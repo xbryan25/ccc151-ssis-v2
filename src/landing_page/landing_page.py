@@ -4,6 +4,8 @@ import csv
 
 from landing_page.landing_page_design import Ui_MainWindow as LandingPageUI
 
+from student.add_student import AddStudentDialog
+
 
 class LandingPage(QMainWindow, LandingPageUI):
     def __init__(self):
@@ -11,6 +13,12 @@ class LandingPage(QMainWindow, LandingPageUI):
 
         self.setupUi(self)
         self.add_from_database()
+
+        self.pushButton.clicked.connect(self.open_add_student_dialog)
+
+    def open_add_student_dialog(self):
+        self.add_student_dialog = AddStudentDialog()
+        self.add_student_dialog.show()
 
     def add_from_database(self):
         with open("databases/students.csv", 'r') as from_students_csv:
