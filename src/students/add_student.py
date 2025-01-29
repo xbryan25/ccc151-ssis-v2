@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 
-from student.add_student_design import Ui_Dialog as AddStudentUI
+from students.add_student_design import Ui_Dialog as AddStudentUI
 from add_item_state.fail_to_add_item import FailToAddItemDialog
 
 import re

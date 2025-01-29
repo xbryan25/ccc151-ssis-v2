@@ -1,10 +1,7 @@
-from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem
-from PyQt6.QtCore import Qt
-import csv
+from PyQt6.QtWidgets import QMainWindow
 
 from landing_page.landing_page_design import Ui_MainWindow as LandingPageUI
-
-from student.add_student import AddStudentDialog
+from students.students_page import StudentsPage
 
 
 class LandingPage(QMainWindow, LandingPageUI):
@@ -12,31 +9,11 @@ class LandingPage(QMainWindow, LandingPageUI):
         super().__init__()
 
         self.setupUi(self)
-        self.add_from_database()
+        self.students_button.clicked.connect(self.open_students_page)
 
-        self.pushButton.clicked.connect(self.open_add_student_dialog)
+    def open_students_page(self):
+        self.students_page = StudentsPage(self)
 
-    def open_add_student_dialog(self):
-        self.add_student_dialog = AddStudentDialog()
-        self.add_student_dialog.show()
+        self.students_page.show()
 
-    def add_from_database(self):
-        with open("databases/students.csv", 'r') as from_students_csv:
-            reader = csv.reader(from_students_csv)
-
-            for row in reader:
-                rowPosition = self.tableWidget.rowCount()
-                self.tableWidget.insertRow(rowPosition)
-
-                # item = QTableWidgetItem()
-                # item.setData(Qt.ItemDataRole.DisplayRole, row[0])
-
-                self.tableWidget.setItem(rowPosition, 0, QTableWidgetItem(row[0]))
-                self.tableWidget.setItem(rowPosition, 1, QTableWidgetItem(row[1]))
-                self.tableWidget.setItem(rowPosition, 2, QTableWidgetItem(row[2]))
-                self.tableWidget.setItem(rowPosition, 3, QTableWidgetItem(row[3]))
-                self.tableWidget.setItem(rowPosition, 4, QTableWidgetItem(row[4]))
-                self.tableWidget.setItem(rowPosition, 5, QTableWidgetItem(row[5]))
-
-            # self.tableWidget.sortItems(0, Qt.SortOrder.DescendingOrder)
-            self.tableWidget.setSortingEnabled(True)
+        self.hide()
