@@ -12,7 +12,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         super().__init__()
 
         self.setupUi(self)
-        self.add_from_database()
+        self.load_students_from_database()
 
         self.main_screen = main_screen
 
@@ -20,10 +20,10 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
     def open_add_student_dialog(self):
-        self.add_student_dialog = AddStudentDialog()
+        self.add_student_dialog = AddStudentDialog(self.students_table)
         self.add_student_dialog.show()
 
-    def add_from_database(self):
+    def load_students_from_database(self):
         with open("databases/students.csv", 'r') as from_students_csv:
             reader = csv.reader(from_students_csv)
 

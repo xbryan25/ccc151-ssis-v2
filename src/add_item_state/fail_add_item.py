@@ -1,10 +1,10 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import QSize
 
-from add_item_state.fail_to_add_item_design import Ui_Dialog as FailToAddItemUI
+from add_item_state.fail_add_item_design import Ui_Dialog as FailAddItemUI
 
 
-class FailToAddItemDialog(QDialog, FailToAddItemUI):
+class FailAddItemDialog(QDialog, FailAddItemUI):
     def __init__(self, issues):
         super().__init__()
 
