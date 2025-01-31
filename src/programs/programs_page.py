@@ -50,10 +50,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
             self.adjust_horizontal_header()
 
     def adjust_horizontal_header(self):
-
-        self.programs_table.setColumnWidth(0, 50)
-        self.programs_table.setColumnWidth(1, 380)
-        self.programs_table.setColumnWidth(2, 50)
+        h_header = self.programs_table.horizontalHeader()
+        h_header.resizeSection(0, 100)
+        h_header.resizeSection(1, 460)
+        h_header.resizeSection(2, 100)
 
     def return_to_main_screen(self):
         self.main_screen.show()

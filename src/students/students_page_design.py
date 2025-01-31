@@ -99,7 +99,7 @@ class Ui_MainWindow(object):
         self.students_table.setHorizontalHeaderItem(5, item)
         self.students_table.horizontalHeader().setVisible(True)
         self.students_table.horizontalHeader().setDefaultSectionSize(140)
-        self.students_table.horizontalHeader().setMinimumSectionSize(140)
+        self.students_table.horizontalHeader().setMinimumSectionSize(90)
         self.students_table.horizontalHeader().setSortIndicatorShown(True)
         self.students_table.verticalHeader().setVisible(False)
         self.gridLayout.addWidget(self.students_table, 3, 0, 1, 6)

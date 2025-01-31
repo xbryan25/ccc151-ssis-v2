@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt6.QtCore import Qt
 import csv
 
@@ -19,6 +19,10 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
+        self.adjust_horizontal_header()
+
+        # h_header.horizontalHeaderItem(0).sectionClicked.connect(self.onHeaderClicked)
+
     def open_add_student_dialog(self):
         self.add_student_dialog = AddStudentDialog(self.students_table)
         self.add_student_dialog.show()
@@ -31,18 +35,42 @@ class StudentsPage(QMainWindow, StudentsPageUI):
                 rowPosition = self.students_table.rowCount()
                 self.students_table.insertRow(rowPosition)
 
-                # item = QTableWidgetItem()
-                # item.setData(Qt.ItemDataRole.DisplayRole, row[0])
+                id_number = QTableWidgetItem(row[0])
+                id_number.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
-                self.students_table.setItem(rowPosition, 0, QTableWidgetItem(row[0]))
-                self.students_table.setItem(rowPosition, 1, QTableWidgetItem(row[1]))
-                self.students_table.setItem(rowPosition, 2, QTableWidgetItem(row[2]))
-                self.students_table.setItem(rowPosition, 3, QTableWidgetItem(row[3]))
-                self.students_table.setItem(rowPosition, 4, QTableWidgetItem(row[4]))
-                self.students_table.setItem(rowPosition, 5, QTableWidgetItem(row[5]))
+                first_name = QTableWidgetItem(row[1])
+                first_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+                last_name = QTableWidgetItem(row[2])
+                last_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+                year_level = QTableWidgetItem(row[3])
+                year_level.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+                gender = QTableWidgetItem(row[4])
+                gender.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+                program_code = QTableWidgetItem(row[5])
+                program_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+                self.students_table.setItem(rowPosition, 0, id_number)
+                self.students_table.setItem(rowPosition, 1, first_name)
+                self.students_table.setItem(rowPosition, 2, last_name)
+                self.students_table.setItem(rowPosition, 3, year_level)
+                self.students_table.setItem(rowPosition, 4, gender)
+                self.students_table.setItem(rowPosition, 5, program_code)
 
             # self.tableWidget.sortItems(0, Qt.SortOrder.DescendingOrder)
             self.students_table.setSortingEnabled(True)
+
+    def adjust_horizontal_header(self):
+        h_header = self.students_table.horizontalHeader()
+        h_header.resizeSection(0, 90)
+        h_header.resizeSection(1, 220)
+        h_header.resizeSection(2, 220)
+        h_header.resizeSection(3, 90)
+        h_header.resizeSection(4, 120)
+        h_header.resizeSection(5, 100)
 
     def return_to_main_screen(self):
         self.main_screen.show()

@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         self.programs_table.horizontalHeader().setVisible(True)
         self.programs_table.horizontalHeader().setCascadingSectionResizes(True)
         self.programs_table.horizontalHeader().setDefaultSectionSize(220)
-        self.programs_table.horizontalHeader().setMinimumSectionSize(140)
+        self.programs_table.horizontalHeader().setMinimumSectionSize(90)
         self.programs_table.horizontalHeader().setSortIndicatorShown(True)
         self.programs_table.horizontalHeader().setStretchLastSection(True)
         self.programs_table.verticalHeader().setVisible(False)
