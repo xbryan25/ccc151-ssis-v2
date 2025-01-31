@@ -1,8 +1,10 @@
 from PyQt6.QtWidgets import QMainWindow
 
 from landing_page.landing_page_design import Ui_MainWindow as LandingPageUI
+
 from students.students_page import StudentsPage
 from programs.programs_page import ProgramsPage
+from colleges.colleges_page import CollegesPage
 
 
 class LandingPage(QMainWindow, LandingPageUI):
@@ -12,6 +14,7 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.setupUi(self)
         self.students_button.clicked.connect(self.open_students_page)
         self.programs_button.clicked.connect(self.open_programs_page)
+        self.colleges_button.clicked.connect(self.open_colleges_page)
 
     def open_students_page(self):
         self.students_page = StudentsPage(self)
@@ -24,5 +27,12 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.programs_page = ProgramsPage(self)
 
         self.programs_page.show()
+
+        self.hide()
+
+    def open_colleges_page(self):
+        self.colleges_page = CollegesPage(self)
+
+        self.colleges_page.show()
 
         self.hide()

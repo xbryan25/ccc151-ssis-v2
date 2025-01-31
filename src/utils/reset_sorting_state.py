@@ -1,5 +1,3 @@
-
-
 # This function determines if a column header has been clicked 3 times consecutively
 # If so, then the sort order for that particular column will be removed
 # Under the hood, the 'Order ID' column, which is hidden, will just be sorted
