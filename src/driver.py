@@ -7,12 +7,9 @@ def main():
     app = QApplication([])
     landing_page = LandingPage()
 
-
     landing_page.show()
     app.exec()
 
 
-
 if __name__ == "__main__":
     main()
-
