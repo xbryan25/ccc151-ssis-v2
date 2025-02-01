@@ -6,6 +6,7 @@ from PyQt6.uic.Compiler.qtproxies import QtCore
 from students.students_page_design import Ui_MainWindow as StudentsPageUI
 
 from utils.reset_sorting_state import ResetSortingState
+from utils.get_information_codes import GetInformationCodes
 
 from students.add_student import AddStudentDialog
 
@@ -21,7 +22,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.main_screen = main_screen
 
-        self.program_codes = self.get_program_codes()
+        self.program_codes = GetInformationCodes.for_programs()
 
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
@@ -34,18 +35,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.students_table.horizontalHeader().sectionClicked.connect(
             self.reset_sorting_state_helper.reset_sorting_state)
-
-    @staticmethod
-    def get_program_codes():
-        program_codes = []
-
-        with open("databases/programs.csv", 'r') as from_programs_csv:
-            reader = csv.reader(from_programs_csv)
-
-            for row in reader:
-                program_codes.append(row[0])
-
-        return program_codes
 
     def open_add_student_dialog(self):
         if not self.program_codes:
@@ -92,7 +81,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
                 self.students_table.setItem(rowPosition, 4, year_level)
                 self.students_table.setItem(rowPosition, 5, gender)
                 self.students_table.setItem(rowPosition, 6, program_code)
-
 
             # self.tableWidget.sortItems(0, Qt.SortOrder.DescendingOrder)
             self.students_table.setSortingEnabled(True)

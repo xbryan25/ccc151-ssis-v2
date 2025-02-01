@@ -5,6 +5,7 @@ import csv
 from programs.programs_page_design import Ui_MainWindow as ProgramsPageUI
 
 from utils.reset_sorting_state import ResetSortingState
+from utils.get_information_codes import GetInformationCodes
 
 from programs.add_program import AddProgramDialog
 
@@ -20,7 +21,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.main_screen = main_screen
 
-        self.college_codes = self.get_college_codes()
+        self.college_codes = GetInformationCodes.for_colleges()
 
         self.add_program_button.clicked.connect(self.open_add_program_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
@@ -37,18 +38,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         else:
             self.add_program_dialog = AddProgramDialog(self.programs_table)
             self.add_program_dialog.show()
-
-    @staticmethod
-    def get_college_codes():
-        college_codes = []
-
-        with open("databases/colleges.csv", 'r') as from_colleges_csv:
-            reader = csv.reader(from_colleges_csv)
-
-            for row in reader:
-                college_codes.append(row[0])
-
-        return college_codes
 
     def load_programs_from_database(self):
         with open("databases/programs.csv", 'r') as from_programs_csv:
@@ -78,8 +67,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
             self.programs_table.setSortingEnabled(True)
             self.adjust_horizontal_header()
-
-
 
     def adjust_horizontal_header(self):
         h_header = self.programs_table.horizontalHeader()
