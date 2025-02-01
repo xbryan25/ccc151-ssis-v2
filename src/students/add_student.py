@@ -1,8 +1,8 @@
 from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
 
 from students.add_student_design import Ui_Dialog as AddStudentUI
-from add_item_state.fail_add_item import FailAddItemDialog
-from add_item_state.success_add_item import SuccessAddItemDialog
+from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
+from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 import re
 import csv

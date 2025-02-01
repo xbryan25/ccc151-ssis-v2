@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import QSize
 
-from add_item_state.fail_add_item_design import Ui_Dialog as FailAddItemUI
+from helper_dialogs.add_item_state.fail_add_item_design import Ui_Dialog as FailAddItemUI
 
 
 class FailAddItemDialog(QDialog, FailAddItemUI):
