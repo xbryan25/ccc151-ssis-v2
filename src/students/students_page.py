@@ -39,10 +39,10 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_add_student_dialog(self):
         if not self.program_codes:
             self.input_programs_dialog = InputPrerequisiteDialog("programs")
-            self.input_programs_dialog.show()
+            self.input_programs_dialog.exec()
         else:
             self.add_student_dialog = AddStudentDialog(self.students_table)
-            self.add_student_dialog.show()
+            self.add_student_dialog.exec()
 
     def load_students_from_database(self):
         with open("databases/students.csv", 'r') as from_students_csv:
@@ -102,5 +102,3 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.main_screen.show()
 
         self.close()
-
-

@@ -49,8 +49,8 @@ class AddProgramDialog(QDialog, AddProgramUI):
             issues.append("Program name already exists")
 
         if issues:
-            self.fail_add_item_dialog = FailAddItemDialog(issues)
-            self.fail_add_item_dialog.show()
+            self.fail_add_item_dialog = FailAddItemDialog(issues, "program")
+            self.fail_add_item_dialog.exec()
         else:
             # Convert program code to all caps
             # Convert all commas in program name to underscores because it messes up the csv
@@ -67,7 +67,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
             self.success_add_item_dialog = SuccessAddItemDialog("programs", self)
 
-            self.success_add_item_dialog.show()
+            self.success_add_item_dialog.exec()
 
     def add_program_to_table(self, program_to_add):
         row_position = self.programs_table.rowCount()

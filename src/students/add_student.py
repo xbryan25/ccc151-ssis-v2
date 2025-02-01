@@ -58,15 +58,15 @@ class AddStudentDialog(QDialog, AddStudentUI):
             issues.append("Name combination already exists")
 
         if issues:
-            self.fail_add_item_dialog = FailAddItemDialog(issues)
-            self.fail_add_item_dialog.show()
+            self.fail_add_item_dialog = FailAddItemDialog(issues, "student")
+            self.fail_add_item_dialog.exec()
         else:
             student_to_add = [self.id_number_lineedit.text(),
                               self.first_name_lineedit.text().strip(),
                               self.last_name_lineedit.text().strip(),
                               self.year_level_combobox.currentText(),
                               self.gender_combobox.currentText(),
-                              self.program_code_lineedit.text().upper()]
+                              self.program_code_combobox.currentText()]
 
             with open("databases/students.csv", 'a', newline='') as from_students_csv:
                 writer = csv.writer(from_students_csv)
@@ -77,7 +77,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
 
-            self.success_add_item_dialog.show()
+            self.success_add_item_dialog.exec()
 
     def add_student_to_table(self, student_to_add):
         row_position = self.students_table.rowCount()

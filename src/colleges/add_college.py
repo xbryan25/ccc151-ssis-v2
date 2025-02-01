@@ -39,8 +39,8 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
             issues.append("College name already exists")
 
         if issues:
-            self.fail_add_item_dialog = FailAddItemDialog(issues)
-            self.fail_add_item_dialog.show()
+            self.fail_add_item_dialog = FailAddItemDialog(issues, "college")
+            self.fail_add_item_dialog.exec()
         else:
             # Convert college code to all caps
             # Convert all commas in college name to underscores because it messes up the csv
@@ -57,7 +57,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
             self.success_add_item_dialog = SuccessAddItemDialog("college", self)
 
-            self.success_add_item_dialog.show()
+            self.success_add_item_dialog.exec()
 
     @staticmethod
     def get_existing_colleges_information():

@@ -34,10 +34,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     def open_add_program_dialog(self):
         if not self.college_codes:
             self.input_college_dialog = InputPrerequisiteDialog("college")
-            self.input_college_dialog.show()
+            self.input_college_dialog.exec()
         else:
             self.add_program_dialog = AddProgramDialog(self.programs_table)
-            self.add_program_dialog.show()
+            self.add_program_dialog.exec()
 
     def load_programs_from_database(self):
         with open("databases/programs.csv", 'r') as from_programs_csv:
@@ -82,5 +82,3 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.main_screen.show()
 
         self.close()
-
-

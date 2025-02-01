@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'fail_to_add_item.ui'
+# Form implementation generated from reading ui file 'fail_add_item.ui'
 #
 # Created by: PyQt6 UI code generator 6.8.0
 #
@@ -19,7 +19,7 @@ class Ui_Dialog(object):
         sizePolicy.setHeightForWidth(Dialog.sizePolicy().hasHeightForWidth())
         Dialog.setSizePolicy(sizePolicy)
         Dialog.setMinimumSize(QtCore.QSize(350, 150))
-        Dialog.setMaximumSize(QtCore.QSize(350, 195))
+        Dialog.setMaximumSize(QtCore.QSize(350, 225))
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(20, 2, QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Minimum)
@@ -42,6 +42,7 @@ class Ui_Dialog(object):
         font.setBold(True)
         font.setWeight(75)
         self.pushButton.setFont(font)
+        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         self.pushButton.setObjectName("pushButton")
         self.gridLayout.addWidget(self.pushButton, 4, 0, 1, 2)
         self.label = QtWidgets.QLabel(parent=Dialog)
@@ -65,5 +66,5 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Fail to add ___"))
         self.label_2.setText(_translate("Dialog", "• TextLabel"))
-        self.pushButton.setText(_translate("Dialog", "Proceed"))
+        self.pushButton.setText(_translate("Dialog", "Click here to proceed"))
         self.label.setText(_translate("Dialog", "Issues found:"))

@@ -28,7 +28,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
     def open_add_college_dialog(self):
         self.add_college_dialog = AddCollegeDialog(self.colleges_table)
-        self.add_college_dialog.show()
+        self.add_college_dialog.exec()
 
     def load_colleges_from_database(self):
         with open("databases/colleges.csv", 'r') as from_colleges_csv:
@@ -68,5 +68,3 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.main_screen.show()
 
         self.close()
-
-
