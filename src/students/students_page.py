@@ -9,6 +9,8 @@ from utils.reset_sorting_state import ResetSortingState
 
 from students.add_student import AddStudentDialog
 
+from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisiteDialog
+
 
 class StudentsPage(QMainWindow, StudentsPageUI):
     def __init__(self, main_screen):
@@ -18,6 +20,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.load_students_from_database()
 
         self.main_screen = main_screen
+
+        self.program_codes = self.get_program_codes()
 
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
@@ -31,9 +35,25 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.students_table.horizontalHeader().sectionClicked.connect(
             self.reset_sorting_state_helper.reset_sorting_state)
 
+    @staticmethod
+    def get_program_codes():
+        program_codes = []
+
+        with open("databases/programs.csv", 'r') as from_programs_csv:
+            reader = csv.reader(from_programs_csv)
+
+            for row in reader:
+                program_codes.append(row[0])
+
+        return program_codes
+
     def open_add_student_dialog(self):
-        self.add_student_dialog = AddStudentDialog(self.students_table)
-        self.add_student_dialog.show()
+        if not self.program_codes:
+            self.input_programs_dialog = InputPrerequisiteDialog("programs")
+            self.input_programs_dialog.show()
+        else:
+            self.add_student_dialog = AddStudentDialog(self.students_table)
+            self.add_student_dialog.show()
 
     def load_students_from_database(self):
         with open("databases/students.csv", 'r') as from_students_csv:

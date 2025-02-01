@@ -38,7 +38,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
             self.add_program_dialog = AddProgramDialog(self.programs_table)
             self.add_program_dialog.show()
 
-    def get_college_codes(self):
+    @staticmethod
+    def get_college_codes():
         college_codes = []
 
         with open("databases/colleges.csv", 'r') as from_colleges_csv:

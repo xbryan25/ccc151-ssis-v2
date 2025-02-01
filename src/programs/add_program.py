@@ -109,10 +109,8 @@ class AddProgramDialog(QDialog, AddProgramUI):
         return college_codes
 
     def add_college_codes_to_combobox(self):
-
         for college_code in self.get_college_codes():
             self.college_code_combobox.addItem(college_code)
-
 
     def is_valid_program_code(self):
         valid_program_code = re.match(r'^[a-zA-Z]{3,}$', self.program_code_lineedit.text())

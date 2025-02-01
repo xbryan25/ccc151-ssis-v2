@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PyQt6.QtCore import Qt
 
 from students.add_student_design import Ui_Dialog as AddStudentUI
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
@@ -16,7 +17,10 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
         self.students_table = students_table
 
+        self.add_program_codes_to_combobox()
+
         self.add_student_button.clicked.connect(self.add_student_to_csv)
+        self.set_program_code_combobox_scrollbar()
 
     def add_student_to_csv(self):
 
@@ -54,11 +58,11 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.fail_add_item_dialog.show()
         else:
             student_to_add = [self.id_number_lineedit.text(),
-                              self.first_name_lineedit.text(),
-                              self.last_name_lineedit.text(),
+                              self.first_name_lineedit.text().strip(),
+                              self.last_name_lineedit.text().strip(),
                               self.year_level_combobox.currentText(),
                               self.gender_combobox.currentText(),
-                              self.program_code_lineedit.text()]
+                              self.program_code_lineedit.text().upper()]
 
             with open("databases/students.csv", 'a', newline='') as from_students_csv:
                 writer = csv.writer(from_students_csv)
@@ -85,16 +89,57 @@ class AddStudentDialog(QDialog, AddStudentUI):
         return students_information
 
     def add_student_to_table(self, student_to_add):
-        rowPosition = self.students_table.rowCount()
-        self.students_table.insertRow(rowPosition)
+        row_position = self.students_table.rowCount()
+        self.students_table.insertRow(row_position)
 
-        self.students_table.setItem(rowPosition, 0, QTableWidgetItem(student_to_add[0]))
-        self.students_table.setItem(rowPosition, 1, QTableWidgetItem(student_to_add[1]))
-        self.students_table.setItem(rowPosition, 2, QTableWidgetItem(student_to_add[2]))
-        self.students_table.setItem(rowPosition, 3, QTableWidgetItem(student_to_add[3]))
-        self.students_table.setItem(rowPosition, 4, QTableWidgetItem(student_to_add[4]))
-        self.students_table.setItem(rowPosition, 5, QTableWidgetItem(student_to_add[5]))
+        order_id = QTableWidgetItem()
+        order_id.setData(Qt.ItemDataRole.DisplayRole, row_position)
+        order_id.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
 
+        id_number = QTableWidgetItem(student_to_add[0])
+        id_number.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        first_name = QTableWidgetItem(student_to_add[1])
+        first_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        last_name = QTableWidgetItem(student_to_add[2])
+        last_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        year_level = QTableWidgetItem(student_to_add[3])
+        year_level.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        gender = QTableWidgetItem(student_to_add[4])
+        gender.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        program_code = QTableWidgetItem(student_to_add[5])
+        program_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.students_table.setItem(row_position, 0, order_id)
+        self.students_table.setItem(row_position, 1, id_number)
+        self.students_table.setItem(row_position, 2, first_name)
+        self.students_table.setItem(row_position, 3, last_name)
+        self.students_table.setItem(row_position, 4, year_level)
+        self.students_table.setItem(row_position, 5, gender)
+        self.students_table.setItem(row_position, 6, program_code)
+
+    # Put in util file
+    @staticmethod
+    def get_program_codes():
+        program_codes = []
+
+        with open("databases/programs.csv", 'r') as from_programs_csv:
+            reader = csv.reader(from_programs_csv)
+
+            for row in reader:
+                program_codes.append(row[0])
+
+        return program_codes
+
+    def add_program_codes_to_combobox(self):
+        for program_code in self.get_program_codes():
+            self.program_code_combobox.addItem(program_code)
+
+    # Put all is_valid functions in a util file
 
     def is_valid_id_number(self):
         valid_id_number = re.match(r'^[0-9]{4}-[0-9]{4}$', self.id_number_lineedit.text())
@@ -111,7 +156,10 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
         return True if valid_last_name else False
 
-    def is_valid_program_code(self):
-        valid_program_code = re.match(r'^[A-Z]{3,}$', self.program_code_lineedit.text())
+    def set_program_code_combobox_scrollbar(self):
+        self.program_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-        return True if valid_program_code else False
+    # def is_valid_program_code(self):
+    #     valid_program_code = re.match(r'^[a-zA-Z]{3,}$', self.program_code_lineedit.text())
+    #
+    #     return True if valid_program_code else False
