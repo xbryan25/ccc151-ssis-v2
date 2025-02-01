@@ -71,12 +71,12 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
             self.add_student_to_table(student_to_add)
 
-            self.success_add_item_dialog = SuccessAddItemDialog(self)
+            self.success_add_item_dialog = SuccessAddItemDialog("student", self)
 
             self.success_add_item_dialog.show()
 
-
-    def get_existing_students_information(self):
+    @staticmethod
+    def get_existing_students_information():
         students_information = {"ID Number": [], "Full Name": []}
 
         with open("databases/students.csv", 'r') as from_students_csv:

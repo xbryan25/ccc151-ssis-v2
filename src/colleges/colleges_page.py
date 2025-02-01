@@ -4,6 +4,8 @@ import csv
 
 from colleges.colleges_page_design import Ui_MainWindow as CollegesPageUI
 
+from colleges.add_college import AddCollegeDialog
+
 from utils.reset_sorting_state import ResetSortingState
 
 

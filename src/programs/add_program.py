@@ -57,7 +57,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
             self.add_program_to_table(program_to_add)
 
-            self.success_add_item_dialog = SuccessAddItemDialog(self)
+            self.success_add_item_dialog = SuccessAddItemDialog("programs", self)
 
             self.success_add_item_dialog.show()
 
