@@ -53,7 +53,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         h_header = self.colleges_table_view.horizontalHeader()
 
         h_header.resizeSection(0, 100)
-        h_header.resizeSection(1, 530)
+        h_header.resizeSection(1, 580)
 
     def return_to_main_screen(self):
         self.main_screen.show()
