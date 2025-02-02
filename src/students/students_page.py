@@ -8,6 +8,7 @@ from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_table_model import CustomTableModel
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
+from utils.load_information_from_database import LoadInformationFromDatabase
 
 from students.add_student import AddStudentDialog
 
@@ -24,7 +25,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.program_codes = GetInformationCodes.for_programs()
 
-        self.students_data = self.load_students_from_database()
+        self.students_data = LoadInformationFromDatabase.get_students()
         self.columns = ["ID Number", "First Name", "Last Name", "Year Level", "Gender", "Program Code"]
 
         self.students_table_model = CustomTableModel(self.students_data, self.columns)
@@ -63,17 +64,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         h_header.resizeSection(3, 90)
         h_header.resizeSection(4, 120)
         h_header.resizeSection(5, 100)
-
-    def load_students_from_database(self):
-        students_data = []
-
-        with open("databases/students.csv", 'r') as from_students_csv:
-            reader = csv.reader(from_students_csv)
-
-            for index, row in enumerate(reader):
-                students_data.append(row)
-
-        return students_data
 
     def return_to_main_screen(self):
         self.main_screen.show()

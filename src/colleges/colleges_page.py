@@ -7,6 +7,7 @@ from colleges.colleges_page_design import Ui_MainWindow as CollegesPageUI
 from utils.reset_sorting_state import ResetSortingState
 from utils.custom_table_model import CustomTableModel
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
+from utils.load_information_from_database import LoadInformationFromDatabase
 
 from colleges.add_college import AddCollegeDialog
 
@@ -21,7 +22,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.main_screen = main_screen
 
-        self.colleges_data = self.load_colleges_from_database()
+        self.colleges_data = LoadInformationFromDatabase.get_colleges()
         self.columns = ["College Code", "College Name"]
 
         self.colleges_table_model = CustomTableModel(self.colleges_data, self.columns)
@@ -44,17 +45,6 @@ class CollegesPage(QMainWindow, CollegesPageUI):
     def open_add_college_dialog(self):
         self.add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model)
         self.add_college_dialog.exec()
-
-    def load_colleges_from_database(self):
-        colleges_data = []
-
-        with open("databases/colleges.csv", 'r') as from_colleges_csv:
-            reader = csv.reader(from_colleges_csv)
-
-            for row in reader:
-                colleges_data.append(row)
-
-        return colleges_data
 
     def adjust_horizontal_header(self):
         h_header = self.colleges_table_view.horizontalHeader()

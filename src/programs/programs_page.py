@@ -8,6 +8,7 @@ from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_table_model import CustomTableModel
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
+from utils.load_information_from_database import LoadInformationFromDatabase
 
 from programs.add_program import AddProgramDialog
 
@@ -24,7 +25,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.college_codes = GetInformationCodes.for_colleges()
 
-        self.programs_data = self.load_programs_from_database()
+        self.programs_data = LoadInformationFromDatabase.get_programs()
         self.columns = ["Program Code", "Program Name", "College Code"]
 
         self.programs_table_model = CustomTableModel(self.programs_data, self.columns)
@@ -58,17 +59,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         h_header.resizeSection(0, 100)
         h_header.resizeSection(1, 460)
         h_header.resizeSection(2, 100)
-
-    def load_programs_from_database(self):
-        programs_data = []
-
-        with open("databases/programs.csv", 'r') as from_programs_csv:
-            reader = csv.reader(from_programs_csv)
-
-            for row in reader:
-                programs_data.append(row)
-
-        return programs_data
 
     def return_to_main_screen(self):
         self.main_screen.show()
