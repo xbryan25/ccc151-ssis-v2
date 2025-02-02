@@ -15,12 +15,13 @@ import csv
 
 
 class AddStudentDialog(QDialog, AddStudentUI):
-    def __init__(self, students_table):
+    def __init__(self, students_table_view, students_table_model):
         super().__init__()
 
         self.setupUi(self)
 
-        self.students_table = students_table
+        self.students_table_view = students_table_view
+        self.students_table_model = students_table_model
 
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
@@ -80,64 +81,15 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.success_add_item_dialog.exec()
 
     def add_student_to_table(self, student_to_add):
-        row_position = self.students_table.rowCount()
-        self.students_table.insertRow(row_position)
-
-        order_id = QTableWidgetItem()
-        order_id.setData(Qt.ItemDataRole.DisplayRole, row_position)
-        order_id.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        id_number = QTableWidgetItem(student_to_add[0])
-        id_number.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        first_name = QTableWidgetItem(student_to_add[1])
-        first_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        last_name = QTableWidgetItem(student_to_add[2])
-        last_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        year_level = QTableWidgetItem(student_to_add[3])
-        year_level.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        gender = QTableWidgetItem(student_to_add[4])
-        gender.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        program_code = QTableWidgetItem(student_to_add[5])
-        program_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.students_table.setItem(row_position, 0, order_id)
-        self.students_table.setItem(row_position, 1, id_number)
-        self.students_table.setItem(row_position, 2, first_name)
-        self.students_table.setItem(row_position, 3, last_name)
-        self.students_table.setItem(row_position, 4, year_level)
-        self.students_table.setItem(row_position, 5, gender)
-        self.students_table.setItem(row_position, 6, program_code)
+        self.students_table_model.layoutAboutToBeChanged.emit()
+        self.students_table_model.data_from_csv.append(student_to_add)
+        self.students_table_model.layoutChanged.emit()
 
     def add_program_codes_to_combobox(self):
         for program_code in self.get_information_codes.for_programs():
             self.program_code_combobox.addItem(program_code)
 
-    # Put all is_valid functions in a util file
-
-    # def is_valid_id_number(self):
-    #     valid_id_number = re.match(r'^[0-9]{4}-[0-9]{4}$', self.id_number_lineedit.text())
-    #
-    #     return True if valid_id_number else False
-    #
-    # def is_valid_first_name(self):
-    #     valid_first_name = re.match(r'^[a-zA-Z ]+$', self.first_name_lineedit.text())
-    #
-    #     return True if valid_first_name else False
-    #
-    # def is_valid_last_name(self):
-    #     valid_last_name = re.match(r'^[a-zA-Z ]+$', self.last_name_lineedit.text())
-    #
-    #     return True if valid_last_name else False
-
     def set_program_code_combobox_scrollbar(self):
         self.program_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-    # def is_valid_program_code(self):
-    #     valid_program_code = re.match(r'^[a-zA-Z]{3,}$', self.program_code_lineedit.text())
-    #
-    #     return True if valid_program_code else False
+
