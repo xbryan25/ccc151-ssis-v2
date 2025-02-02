@@ -4,6 +4,10 @@ import csv
 
 from colleges.colleges_page_design import Ui_MainWindow as CollegesPageUI
 
+from utils.reset_sorting_state import ResetSortingState
+from utils.custom_table_model import CustomTableModel
+from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
+
 from colleges.add_college import AddCollegeDialog
 
 from utils.reset_sorting_state import ResetSortingState
@@ -14,55 +18,49 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         super().__init__()
 
         self.setupUi(self)
-        self.load_colleges_from_database()
 
         self.main_screen = main_screen
+
+        self.colleges_data = self.load_colleges_from_database()
+        self.columns = ["College Code", "College Name"]
+
+        self.colleges_table_model = CustomTableModel(self.colleges_data, self.columns)
+        self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.colleges_table_model)
+
+        self.colleges_table_view.setSortingEnabled(True)
+        self.colleges_table_view.setModel(self.sort_filter_proxy_model)
+
+        self.reset_sorting_state = ResetSortingState(self.colleges_table_model,
+                                                     self.colleges_table_view)
 
         self.add_college_button.clicked.connect(self.open_add_college_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
-        self.reset_sorting_state_helper = ResetSortingState(self.colleges_table, Qt.SortOrder.AscendingOrder)
+        self.colleges_table_view.horizontalHeader().sectionClicked.connect(
+            self.reset_sorting_state.reset_sorting_state)
 
-        self.colleges_table.horizontalHeader().sectionClicked.connect(
-            self.reset_sorting_state_helper.reset_sorting_state)
+        self.adjust_horizontal_header()
 
     def open_add_college_dialog(self):
-        self.add_college_dialog = AddCollegeDialog(self.colleges_table)
+        self.add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model)
         self.add_college_dialog.exec()
 
     def load_colleges_from_database(self):
+        colleges_data = []
+
         with open("databases/colleges.csv", 'r') as from_colleges_csv:
             reader = csv.reader(from_colleges_csv)
 
-            for index, row in enumerate(reader):
-                rowPosition = self.colleges_table.rowCount()
-                self.colleges_table.insertRow(rowPosition)
+            for row in reader:
+                colleges_data.append(row)
 
-                order_id = QTableWidgetItem()
-                order_id.setData(Qt.ItemDataRole.DisplayRole, index + 1)
-                order_id.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                college_code = QTableWidgetItem(row[0])
-                college_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                college_name = QTableWidgetItem(row[1].replace("_", ","))
-                college_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                self.colleges_table.setItem(rowPosition, 0, order_id)
-                self.colleges_table.setItem(rowPosition, 1, college_code)
-                self.colleges_table.setItem(rowPosition, 2, college_name)
-
-            self.colleges_table.setSortingEnabled(True)
-            self.adjust_horizontal_header()
+        return colleges_data
 
     def adjust_horizontal_header(self):
-        h_header = self.colleges_table.horizontalHeader()
+        h_header = self.colleges_table_view.horizontalHeader()
 
-        # Hide 'Order ID' column
-        h_header.resizeSection(0, 0)
-
-        h_header.resizeSection(1, 100)
-        h_header.resizeSection(2, 560)
+        h_header.resizeSection(0, 100)
+        h_header.resizeSection(1, 530)
 
     def return_to_main_screen(self):
         self.main_screen.show()

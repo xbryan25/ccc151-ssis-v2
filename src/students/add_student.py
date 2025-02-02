@@ -33,7 +33,6 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.set_program_code_combobox_scrollbar()
 
     def add_student_to_csv(self):
-
         students_information = self.get_existing_information.from_students()
         issues = []
 

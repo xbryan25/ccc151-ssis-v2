@@ -1,4 +1,4 @@
-# Form implementation generated from reading ui file 'students_page_temp.ui'
+# Form implementation generated from reading ui file 'students_page.ui'
 #
 # Created by: PyQt6 UI code generator 6.8.0
 #
@@ -14,7 +14,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(880, 580)
         MainWindow.setMinimumSize(QtCore.QSize(880, 580))
-        MainWindow.setMaximumSize(QtCore.QSize(880, 1000))
+        MainWindow.setMaximumSize(QtCore.QSize(880, 580))
         self.centralwidget = QtWidgets.QWidget(parent=MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)

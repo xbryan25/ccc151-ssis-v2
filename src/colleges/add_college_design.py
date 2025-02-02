@@ -100,7 +100,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Add program"))
+        Dialog.setWindowTitle(_translate("Dialog", "Add college"))
         self.add_college_button.setText(_translate("Dialog", "Add college"))
         self.header_label.setText(_translate("Dialog", "Input information"))
         self.college_code_label.setText(_translate("Dialog", "College Code"))

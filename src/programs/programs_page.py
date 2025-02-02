@@ -1,11 +1,13 @@
 from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel
 import csv
 
 from programs.programs_page_design import Ui_MainWindow as ProgramsPageUI
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
+from utils.custom_table_model import CustomTableModel
+from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 
 from programs.add_program import AddProgramDialog
 
@@ -17,68 +19,59 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         super().__init__()
 
         self.setupUi(self)
-        self.load_programs_from_database()
 
         self.main_screen = main_screen
 
         self.college_codes = GetInformationCodes.for_colleges()
 
+        self.programs_data = self.load_programs_from_database()
+        self.columns = ["Program Code", "Program Name", "College Code"]
+
+        self.programs_table_model = CustomTableModel(self.programs_data, self.columns)
+        self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
+
+        self.programs_table_view.setSortingEnabled(True)
+        self.programs_table_view.setModel(self.sort_filter_proxy_model)
+
+        self.reset_sorting_state = ResetSortingState(self.programs_table_model,
+                                                     self.programs_table_view)
+
         self.add_program_button.clicked.connect(self.open_add_program_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
-        self.reset_sorting_state_helper = ResetSortingState(self.programs_table, Qt.SortOrder.AscendingOrder)
+        self.programs_table_view.horizontalHeader().sectionClicked.connect(
+            self.reset_sorting_state.reset_sorting_state)
 
-        self.programs_table.horizontalHeader().sectionClicked.connect(
-            self.reset_sorting_state_helper.reset_sorting_state)
+        self.adjust_horizontal_header()
 
     def open_add_program_dialog(self):
         if not self.college_codes:
             self.input_college_dialog = InputPrerequisiteDialog("college")
             self.input_college_dialog.exec()
         else:
-            self.add_program_dialog = AddProgramDialog(self.programs_table)
+            self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model)
             self.add_program_dialog.exec()
 
+    def adjust_horizontal_header(self):
+        h_header = self.programs_table_view.horizontalHeader()
+
+        h_header.resizeSection(0, 100)
+        h_header.resizeSection(1, 460)
+        h_header.resizeSection(2, 100)
+
     def load_programs_from_database(self):
+        programs_data = []
+
         with open("databases/programs.csv", 'r') as from_programs_csv:
             reader = csv.reader(from_programs_csv)
 
-            for index, row in enumerate(reader):
-                rowPosition = self.programs_table.rowCount()
-                self.programs_table.insertRow(rowPosition)
+            for row in reader:
+                programs_data.append(row)
 
-                order_id = QTableWidgetItem()
-                order_id.setData(Qt.ItemDataRole.DisplayRole, index + 1)
-                order_id.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                program_code = QTableWidgetItem(row[0])
-                program_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                program_name = QTableWidgetItem(row[1].replace("_", ","))
-                program_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                college_code = QTableWidgetItem(row[2])
-                college_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-                self.programs_table.setItem(rowPosition, 0, order_id)
-                self.programs_table.setItem(rowPosition, 1, program_code)
-                self.programs_table.setItem(rowPosition, 2, program_name)
-                self.programs_table.setItem(rowPosition, 3, college_code)
-
-            self.programs_table.setSortingEnabled(True)
-            self.adjust_horizontal_header()
-
-    def adjust_horizontal_header(self):
-        h_header = self.programs_table.horizontalHeader()
-
-        # Hide 'Order ID' column
-        h_header.resizeSection(0, 0)
-
-        h_header.resizeSection(1, 100)
-        h_header.resizeSection(2, 460)
-        h_header.resizeSection(3, 100)
+        return programs_data
 
     def return_to_main_screen(self):
         self.main_screen.show()
 
         self.close()
+

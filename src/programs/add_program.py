@@ -15,12 +15,13 @@ import csv
 
 
 class AddProgramDialog(QDialog, AddProgramUI):
-    def __init__(self, programs_table):
+    def __init__(self, programs_table_view, programs_table_model):
         super().__init__()
 
         self.setupUi(self)
 
-        self.programs_table = programs_table
+        self.programs_table_view = programs_table_view
+        self.programs_table_model = programs_table_model
 
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
@@ -29,6 +30,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.add_college_codes_to_combobox()
 
         self.add_program_button.clicked.connect(self.add_program_to_csv)
+        self.set_college_code_combobox_scrollbar()
 
     def add_program_to_csv(self):
         programs_information = self.get_existing_information.from_programs()
@@ -70,27 +72,14 @@ class AddProgramDialog(QDialog, AddProgramUI):
             self.success_add_item_dialog.exec()
 
     def add_program_to_table(self, program_to_add):
-        row_position = self.programs_table.rowCount()
-        self.programs_table.insertRow(row_position)
-
-        order_id = QTableWidgetItem()
-        order_id.setData(Qt.ItemDataRole.DisplayRole, row_position)
-        order_id.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        program_code = QTableWidgetItem(program_to_add[0])
-        program_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        program_name = QTableWidgetItem(program_to_add[1].replace("_", ","))
-        program_name.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        college_code = QTableWidgetItem(program_to_add[2])
-        college_code.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.programs_table.setItem(row_position, 0, order_id)
-        self.programs_table.setItem(row_position, 1, program_code)
-        self.programs_table.setItem(row_position, 2, program_name)
-        self.programs_table.setItem(row_position, 3, college_code)
+        self.programs_table_model.layoutAboutToBeChanged.emit()
+        self.programs_table_model.data_from_csv.append(program_to_add)
+        self.programs_table_model.layoutChanged.emit()
 
     def add_college_codes_to_combobox(self):
         for college_code in self.get_information_codes.for_colleges():
             self.college_code_combobox.addItem(college_code)
+
+    def set_college_code_combobox_scrollbar(self):
+        self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
