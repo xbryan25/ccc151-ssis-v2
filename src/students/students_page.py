@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
-from PyQt6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel
+from PyQt6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel, QRegularExpression
 import csv
 
 from students.students_page_design import Ui_MainWindow as StudentsPageUI
@@ -31,6 +31,9 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.students_table_model = CustomTableModel(self.students_data, self.columns)
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
 
+        # self.sort_filter_proxy_model.setFilterKeyColumn(1)
+        # self.sort_filter_proxy_model.setFilterFixedString("Bryan")
+
         self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.sort_filter_proxy_model)
 
@@ -42,6 +45,9 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.students_table_view.horizontalHeader().sectionClicked.connect(
             self.reset_sorting_state.reset_sorting_state)
+
+        self.search_input_lineedit.textChanged.connect(self.search_student_using_lineedit)
+        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
 
         self.adjust_horizontal_header()
 
@@ -69,3 +75,20 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.main_screen.show()
 
         self.close()
+
+    def search_student_using_lineedit(self):
+        search_type = self.search_type_combobox.currentIndex()
+
+        self.students_table_model.layoutAboutToBeChanged.emit()
+
+        self.sort_filter_proxy_model.setFilterKeyColumn(search_type)
+
+        self.sort_filter_proxy_model.setFilterRegularExpression(QRegularExpression('^' + self.search_input_lineedit.text(),
+                                                                                   QRegularExpression.PatternOption.CaseInsensitiveOption))
+        # self.sort_filter_proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+
+        self.students_table_model.layoutChanged.emit()
+
+    def change_search_lineedit_placeholder(self):
+        self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
+

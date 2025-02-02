@@ -37,18 +37,3 @@ class CustomTableModel(QAbstractTableModel):
             return self.columns[section]
 
         return super().headerData(section, orientation, role)
-
-    # def sort(self, column, order):
-    #     if self.data_from_csv and self.data_from_csv[0]:
-    #         self.layoutAboutToBeChanged.emit()
-    #
-    #         if isinstance(self.tableData[0][col], str):
-    #             sortkey = lambda row: row[col].lower()
-    #         else:
-    #             sortkey = operator.itemgetter(col)
-    #
-    #         self.data_from_csv = sorted(
-    #             self.data_from_csv, key=sortkey,
-    #             reverse=(order != Qt.AscendingOrder))
-    #
-    #         self.layoutChanged.emit()

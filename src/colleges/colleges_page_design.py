@@ -142,7 +142,7 @@ class Ui_MainWindow(object):
         self.back_to_main_button.setText(_translate("MainWindow", "Go back to main screen"))
         self.search_type_combobox.setItemText(0, _translate("MainWindow", "College Code"))
         self.search_type_combobox.setItemText(1, _translate("MainWindow", "College Name"))
-        self.search_input_lineedit.setPlaceholderText(_translate("MainWindow", "Input ___"))
+        self.search_input_lineedit.setPlaceholderText(_translate("MainWindow", "Input College Code"))
         self.serach_label.setText(_translate("MainWindow", "Search by"))
         self.add_college_button.setText(_translate("MainWindow", "Add college"))
         self.edit_college_button.setText(_translate("MainWindow", "Edit college"))

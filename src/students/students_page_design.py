@@ -140,7 +140,7 @@ class Ui_MainWindow(object):
         self.delete_student_button.setText(_translate("MainWindow", "Delete student"))
         self.edit_student_button.setText(_translate("MainWindow", "Edit student"))
         self.serach_label.setText(_translate("MainWindow", "Search by"))
-        self.search_input_lineedit.setPlaceholderText(_translate("MainWindow", "Input ___"))
+        self.search_input_lineedit.setPlaceholderText(_translate("MainWindow", "Input ID Number"))
         self.search_type_combobox.setItemText(0, _translate("MainWindow", "ID Number"))
         self.search_type_combobox.setItemText(1, _translate("MainWindow", "First Name"))
         self.search_type_combobox.setItemText(2, _translate("MainWindow", "Last Name"))

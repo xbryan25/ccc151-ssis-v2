@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QRegularExpression
 import csv
 
 from colleges.colleges_page_design import Ui_MainWindow as CollegesPageUI
@@ -40,6 +40,9 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.colleges_table_view.horizontalHeader().sectionClicked.connect(
             self.reset_sorting_state.reset_sorting_state)
 
+        self.search_input_lineedit.textChanged.connect(self.search_program_using_lineedit)
+        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+
         self.adjust_horizontal_header()
 
     def open_add_college_dialog(self):
@@ -56,3 +59,21 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.main_screen.show()
 
         self.close()
+
+    def search_program_using_lineedit(self):
+        search_type = self.search_type_combobox.currentIndex()
+
+        self.colleges_table_model.layoutAboutToBeChanged.emit()
+
+        self.sort_filter_proxy_model.setFilterKeyColumn(search_type)
+
+        self.sort_filter_proxy_model.setFilterRegularExpression(
+            QRegularExpression('^' + self.search_input_lineedit.text(),
+                               QRegularExpression.PatternOption.CaseInsensitiveOption))
+        # self.sort_filter_proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+
+        self.colleges_table_model.layoutChanged.emit()
+
+    def change_search_lineedit_placeholder(self):
+        self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
+
