@@ -1,7 +1,5 @@
 # This function determines if a column header has been clicked 3 times consecutively
-# If so, then the sort order for that particular column will be removed
-# Under the hood, the 'Order ID' column, which is hidden, will just be sorted
-# in ascending order
+# If so, then the sort order of the table will be reset
 
 from PyQt6.QtCore import Qt
 
@@ -15,7 +13,6 @@ class ResetSortingState:
 
         # self.table_view.horizontalHeader().setSortIndicatorClearable(True)
         self.table_view.horizontalHeader().setSortIndicatorShown(False)
-
 
     def reset_sorting_state(self, column_number):
         column_header = self.table_model.headerData(column_number, Qt.Orientation.Horizontal, Qt.ItemDataRole.DisplayRole)
@@ -35,5 +32,3 @@ class ResetSortingState:
 
         elif column_header == self.prev_clicked[1]:
             self.prev_clicked = [None, None]
-
-        print(self.prev_clicked)

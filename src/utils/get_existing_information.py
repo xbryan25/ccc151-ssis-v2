@@ -28,3 +28,16 @@ class GetExistingInformation:
                 programs_information["Program Name"].append(row[1].replace("_", ","))
 
         return programs_information
+
+    @staticmethod
+    def from_colleges():
+        colleges_information = {"College Code": [], "College Name": []}
+
+        with open("databases/colleges.csv", 'r') as from_colleges_csv:
+            reader = csv.reader(from_colleges_csv)
+
+            for row in reader:
+                colleges_information["College Code"].append(row[0])
+                colleges_information["College Name"].append(row[1].replace("_", ","))
+
+        return colleges_information

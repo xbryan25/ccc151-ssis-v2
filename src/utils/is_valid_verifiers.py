@@ -31,3 +31,15 @@ class IsValidVerifiers:
         valid_program_name = re.match(r'^[a-zA-Z, ]+$', program_name)
 
         return True if valid_program_name else False
+
+    @staticmethod
+    def college_code(college_code):
+        valid_college_code = re.match(r'^[a-zA-Z]{3,}$', college_code)
+
+        return True if valid_college_code else False
+
+    @staticmethod
+    def college_name(college_name):
+        valid_college_name = re.match(r'^[a-zA-Z, ]+$', college_name)
+
+        return True if valid_college_name else False
