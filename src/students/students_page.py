@@ -7,6 +7,7 @@ from students.students_page_design import Ui_MainWindow as StudentsPageUI
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_table_model import CustomTableModel
+from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 
 from students.add_student import AddStudentDialog
 
@@ -27,16 +28,13 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.columns = ["ID Number", "First Name", "Last Name", "Year Level", "Gender", "Program Code"]
 
         self.students_table_model = CustomTableModel(self.students_data, self.columns)
-
-        self.sort_filter_proxy_model = QSortFilterProxyModel()
-        self.sort_filter_proxy_model.setSourceModel(self.students_table_model)
-        self.sort_filter_proxy_model.setSortCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
-        self.sort_filter_proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
 
         self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.sort_filter_proxy_model)
 
-        self.reset_sorting_state = ResetSortingState(self.sort_filter_proxy_model, self.students_table_model)
+        self.reset_sorting_state = ResetSortingState(self.students_table_model,
+                                                     self.students_table_view)
 
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
