@@ -28,7 +28,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.programs_data = LoadInformationFromDatabase.get_programs()
         self.columns = ["Program Code", "Program Name", "College Code"]
 
-        self.programs_table_model = CustomTableModel(self.programs_data, self.columns)
+        self.programs_table_model = CustomTableModel(self.programs_data, self.columns, "programs")
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
 
         self.programs_table_view.setSortingEnabled(True)

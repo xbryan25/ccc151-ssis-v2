@@ -25,7 +25,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.colleges_data = LoadInformationFromDatabase.get_colleges()
         self.columns = ["College Code", "College Name"]
 
-        self.colleges_table_model = CustomTableModel(self.colleges_data, self.columns)
+        self.colleges_table_model = CustomTableModel(self.colleges_data, self.columns, "colleges")
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.colleges_table_model)
 
         self.colleges_table_view.setSortingEnabled(True)

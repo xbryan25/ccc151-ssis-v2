@@ -28,7 +28,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.students_data = LoadInformationFromDatabase.get_students()
         self.columns = ["ID Number", "First Name", "Last Name", "Year Level", "Gender", "Program Code"]
 
-        self.students_table_model = CustomTableModel(self.students_data, self.columns)
+        self.students_table_model = CustomTableModel(self.students_data, self.columns, "students")
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
 
         # self.sort_filter_proxy_model.setFilterKeyColumn(1)
@@ -46,8 +46,14 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.students_table_view.horizontalHeader().sectionClicked.connect(
             self.reset_sorting_state.reset_sorting_state)
 
+        # self.students_table_view.horizontalHeader().setVisible(True)
+
         self.search_input_lineedit.textChanged.connect(self.search_student_using_lineedit)
         self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+
+        # self.students_table_model.layoutAboutToBeChanged.emit()
+        # self.students_table_model.insertRow(0)
+        # self.students_table_model.layoutChanged.emit()
 
         self.adjust_horizontal_header()
 
@@ -70,6 +76,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         h_header.resizeSection(3, 90)
         h_header.resizeSection(4, 120)
         h_header.resizeSection(5, 100)
+
+        h_header.setVisible(True)
 
     def return_to_main_screen(self):
         self.main_screen.show()
