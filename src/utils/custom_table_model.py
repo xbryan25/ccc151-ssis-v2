@@ -45,38 +45,19 @@ class CustomTableModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.EditRole:
             old_value = self.data_from_csv[index.row()][index.column()]
-            data_from_database = []
 
             if self.information_type == "students":
-                with open("databases/students.csv", 'r') as from_students_csv:
-                    reader = csv.reader(from_students_csv)
-
-                    for row in reader:
-                        data_from_database.append(row)
-
                 valid = self.is_valid_edit_value.for_students(index, value,
                                                               self.students_information["ID Number"],
                                                               self.students_information["Full Name"],
                                                               self.data_from_csv)
 
             elif self.information_type == "programs":
-                with open("databases/programs.csv", 'r') as from_programs_csv:
-                    reader = csv.reader(from_programs_csv)
-
-                    for row in reader:
-                        data_from_database.append(row)
-
                 valid = self.is_valid_edit_value.for_programs(index, value,
                                                               self.programs_information["Program Code"],
                                                               self.programs_information["Program Name"])
 
             elif self.information_type == "colleges":
-                with open("databases/colleges.csv", 'r') as from_colleges_csv:
-                    reader = csv.reader(from_colleges_csv)
-
-                    for row in reader:
-                        data_from_database.append(row)
-
                 valid = self.is_valid_edit_value.for_colleges(index, value,
                                                               self.colleges_information["College Code"],
                                                               self.colleges_information["College Name"])
@@ -88,29 +69,29 @@ class CustomTableModel(QAbstractTableModel):
                     self.data_from_csv[index.row()][index.column()] = value.upper()
 
                     # Edit the list from csv to be written
-                    data_from_database[index.row()][index.column()] = value.upper()
+                    # data_from_database[index.row()][index.column()] = value.upper()
 
                 else:
                     self.data_from_csv[index.row()][index.column()] = value
-                    data_from_database[index.row()][index.column()] = value
+                    # data_from_database[index.row()][index.column()] = value
 
                 if self.information_type == "students":
                     with open("databases/students.csv", 'w', newline='') as from_students_csv:
                         writer = csv.writer(from_students_csv)
 
-                        writer.writerows(data_from_database)
+                        writer.writerows(self.data_from_csv)
 
                 elif self.information_type == "programs":
                     with open("databases/programs.csv", 'w', newline='') as from_programs_csv:
                         writer = csv.writer(from_programs_csv)
 
-                        writer.writerows(data_from_database)
+                        writer.writerows(self.data_from_csv)
 
                 elif self.information_type == "colleges":
                     with open("databases/colleges.csv", 'w', newline='') as from_colleges_csv:
                         writer = csv.writer(from_colleges_csv)
 
-                        writer.writerows(data_from_database)
+                        writer.writerows(self.data_from_csv)
 
                 print("Overwritten")
             else:
