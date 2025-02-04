@@ -2,6 +2,7 @@ from PyQt6.QtCore import QAbstractTableModel, Qt
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_existing_information import GetExistingInformation
+from utils.is_valid_edit_value import IsValidEditValue
 
 import operator, csv
 
@@ -19,6 +20,8 @@ class CustomTableModel(QAbstractTableModel):
         self.data_from_csv = data_from_csv
         self.columns = columns
         self.information_type = information_type
+
+        self.is_valid_edit_value = IsValidEditValue()
 
         if self.information_type == "students":
             self.students_information = GetExistingInformation.from_students()
@@ -38,9 +41,7 @@ class CustomTableModel(QAbstractTableModel):
 
     def setData(self, index, value, role):
         # Current approach, read through file, put in list, modify list, write list in file
-        has_issues = False
-
-        get_index = index
+        valid = True
 
         if role == Qt.ItemDataRole.EditRole:
             old_value = self.data_from_csv[index.row()][index.column()]
@@ -53,7 +54,10 @@ class CustomTableModel(QAbstractTableModel):
                     for row in reader:
                         data_from_database.append(row)
 
-                has_issues = self.is_valid_edit_value_for_students(index, value)
+                valid = self.is_valid_edit_value.for_students(index, value,
+                                                              self.students_information["ID Number"],
+                                                              self.students_information["Full Name"],
+                                                              self.data_from_csv)
 
             elif self.information_type == "programs":
                 with open("databases/programs.csv", 'r') as from_programs_csv:
@@ -62,7 +66,9 @@ class CustomTableModel(QAbstractTableModel):
                     for row in reader:
                         data_from_database.append(row)
 
-                has_issues = self.is_valid_edit_value_for_programs(index, value)
+                valid = self.is_valid_edit_value.for_programs(index, value,
+                                                              self.programs_information["Program Code"],
+                                                              self.programs_information["Program Name"])
 
             elif self.information_type == "colleges":
                 with open("databases/colleges.csv", 'r') as from_colleges_csv:
@@ -71,9 +77,11 @@ class CustomTableModel(QAbstractTableModel):
                     for row in reader:
                         data_from_database.append(row)
 
-                has_issues = self.is_valid_edit_value_for_colleges(index, value)
+                valid = self.is_valid_edit_value.for_colleges(index, value,
+                                                              self.colleges_information["College Code"],
+                                                              self.colleges_information["College Name"])
 
-            if not has_issues:
+            if valid:
                 # Edit the list of lists from the model
                 if (self.information_type == "programs" and index.column() == 0) or (self.information_type == "programs" and index.column() == 0):
                     # Edit the list of lists from the model
@@ -110,61 +118,6 @@ class CustomTableModel(QAbstractTableModel):
                 print(old_value)
 
             return True
-
-    def is_valid_edit_value_for_students(self, index, value):
-        has_issues = False
-
-        if index.column() == 0 and value.strip() in self.students_information["ID Number"]:
-            print("ID already exists")
-            has_issues = True
-
-        if index.column() == 1 and f"{value.strip().upper()} {self.data_from_csv[index.row()][index.column() + 1].upper()}" in \
-                [fullname.upper() for fullname in self.students_information["Full Name"]]:
-            print("Name combination exists")
-            has_issues = True
-
-        if index.column() == 2 and f"{self.data_from_csv[index.row()][index.column() - 1].upper()} {value.strip().upper()}" in \
-                [fullname.upper() for fullname in self.students_information["Full Name"]]:
-            print("Name combination exists")
-            has_issues = True
-
-        if index.column() == 3 and value.strip() not in ["1st", "2nd", "3rd", "4th", "5th"]:
-            print("Not valid year level")
-            has_issues = True
-
-        if index.column() == 4 and value.strip() not in ["Male", "Female", "Others", "Prefer not to say"]:
-            print("Not valid gender")
-            has_issues = True
-
-        return has_issues
-
-    def is_valid_edit_value_for_programs(self, index, value):
-        has_issues = False
-
-        if index.column() == 0 and value.strip().upper() in self.programs_information["Program Code"]:
-            print("Program code already exists")
-            has_issues = True
-
-        if index.column() == 1 and value.strip().upper() in \
-                [program_name.upper() for program_name in self.programs_information["Program Name"]]:
-            print("Program name already exists")
-            has_issues = True
-
-        return has_issues
-
-    def is_valid_edit_value_for_colleges(self, index, value):
-        has_issues = False
-
-        if index.column() == 0 and value.strip().upper() in self.colleges_information["College Code"]:
-            print("College code already exists")
-            has_issues = True
-
-        if index.column() == 1 and value.strip().upper() in \
-                [college_name.upper() for college_name in self.colleges_information["College Name"]]:
-            print("College name already exists")
-            has_issues = True
-
-        return has_issues
 
     def rowCount(self, index=None):
         # The length of the outer list.

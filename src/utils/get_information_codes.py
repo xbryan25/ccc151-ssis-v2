@@ -4,16 +4,16 @@ import csv
 class GetInformationCodes:
 
     @staticmethod
-    def for_colleges():
-        college_codes = []
+    def for_students():
+        student_codes = []
 
-        with open("databases/colleges.csv", 'r') as from_colleges_csv:
-            reader = csv.reader(from_colleges_csv)
+        with open("databases/students.csv", 'r') as from_students_csv:
+            reader = csv.reader(from_students_csv)
 
             for row in reader:
-                college_codes.append(row[0])
+                student_codes.append(row[0])
 
-        return college_codes
+        return student_codes
 
     @staticmethod
     def for_programs():
@@ -26,3 +26,15 @@ class GetInformationCodes:
                 program_codes.append(row[0])
 
         return program_codes
+
+    @staticmethod
+    def for_colleges():
+        college_codes = []
+
+        with open("databases/colleges.csv", 'r') as from_colleges_csv:
+            reader = csv.reader(from_colleges_csv)
+
+            for row in reader:
+                college_codes.append(row[0])
+
+        return college_codes
