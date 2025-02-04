@@ -118,13 +118,13 @@ class CustomTableModel(QAbstractTableModel):
             print("ID already exists")
             has_issues = True
 
-        if index.column() == 1 and f"{value.strip()} {self.data_from_csv[index.row()][index.column() + 1]}" in \
-                self.students_information["Full Name"]:
+        if index.column() == 1 and f"{value.strip().upper()} {self.data_from_csv[index.row()][index.column() + 1].upper()}" in \
+                [fullname.upper() for fullname in self.students_information["Full Name"]]:
             print("Name combination exists")
             has_issues = True
 
-        if index.column() == 2 and f"{self.data_from_csv[index.row()][index.column() - 1]} {value.strip()}" in \
-                self.students_information["Full Name"]:
+        if index.column() == 2 and f"{self.data_from_csv[index.row()][index.column() - 1].upper()} {value.strip().upper()}" in \
+                [fullname.upper() for fullname in self.students_information["Full Name"]]:
             print("Name combination exists")
             has_issues = True
 
@@ -145,7 +145,8 @@ class CustomTableModel(QAbstractTableModel):
             print("Program code already exists")
             has_issues = True
 
-        if index.column() == 1 and value.strip() in self.programs_information["Program Name"]:
+        if index.column() == 1 and value.strip().upper() in \
+                [program_name.upper() for program_name in self.programs_information["Program Name"]]:
             print("Program name already exists")
             has_issues = True
 
@@ -158,7 +159,8 @@ class CustomTableModel(QAbstractTableModel):
             print("College code already exists")
             has_issues = True
 
-        if index.column() == 1 and value.strip() in self.colleges_information["College Name"]:
+        if index.column() == 1 and value.strip().upper() in \
+                [college_name.upper() for college_name in self.colleges_information["College Name"]]:
             print("College name already exists")
             has_issues = True
 
