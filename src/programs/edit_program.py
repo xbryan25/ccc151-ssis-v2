@@ -88,7 +88,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
             else:
                 print("No changes made")
 
-
     def add_program_codes_to_combobox(self):
         for program_code in self.get_information_codes.for_programs():
             self.program_to_edit_combobox.addItem(program_code)

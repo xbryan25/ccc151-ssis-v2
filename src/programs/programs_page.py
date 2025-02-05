@@ -65,9 +65,9 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     def adjust_horizontal_header(self):
         h_header = self.programs_table_view.horizontalHeader()
 
-        h_header.resizeSection(0, 100)
+        h_header.resizeSection(0, 110)
         h_header.resizeSection(1, 460)
-        h_header.resizeSection(2, 100)
+        h_header.resizeSection(2, 110)
 
     def return_to_main_screen(self):
         self.main_screen.show()
