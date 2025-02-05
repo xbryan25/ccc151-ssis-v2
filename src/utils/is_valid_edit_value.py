@@ -4,19 +4,23 @@
 class IsValidEditValue:
 
     @staticmethod
-    def for_students(index, value, id_numbers, full_names, data_from_csv):
+    def for_students_cell(index, value, id_numbers, full_names, data_from_csv):
         valid = True
 
         if index.column() == 0 and value.strip() in id_numbers:
             print("ID already exists")
             valid = False
 
-        if index.column() == 1 and f"{value.strip().upper()} {data_from_csv[index.row()][index.column() + 1].upper()}" in \
+        if index.column() == 1 and value.strip() == "":
+            print("first name is blank")
+        elif index.column() == 1 and f"{value.strip().upper()} {data_from_csv[index.row()][index.column() + 1].upper()}" in \
                 [full_name.upper() for full_name in full_names]:
             print("Name combination exists")
             valid = False
 
-        if index.column() == 2 and f"{data_from_csv[index.row()][index.column() - 1].upper()} {value.strip().upper()}" in \
+        if index.column() == 2 and value.strip() == "":
+            print("last name is blank")
+        elif index.column() == 2 and f"{data_from_csv[index.row()][index.column() - 1].upper()} {value.strip().upper()}" in \
                 [full_name.upper() for full_name in full_names]:
             print("Name combination exists")
             valid = False
@@ -32,7 +36,7 @@ class IsValidEditValue:
         return valid
 
     @staticmethod
-    def for_programs(index, value, program_codes, program_names):
+    def for_programs_cell(index, value, program_codes, program_names):
         valid = True
 
         if index.column() == 0 and value.strip().upper() in program_codes:
@@ -47,7 +51,7 @@ class IsValidEditValue:
         return valid
 
     @staticmethod
-    def for_colleges(index, value, college_codes, college_names):
+    def for_colleges_cell(index, value, college_codes, college_names):
         valid = True
 
         if index.column() == 0 and value.strip().upper() in college_codes:

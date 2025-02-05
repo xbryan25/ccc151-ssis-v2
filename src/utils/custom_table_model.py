@@ -47,20 +47,20 @@ class CustomTableModel(QAbstractTableModel):
             old_value = self.data_from_csv[index.row()][index.column()]
 
             if self.information_type == "students":
-                valid = self.is_valid_edit_value.for_students(index, value,
-                                                              self.students_information["ID Number"],
-                                                              self.students_information["Full Name"],
-                                                              self.data_from_csv)
+                valid = self.is_valid_edit_value.for_students_cell(index, value,
+                                                                   self.students_information["ID Number"],
+                                                                   self.students_information["Full Name"],
+                                                                   self.data_from_csv)
 
             elif self.information_type == "programs":
-                valid = self.is_valid_edit_value.for_programs(index, value,
-                                                              self.programs_information["Program Code"],
-                                                              self.programs_information["Program Name"])
+                valid = self.is_valid_edit_value.for_programs_cell(index, value,
+                                                                   self.programs_information["Program Code"],
+                                                                   self.programs_information["Program Name"])
 
             elif self.information_type == "colleges":
-                valid = self.is_valid_edit_value.for_colleges(index, value,
-                                                              self.colleges_information["College Code"],
-                                                              self.colleges_information["College Name"])
+                valid = self.is_valid_edit_value.for_colleges_cell(index, value,
+                                                                   self.colleges_information["College Code"],
+                                                                   self.colleges_information["College Name"])
 
             if valid:
                 # Edit the list of lists from the model

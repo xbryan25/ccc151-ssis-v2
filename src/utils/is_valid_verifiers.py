@@ -1,22 +1,37 @@
 import re
 
+# When edit_state is True, blank inputs (^$) are allowed because it means that the placeholder text will be
+#   used when saving
+
 
 class IsValidVerifiers:
     @staticmethod
-    def id_number(id_number):
-        valid_id_number = re.match(r'^[0-9]{4}-[0-9]{4}$', id_number)
+    def id_number(id_number, edit_state=False):
+        # valid_id_number = True
+
+        if not edit_state:
+            valid_id_number = re.match(r'^[0-9]{4}-[0-9]{4}$', id_number)
+        else:
+            valid_id_number = re.match(r'^[0-9]{4}-[0-9]{4}$|^$', id_number)
 
         return True if valid_id_number else False
 
     @staticmethod
-    def first_name(first_name):
-        valid_first_name = re.match(r'^[a-zA-Z ]+$', first_name)
+    def first_name(first_name, edit_state=False):
+
+        if not edit_state:
+            valid_first_name = re.match(r'^[a-zA-Z ]+$', first_name)
+        else:
+            valid_first_name = re.match(r'^[a-zA-Z ]+$|^$', first_name)
 
         return True if valid_first_name else False
 
     @staticmethod
-    def last_name(last_name):
-        valid_last_name = re.match(r'^[a-zA-Z ]+$', last_name)
+    def last_name(last_name, edit_state=False):
+        if not edit_state:
+            valid_last_name = re.match(r'^[a-zA-Z ]+$', last_name)
+        else:
+            valid_last_name = re.match(r'^[a-zA-Z ]+$|^$', last_name)
 
         return True if valid_last_name else False
 
