@@ -11,6 +11,7 @@ from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.load_information_from_database import LoadInformationFromDatabase
 
 from programs.add_program import AddProgramDialog
+from programs.edit_program import EditProgramDialog
 
 from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisiteDialog
 
@@ -38,6 +39,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                      self.programs_table_view)
 
         self.add_program_button.clicked.connect(self.open_add_program_dialog)
+        self.edit_program_button.clicked.connect(self.open_edit_program_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.programs_table_view.horizontalHeader().sectionClicked.connect(
@@ -55,6 +57,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         else:
             self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model)
             self.add_program_dialog.exec()
+
+    def open_edit_program_dialog(self):
+        self.edit_program_dialog = EditProgramDialog(self.programs_table_view, self.programs_table_model)
+        self.edit_program_dialog.exec()
 
     def adjust_horizontal_header(self):
         h_header = self.programs_table_view.horizontalHeader()

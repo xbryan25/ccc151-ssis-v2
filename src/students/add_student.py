@@ -68,7 +68,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
                               self.gender_combobox.currentText(),
                               self.program_code_combobox.currentText()]
 
-            with open("databases/students.csv", 'a', newline='') as from_students_csv:
+            with open("../databases/students.csv", 'a', newline='') as from_students_csv:
                 writer = csv.writer(from_students_csv)
 
                 writer.writerow(student_to_add)

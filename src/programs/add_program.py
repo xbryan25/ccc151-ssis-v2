@@ -60,7 +60,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
                               self.program_name_lineedit.text().replace(",", "_"),
                               self.college_code_combobox.currentText()]
 
-            with open("databases/programs.csv", 'a', newline='') as from_programs_csv:
+            with open("../databases/programs.csv", 'a', newline='') as from_programs_csv:
                 writer = csv.writer(from_programs_csv)
 
                 writer.writerow(program_to_add)

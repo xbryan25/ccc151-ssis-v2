@@ -54,7 +54,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
             college_to_add = [self.college_code_lineedit.text().upper(),
                               self.college_name_lineedit.text().replace(",", "_")]
 
-            with open("databases/colleges.csv", 'a', newline='') as from_colleges_csv:
+            with open("../databases/colleges.csv", 'a', newline='') as from_colleges_csv:
                 writer = csv.writer(from_colleges_csv)
 
                 writer.writerow(college_to_add)
