@@ -11,6 +11,7 @@ from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.load_information_from_database import LoadInformationFromDatabase
 
 from students.add_student import AddStudentDialog
+from students.edit_student import EditStudentDialog
 
 from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisiteDialog
 
@@ -41,6 +42,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
                                                      self.students_table_view)
 
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
+        self.edit_student_button.clicked.connect(self.open_edit_student_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.students_table_view.horizontalHeader().sectionClicked.connect(
@@ -64,6 +66,11 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         else:
             self.add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model)
             self.add_student_dialog.exec()
+
+    def open_edit_student_dialog(self):
+        self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model)
+        self.edit_student_dialog.exec()
+
 
     def adjust_horizontal_header(self):
         h_header = self.students_table_view.horizontalHeader()

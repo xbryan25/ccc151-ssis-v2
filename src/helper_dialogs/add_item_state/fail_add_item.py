@@ -5,13 +5,13 @@ from helper_dialogs.add_item_state.fail_add_item_design import Ui_Dialog as Fail
 
 
 class FailAddItemDialog(QDialog, FailAddItemUI):
-    def __init__(self, issues, type):
+    def __init__(self, issues, information_type):
         super().__init__()
 
         self.setupUi(self)
 
         self.issues = issues
-        self.type = type
+        self.information_type = information_type
 
         self.pushButton.clicked.connect(self.close_dialog)
 
@@ -31,11 +31,11 @@ class FailAddItemDialog(QDialog, FailAddItemUI):
         self.setMaximumHeight(self.height())
 
     def edit_window_title(self):
-        if self.type == "student":
+        if self.information_type == "student":
             self.setWindowTitle("Fail to add student")
-        elif self.type == "program":
+        elif self.information_type == "program":
             self.setWindowTitle("Fail to add program")
-        elif self.type == "college":
+        elif self.information_type == "college":
             self.setWindowTitle("Fail to add college")
 
     def close_dialog(self):
