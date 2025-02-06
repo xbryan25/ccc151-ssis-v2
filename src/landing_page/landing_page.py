@@ -6,32 +6,53 @@ from students.students_page import StudentsPage
 from programs.programs_page import ProgramsPage
 from colleges.colleges_page import CollegesPage
 
+from utils.load_information_from_database import LoadInformationFromDatabase
+from utils.custom_table_model import CustomTableModel
+
 
 class LandingPage(QMainWindow, LandingPageUI):
     def __init__(self):
         super().__init__()
 
         self.setupUi(self)
+
+        self.students_data = LoadInformationFromDatabase.get_students()
+        self.programs_data = LoadInformationFromDatabase.get_programs()
+        self.colleges_data = LoadInformationFromDatabase.get_colleges()
+
+        self.students_table_columns = ["ID Number", "First Name", "Last Name", "Year Level", "Gender", "Program Code"]
+        self.programs_table_columns = ["Program Code", "Program Name", "College Code"]
+        self.colleges_table_columns = ["College Code", "College Name"]
+
+        # Generate table models in landing page so that it can be accessed in different pages
+        self.students_table_model = CustomTableModel(self.students_data, self.students_table_columns, "students")
+        self.programs_table_model = CustomTableModel(self.programs_data, self.programs_table_columns, "programs")
+        self.colleges_table_model = CustomTableModel(self.colleges_data, self.colleges_table_columns, "colleges")
+
+        # ---Undo stack here---
+        # self.undo_stack = UndoStack()
+
         self.students_button.clicked.connect(self.open_students_page)
         self.programs_button.clicked.connect(self.open_programs_page)
         self.colleges_button.clicked.connect(self.open_colleges_page)
 
     def open_students_page(self):
-        self.students_page = StudentsPage(self)
+        self.students_page = StudentsPage(self, self.students_table_model)
 
         self.students_page.show()
 
         self.hide()
 
     def open_programs_page(self):
-        self.programs_page = ProgramsPage(self)
+        self.programs_page = ProgramsPage(self, self.students_table_model, self.programs_table_model)
 
         self.programs_page.show()
 
         self.hide()
 
     def open_colleges_page(self):
-        self.colleges_page = CollegesPage(self)
+        self.colleges_page = CollegesPage(self, self.students_table_model, self.programs_table_model,
+                                          self.colleges_table_model)
 
         self.colleges_page.show()
 

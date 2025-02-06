@@ -6,9 +6,7 @@ from students.students_page_design import Ui_MainWindow as StudentsPageUI
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
-from utils.custom_table_model import CustomTableModel
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
-from utils.load_information_from_database import LoadInformationFromDatabase
 
 from students.add_student import AddStudentDialog
 from students.edit_student import EditStudentDialog
@@ -17,7 +15,7 @@ from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisi
 
 
 class StudentsPage(QMainWindow, StudentsPageUI):
-    def __init__(self, main_screen):
+    def __init__(self, main_screen, students_table_model):
         super().__init__()
 
         self.setupUi(self)
@@ -26,10 +24,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.program_codes = GetInformationCodes.for_programs()
 
-        self.students_data = LoadInformationFromDatabase.get_students()
-        self.columns = ["ID Number", "First Name", "Last Name", "Year Level", "Gender", "Program Code"]
+        self.students_table_model = students_table_model
 
-        self.students_table_model = CustomTableModel(self.students_data, self.columns, "students")
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
 
         # self.sort_filter_proxy_model.setFilterKeyColumn(1)

@@ -6,9 +6,7 @@ from programs.programs_page_design import Ui_MainWindow as ProgramsPageUI
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
-from utils.custom_table_model import CustomTableModel
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
-from utils.load_information_from_database import LoadInformationFromDatabase
 
 from programs.add_program import AddProgramDialog
 from programs.edit_program import EditProgramDialog
@@ -17,7 +15,7 @@ from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisi
 
 
 class ProgramsPage(QMainWindow, ProgramsPageUI):
-    def __init__(self, main_screen):
+    def __init__(self, main_screen, students_table_model, programs_table_model):
         super().__init__()
 
         self.setupUi(self)
@@ -26,10 +24,9 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.college_codes = GetInformationCodes.for_colleges()
 
-        self.programs_data = LoadInformationFromDatabase.get_programs()
-        self.columns = ["Program Code", "Program Name", "College Code"]
+        self.students_table_model = students_table_model
+        self.programs_table_model = programs_table_model
 
-        self.programs_table_model = CustomTableModel(self.programs_data, self.columns, "programs")
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
 
         self.programs_table_view.setSortingEnabled(True)
@@ -59,7 +56,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
             self.add_program_dialog.exec()
 
     def open_edit_program_dialog(self):
-        self.edit_program_dialog = EditProgramDialog(self.programs_table_view, self.programs_table_model)
+        self.edit_program_dialog = EditProgramDialog(self.programs_table_view, self.programs_table_model,
+                                                     self.students_table_model)
         self.edit_program_dialog.exec()
 
     def adjust_horizontal_header(self):
