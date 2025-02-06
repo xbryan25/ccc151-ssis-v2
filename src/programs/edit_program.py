@@ -7,6 +7,7 @@ from programs.edit_program_design import Ui_Dialog as EditProgramUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
+from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
@@ -15,10 +16,12 @@ from utils.is_valid_edit_value import IsValidEditValue
 
 
 class EditProgramDialog(QDialog, EditProgramUI):
-    def __init__(self, programs_table_view, programs_table_model):
+    def __init__(self, programs_table_view, programs_table_model, students_table_model):
         super().__init__()
 
         self.setupUi(self)
+
+        self.students_table_model = students_table_model
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
@@ -71,22 +74,46 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
             row_to_edit = self.row_to_edit()
 
-            # Check if there are any changes made from the old data of the program
-            if self.data_from_csv[row_to_edit] != program_to_edit:
+            old_program_code = self.program_to_edit_combobox.currentText()
 
-                # By doing this, the data in the model also gets updated, same reference
-                self.data_from_csv[row_to_edit] = program_to_edit
-
-                with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
-                    writer = csv.writer(from_programs_csv)
-
-                    writer.writerows(self.data_from_csv)
-
-                self.success_edit_item_dialog = SuccessEditItemDialog("program", self)
-
-                self.success_edit_item_dialog.exec()
+            # If program code is not changed, a different confirm edit dialog will show
+            if old_program_code == program_to_edit[0]:
+                self.confirm_to_edit_dialog = ConfirmEditDialog("program",
+                                                                old_program_code)
             else:
-                print("No changes made")
+                len_of_students_under_program_code = self.len_of_students_under_program_code(old_program_code)
+
+                self.confirm_to_edit_dialog = ConfirmEditDialog("program",
+                                                                old_program_code,
+                                                                num_of_affected=len_of_students_under_program_code,
+                                                                information_code_affected=True)
+
+            # Halts the program as this starts another loop
+            self.confirm_to_edit_dialog.exec()
+
+            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+
+            if confirm_edit_decision:
+                self.edit_program_code_of_students(old_program_code, program_to_edit[0])
+
+                # Check if there are any changes made from the old data of the program
+                if self.data_from_csv[row_to_edit] != program_to_edit:
+
+                    # By doing this, the data in the model also gets updated, same reference
+                    self.data_from_csv[row_to_edit] = program_to_edit
+
+                    with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
+                        writer = csv.writer(from_programs_csv)
+
+                        writer.writerows(self.data_from_csv)
+
+                    self.success_edit_item_dialog = SuccessEditItemDialog("program", self)
+
+                    self.success_edit_item_dialog.exec()
+                else:
+                    print("No changes made")
+            else:
+                print("Cancel edit")
 
     def add_program_codes_to_combobox(self):
         for program_code in self.get_information_codes.for_programs():
@@ -125,3 +152,18 @@ class EditProgramDialog(QDialog, EditProgramUI):
             if program[0] == self.program_to_edit_combobox.currentText():
                 return self.programs_table_model.data_from_csv.index(program)
 
+    def len_of_students_under_program_code(self, old_program_code):
+        length = 0
+
+        for student in self.students_table_model.get_data():
+            if student[5] == old_program_code:
+                length += 1
+
+        print(length)
+
+        return length
+
+    def edit_program_code_of_students(self, old_program_code, new_program_code):
+        for student in self.students_table_model.get_data():
+            if student[5] == old_program_code:
+                student[5] = new_program_code

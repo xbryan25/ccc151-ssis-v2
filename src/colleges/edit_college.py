@@ -7,6 +7,7 @@ from colleges.edit_college_design import Ui_Dialog as EditCollegeUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
+from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
@@ -15,10 +16,12 @@ from utils.is_valid_edit_value import IsValidEditValue
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
-    def __init__(self, college_table_view, college_table_model):
+    def __init__(self, college_table_view, college_table_model, programs_table_model):
         super().__init__()
 
         self.setupUi(self)
+
+        self.programs_table_model = programs_table_model
 
         self.college_table_view = college_table_view
         self.college_table_model = college_table_model
@@ -68,22 +71,47 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
             row_to_edit = self.row_to_edit()
 
-            # Check if there are any changes made from the old data of the college
-            if self.data_from_csv[row_to_edit] != college_to_edit:
+            old_college_code = self.college_to_edit_combobox.currentText()
 
-                # By doing this, the data in the model also gets updated, same reference
-                self.data_from_csv[row_to_edit] = college_to_edit
 
-                with open("../databases/colleges.csv", 'w', newline='') as from_colleges_csv:
-                    writer = csv.writer(from_colleges_csv)
-
-                    writer.writerows(self.data_from_csv)
-
-                self.success_edit_item_dialog = SuccessEditItemDialog("college", self)
-
-                self.success_edit_item_dialog.exec()
+            # If college code is not changed, a different confirm edit dialog will show
+            if old_college_code == college_to_edit[0]:
+                self.confirm_to_edit_dialog = ConfirmEditDialog("college",
+                                                                old_college_code)
             else:
-                print("No changes made")
+                len_of_programs_under_college_code = self.len_of_programs_under_college_code(old_college_code)
+
+                self.confirm_to_edit_dialog = ConfirmEditDialog("college",
+                                                                old_college_code,
+                                                                num_of_affected=len_of_programs_under_college_code,
+                                                                information_code_affected=True)
+
+            # Halts the program where as this starts another loop
+            self.confirm_to_edit_dialog.exec()
+
+            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+
+            if confirm_edit_decision:
+                self.edit_college_code_of_programs(old_college_code, college_to_edit[0])
+
+                # Check if there are any changes made from the old data of the college
+                if self.data_from_csv[row_to_edit] != college_to_edit:
+
+                    # By doing this, the data in the model also gets updated, same reference
+                    self.data_from_csv[row_to_edit] = college_to_edit
+
+                    with open("../databases/colleges.csv", 'w', newline='') as from_colleges_csv:
+                        writer = csv.writer(from_colleges_csv)
+
+                        writer.writerows(self.data_from_csv)
+
+                    self.success_edit_item_dialog = SuccessEditItemDialog("college", self)
+
+                    self.success_edit_item_dialog.exec()
+                else:
+                    print("No changes made")
+            else:
+                print("Cancel edit")
 
     def add_college_codes_to_combobox(self):
         for college_code in self.get_information_codes.for_colleges():
@@ -115,3 +143,18 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             if college[0] == self.college_to_edit_combobox.currentText():
                 return self.college_table_model.data_from_csv.index(college)
 
+    def len_of_programs_under_college_code(self, old_college_code):
+        length = 0
+
+        for program in self.programs_table_model.get_data():
+            if program[2] == old_college_code:
+                length += 1
+
+        print(length)
+
+        return length
+
+    def edit_college_code_of_programs(self, old_college_code, new_college_code):
+        for program in self.programs_table_model.get_data():
+            if program[2] == old_college_code:
+                program[2] = new_college_code

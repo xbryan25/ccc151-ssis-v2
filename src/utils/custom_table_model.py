@@ -32,6 +32,10 @@ class CustomTableModel(QAbstractTableModel):
         if self.information_type == "colleges":
             self.colleges_information = GetExistingInformation.from_colleges()
 
+    def get_data(self):
+        return self.data_from_csv
+
+    # Override
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
             return self.data_from_csv[index.row()][index.column()]
@@ -39,6 +43,7 @@ class CustomTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.TextAlignmentRole:
             return Qt.AlignmentFlag.AlignCenter
 
+    # Override
     def setData(self, index, value, role):
         # Current approach, read through file, put in list, modify list, write list in file
         valid = True
@@ -76,19 +81,19 @@ class CustomTableModel(QAbstractTableModel):
                     # data_from_database[index.row()][index.column()] = value
 
                 if self.information_type == "students":
-                    with open("databases/students.csv", 'w', newline='') as from_students_csv:
+                    with open("../databases/students.csv", 'w', newline='') as from_students_csv:
                         writer = csv.writer(from_students_csv)
 
                         writer.writerows(self.data_from_csv)
 
                 elif self.information_type == "programs":
-                    with open("databases/programs.csv", 'w', newline='') as from_programs_csv:
+                    with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
                         writer = csv.writer(from_programs_csv)
 
                         writer.writerows(self.data_from_csv)
 
                 elif self.information_type == "colleges":
-                    with open("databases/colleges.csv", 'w', newline='') as from_colleges_csv:
+                    with open("../databases/colleges.csv", 'w', newline='') as from_colleges_csv:
                         writer = csv.writer(from_colleges_csv)
 
                         writer.writerows(self.data_from_csv)
@@ -100,21 +105,25 @@ class CustomTableModel(QAbstractTableModel):
 
             return True
 
+    # Override
     def rowCount(self, index=None):
         # The length of the outer list.
         return len(self.data_from_csv)
 
+    # Override
     def columnCount(self, index=None):
         if not self.data_from_csv:
             return 0
 
         return len(self.data_from_csv[0])
 
+    # Override
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
         if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
             return self.columns[section]
 
         return super().headerData(section, orientation, role)
 
+    # Override
     def flags(self, index):
         return Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled

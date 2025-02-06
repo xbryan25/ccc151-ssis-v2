@@ -7,6 +7,7 @@ from students.edit_student_design import Ui_Dialog as EditStudentUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
+from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
@@ -36,7 +37,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
         self.student_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
         self.student_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
-
 
         self.set_program_code_combobox_scrollbar()
 
@@ -82,22 +82,34 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
             row_to_edit = self.row_to_edit()
 
-            # Check if there are any changes made from the old data of the student
-            if self.data_from_csv[row_to_edit] != student_to_edit:
+            old_student_id_number = self.student_to_edit_combobox.currentText()
+            self.confirm_to_edit_dialog = ConfirmEditDialog("student",
+                                                            old_student_id_number)
 
-                # By doing this, the data in the model also gets updated, same reference
-                self.data_from_csv[row_to_edit] = student_to_edit
+            # Halts the program where as this starts another loop
+            self.confirm_to_edit_dialog.exec()
 
-                with open("../databases/students.csv", 'w', newline='') as from_students_csv:
-                    writer = csv.writer(from_students_csv)
+            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
 
-                    writer.writerows(self.data_from_csv)
+            if confirm_edit_decision:
+                # Check if there are any changes made from the old data of the student
+                if self.data_from_csv[row_to_edit] != student_to_edit:
 
-                self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
+                    # By doing this, the data in the model also gets updated, same reference
+                    self.data_from_csv[row_to_edit] = student_to_edit
 
-                self.success_edit_item_dialog.exec()
+                    with open("../databases/students.csv", 'w', newline='') as from_students_csv:
+                        writer = csv.writer(from_students_csv)
+
+                        writer.writerows(self.data_from_csv)
+
+                    self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
+
+                    self.success_edit_item_dialog.exec()
+                else:
+                    print("No changes made")
             else:
-                print("No changes made")
+                print("no changes made")
 
 
     def add_id_numbers_to_combobox(self):
