@@ -9,6 +9,7 @@ from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 
 from colleges.add_college import AddCollegeDialog
 from colleges.edit_college import EditCollegeDialog
+from colleges.delete_college import DeleteCollegeDialog
 
 from utils.reset_sorting_state import ResetSortingState
 
@@ -35,6 +36,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.add_college_button.clicked.connect(self.open_add_college_dialog)
         self.edit_college_button.clicked.connect(self.open_edit_college_dialog)
+        self.delete_college_button.clicked.connect(self.open_delete_college_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.colleges_table_view.horizontalHeader().sectionClicked.connect(
@@ -53,6 +55,11 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.edit_college_dialog = EditCollegeDialog(self.colleges_table_view, self.colleges_table_model,
                                                      self.programs_table_model)
         self.edit_college_dialog.exec()
+
+    def open_delete_college_dialog(self):
+        self.delete_college_dialog = DeleteCollegeDialog(self.colleges_table_view, self.colleges_table_model,
+                                                         self.students_table_model, self.programs_table_model)
+        self.delete_college_dialog.exec()
 
     def adjust_horizontal_header(self):
         h_header = self.colleges_table_view.horizontalHeader()

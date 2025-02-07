@@ -35,6 +35,9 @@ class CustomTableModel(QAbstractTableModel):
     def get_data(self):
         return self.data_from_csv
 
+    def set_data(self, data_from_csv):
+        self.data_from_csv = data_from_csv
+
     # Override
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
