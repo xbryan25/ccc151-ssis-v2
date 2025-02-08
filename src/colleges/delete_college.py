@@ -38,15 +38,15 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
             if college[0] == self.college_to_delete_combobox.currentText():
 
                 college_code_to_delete = self.college_to_delete_combobox.currentText()
-                len_of_programs_under_college_code = self.len_of_programs_under_college_code(college_code_to_delete)
+                quantities_under_college_code = self.len_of_programs_under_college_code(college_code_to_delete)
 
-                if len_of_programs_under_college_code == 0:
+                if quantities_under_college_code["programs"] == 0:
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("college", college_code_to_delete)
                 else:
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("college",
                                                                         college_code_to_delete,
                                                                         num_of_affected=
-                                                                        len_of_programs_under_college_code,
+                                                                        quantities_under_college_code,
                                                                         information_code_affected=True)
 
                 self.confirm_to_delete_dialog.exec()
@@ -73,13 +73,22 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
             self.delete_college_button.setEnabled(False)
 
     def len_of_programs_under_college_code(self, college_code):
-        length = 0
+        lengths = {"programs": 0, "students": 0}
 
         for program in self.programs_table_model.get_data():
             if program[2] == college_code:
-                length += 1
+                lengths["students"] += self.len_of_students_under_program_code(program[0])
 
-        print(length)
+                lengths["programs"] += 1
+
+        return lengths
+
+    def len_of_students_under_program_code(self, program_code):
+        length = 0
+
+        for student in self.students_table_model.get_data():
+            if student[5] == program_code:
+                length += 1
 
         return length
 
@@ -89,7 +98,21 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         for program in self.programs_table_model.get_data():
             if program[2] != college_code:
                 new_data_from_csv.append(program)
+            else:
+                # Delete all students in program
+                self.delete_students_who_have_program_code(program[0])
 
         self.programs_table_model.layoutAboutToBeChanged.emit()
         self.programs_table_model.set_data(new_data_from_csv)
         self.programs_table_model.layoutChanged.emit()
+
+    def delete_students_who_have_program_code(self, program_code):
+        new_data_from_csv = []
+
+        for student in self.students_table_model.get_data():
+            if student[5] != program_code:
+                new_data_from_csv.append(student)
+
+        self.students_table_model.layoutAboutToBeChanged.emit()
+        self.students_table_model.set_data(new_data_from_csv)
+        self.students_table_model.layoutChanged.emit()

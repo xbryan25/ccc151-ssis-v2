@@ -13,6 +13,7 @@ from colleges.delete_college import DeleteCollegeDialog
 
 from utils.reset_sorting_state import ResetSortingState
 
+# When a college is deleted, it should also affect students
 
 class CollegesPage(QMainWindow, CollegesPageUI):
     def __init__(self, main_screen, students_table_model, programs_table_model, colleges_table_model):

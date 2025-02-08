@@ -39,7 +39,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                 program_code_to_delete = self.program_to_delete_combobox.currentText()
                 len_of_students_under_program_code = self.len_of_students_under_program_code(program_code_to_delete)
 
-                if len_of_students_under_program_code == 0:
+                if len_of_students_under_program_code["students"] == 0:
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("program", program_code_to_delete)
                 else:
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("program",
@@ -72,11 +72,11 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
             self.delete_program_button.setEnabled(False)
 
     def len_of_students_under_program_code(self, program_code):
-        length = 0
+        length = {"students": 0}
 
         for student in self.students_table_model.get_data():
             if student[5] == program_code:
-                length += 1
+                length["students"] += 1
 
         print(length)
 
