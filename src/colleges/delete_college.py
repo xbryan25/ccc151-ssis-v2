@@ -7,7 +7,6 @@ from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteIt
 
 from utils.get_information_codes import GetInformationCodes
 
-# TODO: Finish delete college
 class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
     def __init__(self, colleges_table_view, colleges_table_model, students_table_model, programs_table_model):
         super().__init__()
