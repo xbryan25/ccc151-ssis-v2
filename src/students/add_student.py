@@ -9,6 +9,7 @@ from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
+from utils.get_connections import GetConnections
 
 import re
 import csv
@@ -26,11 +27,18 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
         self.get_existing_information = GetExistingInformation()
+        self.get_connections = GetConnections()
 
-        self.add_program_codes_to_combobox()
+        self.add_college_codes_to_combobox()
 
         self.add_student_button.clicked.connect(self.add_student_to_csv)
+
         self.set_program_code_combobox_scrollbar()
+        self.set_college_code_combobox_scrollbar()
+
+        self.program_code_combobox.currentTextChanged.connect(self.enable_add_button)
+
+        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
 
     def add_student_to_csv(self):
         students_information = self.get_existing_information.from_students()
@@ -84,11 +92,57 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.students_table_model.data_from_csv.append(student_to_add)
         self.students_table_model.layoutChanged.emit()
 
-    def add_program_codes_to_combobox(self):
+    def add_program_codes_from_a_college_to_combobox(self, college_code):
+        num_of_programs = 0
+
+        college_to_program_connections = self.get_connections.in_programs()
+
         for program_code in self.get_information_codes.for_programs():
-            self.program_code_combobox.addItem(program_code)
+            if program_code in college_to_program_connections[college_code]:
+                self.program_code_combobox.addItem(program_code)
+
+                num_of_programs += 1
+
+        if num_of_programs == 0:
+            self.reset_program_code_combobox(has_programs=False)
+
+    def add_college_codes_to_combobox(self):
+        for college_code in self.get_information_codes.for_colleges():
+            self.college_code_combobox.addItem(college_code)
 
     def set_program_code_combobox_scrollbar(self):
         self.program_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
+    def set_college_code_combobox_scrollbar(self):
+        self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
+    def filter_program_codes(self):
+        college_code = self.college_code_combobox.currentText()
+
+        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges():
+
+            self.program_code_combobox.setEnabled(True)
+            self.reset_program_code_combobox()
+
+            self.add_program_codes_from_a_college_to_combobox(college_code)
+
+        else:
+            self.program_code_combobox.setEnabled(False)
+            self.program_code_combobox.setCurrentText("")
+
+    def reset_program_code_combobox(self, has_programs=True):
+        self.program_code_combobox.clear()
+
+        if has_programs:
+            self.program_code_combobox.addItem("--Select a program--")
+        else:
+            self.program_code_combobox.addItem("--No programs available--")
+
+    def enable_add_button(self):
+        if (self.college_code_combobox.currentText() != "--Select a college--" and
+                (self.program_code_combobox.currentText() != "--Select a program--" and
+                    self.program_code_combobox.currentText() != "--No programs available--")):
+
+            self.add_student_button.setEnabled(True)
+        else:
+            self.add_student_button.setEnabled(False)
