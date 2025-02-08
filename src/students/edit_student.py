@@ -13,6 +13,7 @@ from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
 from utils.is_valid_edit_value import IsValidEditValue
+from utils.get_connections import GetConnections
 
 
 class EditStudentDialog(QDialog, EditStudentUI):
@@ -28,15 +29,21 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.is_valid = IsValidVerifiers()
         self.is_valid_edit_value = IsValidEditValue()
         self.get_information_codes = GetInformationCodes()
+        self.get_connections = GetConnections()
         self.students_information = GetExistingInformation().from_students()
 
         self.add_id_numbers_to_combobox()
         self.add_program_codes_to_combobox()
+        self.add_college_codes_to_combobox()
 
         self.edit_student_button.clicked.connect(self.edit_student_information)
 
         self.student_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
         self.student_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+
+        self.new_program_code_combobox.currentTextChanged.connect(self.enable_edit_button)
+
+        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
 
         self.set_program_code_combobox_scrollbar()
 
@@ -111,38 +118,69 @@ class EditStudentDialog(QDialog, EditStudentUI):
             else:
                 print("no changes made")
 
-
     def add_id_numbers_to_combobox(self):
         for id_number in self.get_information_codes.for_students():
-            print(id_number)
             self.student_to_edit_combobox.addItem(id_number)
 
     def add_program_codes_to_combobox(self):
         for program_code in self.get_information_codes.for_programs():
             self.new_program_code_combobox.addItem(program_code)
 
+    def add_college_codes_to_combobox(self):
+        for college_code in self.get_information_codes.for_colleges():
+            self.college_code_combobox.addItem(college_code)
+
     def set_program_code_combobox_scrollbar(self):
         self.new_program_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def enable_edit_fields(self, id_number):
-
         if id_number != "--Select ID Number--" and id_number in self.students_information["ID Number"]:
-            self.edit_student_button.setEnabled(True)
             self.new_id_number_lineedit.setEnabled(True)
             self.new_first_name_lineedit.setEnabled(True)
             self.new_last_name_lineedit.setEnabled(True)
             self.new_year_level_combobox.setEnabled(True)
             self.new_gender_combobox.setEnabled(True)
+            self.college_code_combobox.setEnabled(True)
             self.new_program_code_combobox.setEnabled(True)
 
+            # No need to check the other comboboxes
+            if self.new_year_level_combobox.currentText() == "":
+
+                # Remove "" in comboboxes
+                self.new_year_level_combobox.removeItem(0)
+                self.new_gender_combobox.removeItem(0)
+                self.college_code_combobox.setItemText(0, "--Select a college--")
+                self.new_program_code_combobox.removeItem(0)
+
         else:
-            self.edit_student_button.setEnabled(False)
+            # Add "" in comboboxes
+            self.new_year_level_combobox.insertItem(0, "")
+            self.new_gender_combobox.insertItem(0, "")
+            self.college_code_combobox.setItemText(0, "")
+            self.new_program_code_combobox.insertItem(0, "")
+
+            self.new_year_level_combobox.setCurrentIndex(0)
+            self.new_gender_combobox.setCurrentIndex(0)
+            self.college_code_combobox.setCurrentIndex(0)
+            self.new_program_code_combobox.setCurrentIndex(0)
+
+            self.new_id_number_lineedit.setPlaceholderText("")
+            self.new_first_name_lineedit.setPlaceholderText("")
+            self.new_last_name_lineedit.setPlaceholderText("")
+
             self.new_id_number_lineedit.setEnabled(False)
             self.new_first_name_lineedit.setEnabled(False)
             self.new_last_name_lineedit.setEnabled(False)
             self.new_year_level_combobox.setEnabled(False)
             self.new_gender_combobox.setEnabled(False)
+            self.college_code_combobox.setEnabled(False)
             self.new_program_code_combobox.setEnabled(False)
+
+    def enable_edit_button(self, program_code):
+        if program_code != "--Select a program--" and program_code != "":
+            self.edit_student_button.setEnabled(True)
+        else:
+            self.edit_student_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
         for student in self.students_table_model.data_from_csv:
@@ -152,6 +190,13 @@ class EditStudentDialog(QDialog, EditStudentUI):
                 self.new_last_name_lineedit.setPlaceholderText(student[2])
                 self.new_year_level_combobox.setCurrentText(student[3])
                 self.new_gender_combobox.setCurrentText(student[4])
+
+                # student[5] is the program code
+                for program_college_connection in self.get_connections.in_programs().items():
+                    if student[5] in program_college_connection[1]:
+                        self.college_code_combobox.setCurrentText(program_college_connection[0])
+                        break
+
                 self.new_program_code_combobox.setCurrentText(student[5])
 
     def row_to_edit(self):
@@ -159,3 +204,35 @@ class EditStudentDialog(QDialog, EditStudentUI):
             if student[0] == self.student_to_edit_combobox.currentText():
                 return self.students_table_model.data_from_csv.index(student)
 
+    def filter_program_codes(self):
+        college_code = self.college_code_combobox.currentText()
+
+        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges():
+            self.reset_program_code_combobox()
+            self.add_program_codes_from_a_college_to_combobox(college_code)
+
+        elif college_code != "":
+            self.reset_program_code_combobox()
+            self.add_program_codes_to_combobox()
+
+    def add_program_codes_from_a_college_to_combobox(self, college_code):
+        num_of_programs = 0
+
+        college_to_program_connections = self.get_connections.in_programs()
+
+        for program_code in self.get_information_codes.for_programs():
+            if program_code in college_to_program_connections[college_code]:
+                self.new_program_code_combobox.addItem(program_code)
+
+                num_of_programs += 1
+
+        if num_of_programs == 0:
+            self.reset_program_code_combobox(has_programs=False)
+
+    def reset_program_code_combobox(self, has_programs=True):
+        self.new_program_code_combobox.clear()
+
+        if has_programs:
+            self.new_program_code_combobox.addItem("--Select a program--")
+        else:
+            self.new_program_code_combobox.addItem("--No programs available--")

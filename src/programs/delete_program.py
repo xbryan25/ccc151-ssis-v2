@@ -123,10 +123,6 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
             self.reset_program_code_combobox()
             self.add_program_codes_to_combobox()
 
-        # else:
-        #     self.program_code_combobox.setEnabled(False)
-        #     self.program_code_combobox.setCurrentText("")
-
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
