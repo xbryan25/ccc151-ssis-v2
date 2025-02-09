@@ -7,12 +7,15 @@ from students.students_page_design import Ui_MainWindow as StudentsPageUI
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
+from utils.save_all_changes import SaveAllChanges
 
 from students.add_student import AddStudentDialog
 from students.edit_student import EditStudentDialog
 from students.delete_student import DeleteStudentDialog
 
 from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisiteDialog
+from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
+from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
 
 
 class StudentsPage(QMainWindow, StudentsPageUI):
@@ -26,11 +29,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.program_codes = GetInformationCodes.for_programs()
 
         self.students_table_model = students_table_model
-
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
-
-        # self.sort_filter_proxy_model.setFilterKeyColumn(1)
-        # self.sort_filter_proxy_model.setFilterFixedString("Bryan")
 
         self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.sort_filter_proxy_model)
@@ -41,19 +40,14 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
         self.edit_student_button.clicked.connect(self.open_edit_student_dialog)
         self.delete_student_button.clicked.connect(self.open_delete_student_dialog)
+        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.students_table_view.horizontalHeader().sectionClicked.connect(
             self.reset_sorting_state.reset_sorting_state)
 
-        # self.students_table_view.horizontalHeader().setVisible(True)
-
         self.search_input_lineedit.textChanged.connect(self.search_student_using_lineedit)
         self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
-
-        # self.students_table_model.layoutAboutToBeChanged.emit()
-        # self.students_table_model.insertRow(0)
-        # self.students_table_model.layoutChanged.emit()
 
         self.adjust_horizontal_header()
 
@@ -72,6 +66,18 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_delete_student_dialog(self):
         self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model)
         self.delete_student_dialog.exec()
+
+    def open_confirm_save_dialog(self):
+        self.confirm_save_dialog = ConfirmSaveDialog()
+        self.confirm_save_dialog.exec()
+
+        if self.confirm_save_dialog.get_confirm_edit_decision():
+            self.save_all_changes = SaveAllChanges("student", self.students_table_model.get_data())
+
+            self.save_all_changes.to_csv()
+
+            self.success_save_changes = SuccessSaveChangesDialog()
+            self.success_save_changes.exec()
 
     def adjust_horizontal_header(self):
         h_header = self.students_table_view.horizontalHeader()

@@ -6,12 +6,15 @@ from colleges.colleges_page_design import Ui_MainWindow as CollegesPageUI
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
+from utils.save_all_changes import SaveAllChanges
 
 from colleges.add_college import AddCollegeDialog
 from colleges.edit_college import EditCollegeDialog
 from colleges.delete_college import DeleteCollegeDialog
 
 from utils.reset_sorting_state import ResetSortingState
+from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
+from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
 
 
 class CollegesPage(QMainWindow, CollegesPageUI):
@@ -37,6 +40,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.add_college_button.clicked.connect(self.open_add_college_dialog)
         self.edit_college_button.clicked.connect(self.open_edit_college_dialog)
         self.delete_college_button.clicked.connect(self.open_delete_college_dialog)
+        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.colleges_table_view.horizontalHeader().sectionClicked.connect(
@@ -60,6 +64,21 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.delete_college_dialog = DeleteCollegeDialog(self.colleges_table_view, self.colleges_table_model,
                                                          self.students_table_model, self.programs_table_model)
         self.delete_college_dialog.exec()
+
+    def open_confirm_save_dialog(self):
+        self.confirm_save_dialog = ConfirmSaveDialog()
+        self.confirm_save_dialog.exec()
+
+        if self.confirm_save_dialog.get_confirm_edit_decision():
+            self.save_all_changes = SaveAllChanges("college",
+                                                   self.students_table_model.get_data(),
+                                                   self.programs_table_model.get_data(),
+                                                   self.colleges_table_model.get_data())
+
+            self.save_all_changes.to_csv()
+
+            self.success_save_changes = SuccessSaveChangesDialog()
+            self.success_save_changes.exec()
 
     def adjust_horizontal_header(self):
         h_header = self.colleges_table_view.horizontalHeader()
