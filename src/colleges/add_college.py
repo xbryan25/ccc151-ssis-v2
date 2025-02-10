@@ -54,12 +54,14 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
             college_to_add = [self.college_code_lineedit.text().upper(),
                               self.college_name_lineedit.text().replace(",", "_")]
 
-            with open("../databases/colleges.csv", 'a', newline='') as from_colleges_csv:
-                writer = csv.writer(from_colleges_csv)
-
-                writer.writerow(college_to_add)
+            # with open("../databases/colleges.csv", 'a', newline='') as from_colleges_csv:
+            #     writer = csv.writer(from_colleges_csv)
+            #
+            #     writer.writerow(college_to_add)
 
             self.add_college_to_table(college_to_add)
+
+            self.colleges_table_model.set_has_changes(True)
 
             self.success_add_item_dialog = SuccessAddItemDialog("college", self)
 

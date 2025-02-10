@@ -102,10 +102,12 @@ class EditProgramDialog(QDialog, EditProgramUI):
                     # By doing this, the data in the model also gets updated, same reference
                     self.data_from_csv[row_to_edit] = program_to_edit
 
-                    with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
-                        writer = csv.writer(from_programs_csv)
+                    self.programs_table_model.set_has_changes(True)
 
-                        writer.writerows(self.data_from_csv)
+                    # with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
+                    #     writer = csv.writer(from_programs_csv)
+                    #
+                    #     writer.writerows(self.data_from_csv)
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("program", self)
 

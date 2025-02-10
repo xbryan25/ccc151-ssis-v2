@@ -17,6 +17,8 @@ class CustomTableModel(QAbstractTableModel):
     def __init__(self, data_from_csv, columns, information_type):
         super().__init__()
 
+        self.has_changes = False
+
         self.data_from_csv = data_from_csv
         self.columns = columns
         self.information_type = information_type
@@ -37,6 +39,12 @@ class CustomTableModel(QAbstractTableModel):
 
     def set_data(self, data_from_csv):
         self.data_from_csv = data_from_csv
+
+    def set_has_changes(self, state):
+        self.has_changes = state
+
+    def get_has_changes(self):
+        return self.has_changes
 
     # Override
     def data(self, index, role):

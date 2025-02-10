@@ -46,6 +46,8 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
                     self.students_table_model.data_from_csv.remove(student)
                     self.students_table_model.layoutChanged.emit()
 
+                    self.students_table_model.set_has_changes(True)
+
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("student", self)
 
                     self.success_delete_item_dialog.exec()

@@ -105,10 +105,12 @@ class EditStudentDialog(QDialog, EditStudentUI):
                     # By doing this, the data in the model also gets updated, same reference
                     self.data_from_csv[row_to_edit] = student_to_edit
 
-                    with open("../databases/students.csv", 'w', newline='') as from_students_csv:
-                        writer = csv.writer(from_students_csv)
+                    self.students_table_model.set_has_changes(True)
 
-                        writer.writerows(self.data_from_csv)
+                    # with open("../databases/students.csv", 'w', newline='') as from_students_csv:
+                    #     writer = csv.writer(from_students_csv)
+                    #
+                    #     writer.writerows(self.data_from_csv)
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
 

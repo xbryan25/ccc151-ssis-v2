@@ -71,12 +71,12 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                          self.students_table_model)
         self.delete_program_dialog.exec()
 
-    def open_confirm_save_dialog(self):
+    def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
         self.confirm_save_dialog.exec()
 
         if self.confirm_save_dialog.get_confirm_edit_decision():
-            self.save_all_changes = SaveAllChanges("program",
+            self.save_all_changes = SaveAllChanges(save_type,
                                                    self.students_table_model.get_data(),
                                                    self.programs_table_model.get_data())
 
@@ -114,5 +114,14 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     def change_search_lineedit_placeholder(self):
         self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
 
+    def closeEvent(self, event):
 
+        if self.programs_table_model.get_has_changes():
+            self.open_confirm_save_dialog("program")
 
+        elif self.students_table_model.get_has_changes():
+            self.open_confirm_save_dialog("student")
+
+        print(event)
+
+        event.accept()

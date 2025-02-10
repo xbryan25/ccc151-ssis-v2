@@ -70,6 +70,8 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.programs_table_model.data_from_csv.remove(program)
                     self.programs_table_model.layoutChanged.emit()
 
+                    self.programs_table_model.set_has_changes(True)
+
                     self.program_to_delete_combobox.setCurrentText("--Select Program Code--")
 
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("program", self)

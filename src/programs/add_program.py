@@ -60,12 +60,14 @@ class AddProgramDialog(QDialog, AddProgramUI):
                               self.program_name_lineedit.text().replace(",", "_"),
                               self.college_code_combobox.currentText()]
 
-            with open("../databases/programs.csv", 'a', newline='') as from_programs_csv:
-                writer = csv.writer(from_programs_csv)
-
-                writer.writerow(program_to_add)
+            # with open("../databases/programs.csv", 'a', newline='') as from_programs_csv:
+            #     writer = csv.writer(from_programs_csv)
+            #
+            #     writer.writerow(program_to_add)
 
             self.add_program_to_table(program_to_add)
+
+            self.programs_table_model.set_has_changes(True)
 
             self.success_add_item_dialog = SuccessAddItemDialog("programs", self)
 

@@ -8,7 +8,10 @@ from colleges.colleges_page import CollegesPage
 
 from utils.load_information_from_database import LoadInformationFromDatabase
 from utils.custom_table_model import CustomTableModel
+from utils.save_all_changes import SaveAllChanges
 
+from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
+from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
 
 class LandingPage(QMainWindow, LandingPageUI):
     def __init__(self):
@@ -57,3 +60,30 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.colleges_page.show()
 
         self.hide()
+
+    def open_confirm_save_dialog(self, save_type):
+        self.confirm_save_dialog = ConfirmSaveDialog()
+        self.confirm_save_dialog.exec()
+
+        if self.confirm_save_dialog.get_confirm_edit_decision():
+            self.save_all_changes = SaveAllChanges(save_type, self.students_table_model.get_data())
+
+            self.save_all_changes.to_csv()
+
+            self.success_save_changes = SuccessSaveChangesDialog()
+            self.success_save_changes.exec()
+
+    def closeEvent(self, event):
+
+        if self.colleges_table_model.get_has_changes():
+            self.open_confirm_save_dialog("college")
+
+        elif self.programs_table_model.get_has_changes():
+            self.open_confirm_save_dialog("program")
+
+        elif self.students_table_model.get_has_changes():
+            self.open_confirm_save_dialog("student")
+
+        print(event)
+
+        event.accept()

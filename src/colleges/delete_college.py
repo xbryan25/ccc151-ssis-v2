@@ -59,6 +59,8 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.colleges_table_model.data_from_csv.remove(college)
                     self.colleges_table_model.layoutChanged.emit()
 
+                    self.colleges_table_model.set_has_changes(True)
+
                     self.college_to_delete_combobox.setCurrentText("--Select College Code--")
 
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("college", self)

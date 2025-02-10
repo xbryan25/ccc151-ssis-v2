@@ -21,6 +21,8 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
         self.setupUi(self)
 
+        self.has_added_student = False
+
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
 
@@ -76,12 +78,14 @@ class AddStudentDialog(QDialog, AddStudentUI):
                               self.gender_combobox.currentText(),
                               self.program_code_combobox.currentText()]
 
-            with open("../databases/students.csv", 'a', newline='') as from_students_csv:
-                writer = csv.writer(from_students_csv)
-
-                writer.writerow(student_to_add)
+            # with open("../databases/students.csv", 'a', newline='') as from_students_csv:
+            #     writer = csv.writer(from_students_csv)
+            #
+            #     writer.writerow(student_to_add)
 
             self.add_student_to_table(student_to_add)
+
+            self.students_table_model.set_has_changes(True)
 
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
 
@@ -146,3 +150,6 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.add_student_button.setEnabled(True)
         else:
             self.add_student_button.setEnabled(False)
+
+    def any_changes_made(self):
+        return self.has_added_student
