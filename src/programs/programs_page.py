@@ -53,6 +53,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.adjust_horizontal_header()
 
+        self.enable_delete_button()
+
     def open_add_program_dialog(self):
         if not self.college_codes:
             self.input_college_dialog = InputPrerequisiteDialog("college")
@@ -60,6 +62,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         else:
             self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model)
             self.add_program_dialog.exec()
+
+            self.enable_delete_button()
 
     def open_edit_program_dialog(self):
         self.edit_program_dialog = EditProgramDialog(self.programs_table_view, self.programs_table_model,
@@ -70,6 +74,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view, self.programs_table_model,
                                                          self.students_table_model)
         self.delete_program_dialog.exec()
+
+        self.enable_delete_button()
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
@@ -95,7 +101,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     def return_to_main_screen(self):
         self.main_screen.show()
 
-        self.close()
+        self.setVisible(False)
 
     def search_program_using_lineedit(self):
         search_type = self.search_type_combobox.currentIndex()
@@ -107,12 +113,17 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.sort_filter_proxy_model.setFilterRegularExpression(
             QRegularExpression('^' + self.search_input_lineedit.text(),
                                QRegularExpression.PatternOption.CaseInsensitiveOption))
-        # self.sort_filter_proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
 
         self.programs_table_model.layoutChanged.emit()
 
     def change_search_lineedit_placeholder(self):
         self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
+
+    def enable_delete_button(self):
+        if self.programs_table_model.get_data():
+            self.delete_program_button.setEnabled(True)
+        else:
+            self.delete_program_button.setEnabled(False)
 
     def closeEvent(self, event):
 

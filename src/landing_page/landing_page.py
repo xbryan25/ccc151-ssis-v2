@@ -13,6 +13,7 @@ from utils.save_all_changes import SaveAllChanges
 from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
 from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
 
+
 class LandingPage(QMainWindow, LandingPageUI):
     def __init__(self):
         super().__init__()
@@ -35,30 +36,26 @@ class LandingPage(QMainWindow, LandingPageUI):
         # ---Undo stack here---
         # self.undo_stack = UndoStack()
 
+        # Create pages
+        self.students_page = StudentsPage(self, self.students_table_model)
+        self.programs_page = ProgramsPage(self, self.students_table_model, self.programs_table_model)
+        self.colleges_page = CollegesPage(self, self.students_table_model, self.programs_table_model,
+                                          self.colleges_table_model)
+
         self.students_button.clicked.connect(self.open_students_page)
         self.programs_button.clicked.connect(self.open_programs_page)
         self.colleges_button.clicked.connect(self.open_colleges_page)
 
     def open_students_page(self):
-        self.students_page = StudentsPage(self, self.students_table_model)
-
         self.students_page.show()
-
         self.hide()
 
     def open_programs_page(self):
-        self.programs_page = ProgramsPage(self, self.students_table_model, self.programs_table_model)
-
         self.programs_page.show()
-
         self.hide()
 
     def open_colleges_page(self):
-        self.colleges_page = CollegesPage(self, self.students_table_model, self.programs_table_model,
-                                          self.colleges_table_model)
-
         self.colleges_page.show()
-
         self.hide()
 
     def open_confirm_save_dialog(self, save_type):
