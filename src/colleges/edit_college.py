@@ -16,15 +16,15 @@ from utils.is_valid_edit_value import IsValidEditValue
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
-    def __init__(self, college_table_view, college_table_model, programs_table_model):
+    def __init__(self, colleges_table_view, college_table_model, programs_table_model):
         super().__init__()
 
         self.setupUi(self)
 
         self.programs_table_model = programs_table_model
 
-        self.college_table_view = college_table_view
-        self.college_table_model = college_table_model
+        self.colleges_table_view = colleges_table_view
+        self.colleges_table_model = college_table_model
         self.data_from_csv = college_table_model.data_from_csv
 
         self.is_valid = IsValidVerifiers()
@@ -116,7 +116,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                 print("Cancel edit")
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
             self.college_to_edit_combobox.addItem(college_code)
 
     # def set_college_code_combobox_scrollbar(self):

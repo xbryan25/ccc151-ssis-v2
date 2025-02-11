@@ -17,10 +17,13 @@ from utils.get_connections import GetConnections
 
 
 class EditStudentDialog(QDialog, EditStudentUI):
-    def __init__(self, students_table_view, students_table_model):
+    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
+
+        self.programs_table_model = programs_table_model
+        self.colleges_table_model = colleges_table_model
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
@@ -121,15 +124,16 @@ class EditStudentDialog(QDialog, EditStudentUI):
                 print("no changes made")
 
     def add_id_numbers_to_combobox(self):
-        for id_number in self.get_information_codes.for_students():
+        for id_number in self.get_information_codes.for_students(self.students_table_model.get_data()):
             self.student_to_edit_combobox.addItem(id_number)
 
     def add_program_codes_to_combobox(self):
-        for program_code in self.get_information_codes.for_programs():
+        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
             self.new_program_code_combobox.addItem(program_code)
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
+
             self.college_code_combobox.addItem(college_code)
 
     def set_program_code_combobox_scrollbar(self):
@@ -194,7 +198,10 @@ class EditStudentDialog(QDialog, EditStudentUI):
                 self.new_gender_combobox.setCurrentText(student[4])
 
                 # student[5] is the program code
-                for program_college_connection in self.get_connections.in_programs().items():
+                for program_college_connection in self.get_connections.in_programs(
+                        self.programs_table_model.get_data(),
+                        self.colleges_table_model.get_data()).items():
+
                     if student[5] in program_college_connection[1]:
                         self.college_code_combobox.setCurrentText(program_college_connection[0])
                         break
@@ -209,7 +216,9 @@ class EditStudentDialog(QDialog, EditStudentUI):
     def filter_program_codes(self):
         college_code = self.college_code_combobox.currentText()
 
-        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges():
+        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges(
+                self.colleges_table_model.get_data()):
+
             self.reset_program_code_combobox()
             self.add_program_codes_from_a_college_to_combobox(college_code)
 
@@ -220,9 +229,10 @@ class EditStudentDialog(QDialog, EditStudentUI):
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
-        college_to_program_connections = self.get_connections.in_programs()
+        college_to_program_connections = self.get_connections.in_programs(self.programs_table_model.get_data(),
+                                                                          self.colleges_table_model.get_data())
 
-        for program_code in self.get_information_codes.for_programs():
+        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
             if program_code in college_to_program_connections[college_code]:
                 self.new_program_code_combobox.addItem(program_code)
 

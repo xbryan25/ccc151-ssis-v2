@@ -15,10 +15,12 @@ import csv
 
 
 class AddProgramDialog(QDialog, AddProgramUI):
-    def __init__(self, programs_table_view, programs_table_model):
+    def __init__(self, programs_table_view, programs_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
+
+        self.colleges_table_model = colleges_table_model
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
@@ -79,7 +81,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.programs_table_model.layoutChanged.emit()
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
             self.college_code_combobox.addItem(college_code)
 
     def set_college_code_combobox_scrollbar(self):

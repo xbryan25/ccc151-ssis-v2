@@ -26,7 +26,7 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
         self.student_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def add_id_numbers_to_combobox(self):
-        for id_number in self.get_information_codes.for_students():
+        for id_number in self.get_information_codes.for_students(self.students_table_model.get_data()):
             print(id_number)
             self.student_to_delete_combobox.addItem(id_number)
 
@@ -53,7 +53,9 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
                     self.success_delete_item_dialog.exec()
 
     def enable_delete_button(self):
-        if self.student_to_delete_combobox.currentText() in self.get_information_codes.for_students():
+        if self.student_to_delete_combobox.currentText() in self.get_information_codes.for_students(
+                self.students_table_model.get_data()):
+
             self.delete_student_button.setEnabled(True)
         else:
             self.delete_student_button.setEnabled(False)

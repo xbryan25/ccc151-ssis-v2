@@ -54,6 +54,8 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.enable_delete_button()
 
     def open_add_college_dialog(self):
+        self.adjust_horizontal_header()
+
         self.add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model)
         self.add_college_dialog.exec()
 

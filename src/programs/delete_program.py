@@ -9,13 +9,15 @@ from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteIt
 from utils.get_information_codes import GetInformationCodes
 from utils.get_connections import GetConnections
 
+
 class DeleteProgramDialog(QDialog, DeleteProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, students_table_model):
+    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
 
         self.students_table_model = students_table_model
+        self.colleges_table_model = colleges_table_model
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
@@ -35,11 +37,11 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.set_college_code_combobox_scrollbar()
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
             self.college_code_combobox.addItem(college_code)
 
     def add_program_codes_to_combobox(self):
-        for program_code in self.get_information_codes.for_programs():
+        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
             print(program_code)
             self.program_to_delete_combobox.addItem(program_code)
 
@@ -79,7 +81,8 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.success_delete_item_dialog.exec()
 
     def enable_delete_button(self):
-        if self.program_to_delete_combobox.currentText() in self.get_information_codes.for_programs():
+        if self.program_to_delete_combobox.currentText() in self.get_information_codes.for_programs(
+                self.programs_table_model.get_data()):
             self.delete_program_button.setEnabled(True)
         else:
             self.delete_program_button.setEnabled(False)
@@ -115,7 +118,8 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def filter_program_codes(self):
         college_code = self.college_code_combobox.currentText()
 
-        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges():
+        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges(
+                self.colleges_table_model.get_data()):
 
             # self.program_code_combobox.setEnabled(True)
             self.reset_program_code_combobox()
@@ -128,9 +132,10 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
-        college_to_program_connections = self.get_connections.in_programs()
+        college_to_program_connections = self.get_connections.in_programs(self.programs_table_model.get_data(),
+                                                                          self.colleges_table_model.get_data())
 
-        for program_code in self.get_information_codes.for_programs():
+        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
             if program_code in college_to_program_connections[college_code]:
                 self.program_to_delete_combobox.addItem(program_code)
 

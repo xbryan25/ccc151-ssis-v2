@@ -19,14 +19,17 @@ from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChang
 
 
 class StudentsPage(QMainWindow, StudentsPageUI):
-    def __init__(self, main_screen, students_table_model):
+    def __init__(self, main_screen, students_table_model, programs_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
 
         self.main_screen = main_screen
 
-        self.program_codes = GetInformationCodes.for_programs()
+        self.programs_table_model = programs_table_model
+        self.colleges_table_model = colleges_table_model
+
+        self.program_codes = GetInformationCodes.for_programs(self.programs_table_model.get_data())
 
         self.students_table_model = students_table_model
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
@@ -55,17 +58,23 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.enable_delete_button()
 
     def open_add_student_dialog(self):
+        self.adjust_horizontal_header()
+
         if not self.program_codes:
             self.input_programs_dialog = InputPrerequisiteDialog("programs")
             self.input_programs_dialog.exec()
         else:
-            self.add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model)
+            self.add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model,
+                                                       self.programs_table_model,
+                                                       self.colleges_table_model)
             self.add_student_dialog.exec()
 
             self.enable_delete_button()
 
     def open_edit_student_dialog(self):
-        self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model)
+        self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model,
+                                                     self.programs_table_model,
+                                                     self.colleges_table_model)
         self.edit_student_dialog.exec()
 
     def open_delete_student_dialog(self):

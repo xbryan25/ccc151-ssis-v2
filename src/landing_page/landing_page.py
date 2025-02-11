@@ -37,8 +37,10 @@ class LandingPage(QMainWindow, LandingPageUI):
         # self.undo_stack = UndoStack()
 
         # Create pages
-        self.students_page = StudentsPage(self, self.students_table_model)
-        self.programs_page = ProgramsPage(self, self.students_table_model, self.programs_table_model)
+        self.students_page = StudentsPage(self, self.students_table_model, self.programs_table_model,
+                                          self.colleges_table_model)
+        self.programs_page = ProgramsPage(self, self.students_table_model, self.programs_table_model,
+                                          self.colleges_table_model)
         self.colleges_page = CollegesPage(self, self.students_table_model, self.programs_table_model,
                                           self.colleges_table_model)
 

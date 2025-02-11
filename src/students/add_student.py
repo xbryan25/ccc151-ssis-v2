@@ -16,12 +16,15 @@ import csv
 
 
 class AddStudentDialog(QDialog, AddStudentUI):
-    def __init__(self, students_table_view, students_table_model):
+    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
 
         self.has_added_student = False
+
+        self.programs_table_model = programs_table_model
+        self.colleges_table_model = colleges_table_model
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
@@ -99,9 +102,10 @@ class AddStudentDialog(QDialog, AddStudentUI):
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
-        college_to_program_connections = self.get_connections.in_programs()
+        college_to_program_connections = self.get_connections.in_programs(self.programs_table_model.get_data(),
+                                                                          self.colleges_table_model.get_data())
 
-        for program_code in self.get_information_codes.for_programs():
+        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
             if program_code in college_to_program_connections[college_code]:
                 self.program_code_combobox.addItem(program_code)
 
@@ -111,7 +115,8 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.reset_program_code_combobox(has_programs=False)
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
+
             self.college_code_combobox.addItem(college_code)
 
     def set_program_code_combobox_scrollbar(self):
@@ -123,7 +128,8 @@ class AddStudentDialog(QDialog, AddStudentUI):
     def filter_program_codes(self):
         college_code = self.college_code_combobox.currentText()
 
-        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges():
+        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges(
+                self.colleges_table_model.get_data()):
 
             self.program_code_combobox.setEnabled(True)
             self.reset_program_code_combobox()

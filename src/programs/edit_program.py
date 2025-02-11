@@ -16,12 +16,13 @@ from utils.is_valid_edit_value import IsValidEditValue
 
 
 class EditProgramDialog(QDialog, EditProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, students_table_model):
+    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
 
         self.students_table_model = students_table_model
+        self.colleges_table_model = colleges_table_model
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
@@ -118,11 +119,11 @@ class EditProgramDialog(QDialog, EditProgramUI):
                 print("Cancel edit")
 
     def add_program_codes_to_combobox(self):
-        for program_code in self.get_information_codes.for_programs():
+        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
             self.program_to_edit_combobox.addItem(program_code)
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
             self.new_college_code_combobox.addItem(college_code)
 
     def set_college_code_combobox_scrollbar(self):

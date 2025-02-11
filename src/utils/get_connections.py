@@ -9,33 +9,27 @@ import csv
 class GetConnections:
 
     @staticmethod
-    def in_students():
+    def in_students(students_table_model_data, programs_table_model_data):
         program_to_student_connections = {}
 
-        for program_code in GetInformationCodes.for_programs():
+        for program_code in GetInformationCodes.for_programs(programs_table_model_data):
             program_to_student_connections.update({program_code: []})
 
-        with open("../databases/students.csv", 'r') as from_students_csv:
-            reader = csv.reader(from_students_csv)
-
-            for row in reader:
-                if row[5] in program_to_student_connections.keys():
-                    program_to_student_connections[row[5]].append(row[0])
+        for student in students_table_model_data:
+            if student[5] in program_to_student_connections.keys():
+                program_to_student_connections[student[5]].append(student[0])
 
         return program_to_student_connections
 
     @staticmethod
-    def in_programs():
+    def in_programs(programs_table_model_data, colleges_table_model_data):
         college_to_program_connections = {}
 
-        for college_code in GetInformationCodes.for_colleges():
+        for college_code in GetInformationCodes.for_colleges(colleges_table_model_data):
             college_to_program_connections.update({college_code: []})
 
-        with open("../databases/programs.csv", 'r') as from_programs_csv:
-            reader = csv.reader(from_programs_csv)
-
-            for row in reader:
-                if row[2] in college_to_program_connections.keys():
-                    college_to_program_connections[row[2]].append(row[0])
+        for program in programs_table_model_data:
+            if program[2] in college_to_program_connections.keys():
+                college_to_program_connections[program[2]].append(program[0])
 
         return college_to_program_connections

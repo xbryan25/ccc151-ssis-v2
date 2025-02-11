@@ -19,14 +19,17 @@ from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChang
 
 
 class ProgramsPage(QMainWindow, ProgramsPageUI):
-    def __init__(self, main_screen, students_table_model, programs_table_model):
+    def __init__(self, main_screen, students_table_model, programs_table_model, colleges_table_model):
         super().__init__()
 
         self.setupUi(self)
 
         self.main_screen = main_screen
 
-        self.college_codes = GetInformationCodes.for_colleges()
+        self.colleges_table_model = colleges_table_model
+        print(self.colleges_table_model)
+
+        self.college_codes = GetInformationCodes.for_colleges(self.colleges_table_model.get_data())
 
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
@@ -56,23 +59,29 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.enable_delete_button()
 
     def open_add_program_dialog(self):
+        self.adjust_horizontal_header()
+
         if not self.college_codes:
             self.input_college_dialog = InputPrerequisiteDialog("college")
             self.input_college_dialog.exec()
         else:
-            self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model)
+            self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model,
+                                                       self.colleges_table_model)
             self.add_program_dialog.exec()
 
             self.enable_delete_button()
 
+
+
     def open_edit_program_dialog(self):
         self.edit_program_dialog = EditProgramDialog(self.programs_table_view, self.programs_table_model,
-                                                     self.students_table_model)
+                                                     self.students_table_model, self.colleges_table_model)
         self.edit_program_dialog.exec()
 
     def open_delete_program_dialog(self):
         self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view, self.programs_table_model,
-                                                         self.students_table_model)
+                                                         self.students_table_model,
+                                                         self.colleges_table_model)
         self.delete_program_dialog.exec()
 
         self.enable_delete_button()

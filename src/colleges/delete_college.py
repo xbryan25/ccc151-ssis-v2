@@ -28,7 +28,7 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.college_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges():
+        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
             print(college_code)
             self.college_to_delete_combobox.addItem(college_code)
 
@@ -68,7 +68,9 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.success_delete_item_dialog.exec()
 
     def enable_delete_button(self):
-        if self.college_to_delete_combobox.currentText() in self.get_information_codes.for_colleges():
+        if self.college_to_delete_combobox.currentText() in self.get_information_codes.for_colleges(
+                self.colleges_table_model.get_data()):
+
             self.delete_college_button.setEnabled(True)
         else:
             self.delete_college_button.setEnabled(False)
