@@ -1,14 +1,12 @@
 from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel, QRegularExpression
-import csv
-
-from students.students_page_design import Ui_MainWindow as StudentsPageUI
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
 
+from students.students_page_design import Ui_MainWindow as StudentsPageUI
 from students.add_student import AddStudentDialog
 from students.edit_student import EditStudentDialog
 from students.delete_student import DeleteStudentDialog
@@ -16,6 +14,8 @@ from students.delete_student import DeleteStudentDialog
 from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisiteDialog
 from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
 from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
+
+import csv
 
 
 class StudentsPage(QMainWindow, StudentsPageUI):
@@ -29,7 +29,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
 
-        self.program_codes = GetInformationCodes.for_programs(self.programs_table_model.get_data())
+
 
         self.students_table_model = students_table_model
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
@@ -40,17 +40,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.reset_sorting_state = ResetSortingState(self.students_table_model,
                                                      self.students_table_view)
 
-        self.add_student_button.clicked.connect(self.open_add_student_dialog)
-        self.edit_student_button.clicked.connect(self.open_edit_student_dialog)
-        self.delete_student_button.clicked.connect(self.open_delete_student_dialog)
-        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
-        self.back_to_main_button.clicked.connect(self.return_to_main_screen)
-
-        self.students_table_view.horizontalHeader().sectionClicked.connect(
-            self.reset_sorting_state.reset_sorting_state)
-
-        self.search_input_lineedit.textChanged.connect(self.search_student_using_lineedit)
-        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+        self.add_signals()
 
         # Has no effect if model is empty
         self.adjust_horizontal_header()
@@ -60,7 +50,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_add_student_dialog(self):
         self.adjust_horizontal_header()
 
-        if not self.program_codes:
+        if not self.get_program_codes():
             self.input_programs_dialog = InputPrerequisiteDialog("programs")
             self.input_programs_dialog.exec()
         else:
@@ -143,3 +133,19 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         print(event)
 
         event.accept()
+
+    def add_signals(self):
+        self.add_student_button.clicked.connect(self.open_add_student_dialog)
+        self.edit_student_button.clicked.connect(self.open_edit_student_dialog)
+        self.delete_student_button.clicked.connect(self.open_delete_student_dialog)
+        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
+        self.back_to_main_button.clicked.connect(self.return_to_main_screen)
+
+        self.students_table_view.horizontalHeader().sectionClicked.connect(
+            self.reset_sorting_state.reset_sorting_state)
+
+        self.search_input_lineedit.textChanged.connect(self.search_student_using_lineedit)
+        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+
+    def get_program_codes(self):
+        return GetInformationCodes.for_programs(self.programs_table_model.get_data())

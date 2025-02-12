@@ -3,14 +3,13 @@ from PyQt6.QtCore import Qt, QRegularExpression
 import csv
 
 from colleges.colleges_page_design import Ui_MainWindow as CollegesPageUI
+from colleges.add_college import AddCollegeDialog
+from colleges.edit_college import EditCollegeDialog
+from colleges.delete_college import DeleteCollegeDialog
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
-
-from colleges.add_college import AddCollegeDialog
-from colleges.edit_college import EditCollegeDialog
-from colleges.delete_college import DeleteCollegeDialog
 
 from utils.reset_sorting_state import ResetSortingState
 from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
@@ -37,24 +36,13 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.reset_sorting_state = ResetSortingState(self.colleges_table_model,
                                                      self.colleges_table_view)
 
-        self.add_college_button.clicked.connect(self.open_add_college_dialog)
-        self.edit_college_button.clicked.connect(self.open_edit_college_dialog)
-        self.delete_college_button.clicked.connect(self.open_delete_college_dialog)
-        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
-        self.back_to_main_button.clicked.connect(self.return_to_main_screen)
-
-        self.colleges_table_view.horizontalHeader().sectionClicked.connect(
-            self.reset_sorting_state.reset_sorting_state)
-
-        self.search_input_lineedit.textChanged.connect(self.search_program_using_lineedit)
-        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
-
+        self.add_signals()
         self.adjust_horizontal_header()
-
         self.enable_delete_button()
 
     def open_add_college_dialog(self):
         self.adjust_horizontal_header()
+
 
         self.add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model)
         self.add_college_dialog.exec()
@@ -109,7 +97,6 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.sort_filter_proxy_model.setFilterRegularExpression(
             QRegularExpression('^' + self.search_input_lineedit.text(),
                                QRegularExpression.PatternOption.CaseInsensitiveOption))
-        # self.sort_filter_proxy_model.setFilterCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
 
         self.colleges_table_model.layoutChanged.emit()
 
@@ -122,8 +109,20 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         else:
             self.delete_college_button.setEnabled(False)
 
-    def closeEvent(self, event):
+    def add_signals(self):
+        self.add_college_button.clicked.connect(self.open_add_college_dialog)
+        self.edit_college_button.clicked.connect(self.open_edit_college_dialog)
+        self.delete_college_button.clicked.connect(self.open_delete_college_dialog)
+        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
+        self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
+        self.colleges_table_view.horizontalHeader().sectionClicked.connect(
+            self.reset_sorting_state.reset_sorting_state)
+
+        self.search_input_lineedit.textChanged.connect(self.search_program_using_lineedit)
+        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+
+    def closeEvent(self, event):
         if self.colleges_table_model.get_has_changes():
             self.open_confirm_save_dialog("college")
 

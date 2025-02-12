@@ -7,6 +7,7 @@ from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteIt
 
 from utils.get_information_codes import GetInformationCodes
 
+
 class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
     def __init__(self, colleges_table_view, colleges_table_model, students_table_model, programs_table_model):
         super().__init__()
@@ -23,17 +24,14 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
 
         self.add_college_codes_to_combobox()
 
-        self.delete_college_button.clicked.connect(self.delete_college_from_table)
-
-        self.college_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
+        self.add_signals()
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
-            print(college_code)
+        for college_code in self.get_college_codes():
             self.college_to_delete_combobox.addItem(college_code)
 
     def delete_college_from_table(self):
-        for college in self.colleges_table_model.data_from_csv:
+        for college in self.colleges_table_model.get_data():
             if college[0] == self.college_to_delete_combobox.currentText():
 
                 college_code_to_delete = self.college_to_delete_combobox.currentText()
@@ -64,7 +62,6 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.college_to_delete_combobox.setCurrentText("--Select College Code--")
 
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("college", self)
-
                     self.success_delete_item_dialog.exec()
 
     def enable_delete_button(self):
@@ -96,26 +93,33 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         return length
 
     def delete_programs_who_have_college_code(self, college_code):
-        new_data_from_csv = []
+        new_programs_data = []
 
         for program in self.programs_table_model.get_data():
             if program[2] != college_code:
-                new_data_from_csv.append(program)
+                new_programs_data.append(program)
             else:
                 # Delete all students in program
                 self.delete_students_who_have_program_code(program[0])
 
         self.programs_table_model.layoutAboutToBeChanged.emit()
-        self.programs_table_model.set_data(new_data_from_csv)
+        self.programs_table_model.set_data(new_programs_data)
         self.programs_table_model.layoutChanged.emit()
 
     def delete_students_who_have_program_code(self, program_code):
-        new_data_from_csv = []
+        new_students_data = []
 
         for student in self.students_table_model.get_data():
             if student[5] != program_code:
-                new_data_from_csv.append(student)
+                new_students_data.append(student)
 
         self.students_table_model.layoutAboutToBeChanged.emit()
-        self.students_table_model.set_data(new_data_from_csv)
+        self.students_table_model.set_data(new_students_data)
         self.students_table_model.layoutChanged.emit()
+
+    def add_signals(self):
+        self.delete_college_button.clicked.connect(self.delete_college_from_table)
+        self.college_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
+
+    def get_college_codes(self):
+        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())

@@ -36,39 +36,13 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
         self.add_college_codes_to_combobox()
 
-        self.add_student_button.clicked.connect(self.add_student_to_csv)
+        self.add_signals()
 
         self.set_program_code_combobox_scrollbar()
         self.set_college_code_combobox_scrollbar()
 
-        self.program_code_combobox.currentTextChanged.connect(self.enable_add_button)
-
-        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
-
     def add_student_to_csv(self):
-        students_information = self.get_existing_information.from_students()
-        issues = []
-
-        if (self.id_number_lineedit.text()).strip() == "":
-            issues.append("ID Number is blank")
-        elif not self.is_valid.id_number(self.id_number_lineedit.text()):
-            issues.append("ID Number is not in the correct format")
-        elif (self.id_number_lineedit.text()).strip() in students_information["ID Number"]:
-            issues.append("ID Number has already been taken")
-
-        if (self.first_name_lineedit.text()).strip() == "":
-            issues.append("First name is blank")
-        elif not self.is_valid.first_name(self.first_name_lineedit.text()):
-            issues.append("First name is not in the correct format")
-
-        if (self.last_name_lineedit.text()).strip() == "":
-            issues.append("Last name is blank")
-        elif not self.is_valid.last_name(self.last_name_lineedit.text()):
-            issues.append("Last name is not in the correct format")
-
-        full_name = f"{(self.first_name_lineedit.text()).strip()} {(self.last_name_lineedit.text()).strip()}"
-        if full_name in students_information["Full Name"]:
-            issues.append("Name combination already exists")
+        issues = self.find_issues()
 
         if issues:
             self.fail_add_item_dialog = FailAddItemDialog(issues, "student")
@@ -81,17 +55,12 @@ class AddStudentDialog(QDialog, AddStudentUI):
                               self.gender_combobox.currentText(),
                               self.program_code_combobox.currentText()]
 
-            # with open("../databases/students.csv", 'a', newline='') as from_students_csv:
-            #     writer = csv.writer(from_students_csv)
-            #
-            #     writer.writerow(student_to_add)
 
             self.add_student_to_table(student_to_add)
 
             self.students_table_model.set_has_changes(True)
 
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
-
             self.success_add_item_dialog.exec()
 
     def add_student_to_table(self, student_to_add):
@@ -105,7 +74,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
         college_to_program_connections = self.get_connections.in_programs(self.programs_table_model.get_data(),
                                                                           self.colleges_table_model.get_data())
 
-        for program_code in self.get_information_codes.for_programs(self.programs_table_model.get_data()):
+        for program_code in self.get_program_codes():
             if program_code in college_to_program_connections[college_code]:
                 self.program_code_combobox.addItem(program_code)
 
@@ -115,8 +84,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.reset_program_code_combobox(has_programs=False)
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
-
+        for college_code in self.get_college_codes():
             self.college_code_combobox.addItem(college_code)
 
     def set_program_code_combobox_scrollbar(self):
@@ -128,8 +96,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
     def filter_program_codes(self):
         college_code = self.college_code_combobox.currentText()
 
-        if college_code != "--Select a college--" and college_code in self.get_information_codes.for_colleges(
-                self.colleges_table_model.get_data()):
+        if college_code != "--Select a college--" and college_code in self.get_college_codes():
 
             self.program_code_combobox.setEnabled(True)
             self.reset_program_code_combobox()
@@ -157,5 +124,48 @@ class AddStudentDialog(QDialog, AddStudentUI):
         else:
             self.add_student_button.setEnabled(False)
 
-    def any_changes_made(self):
-        return self.has_added_student
+    # def any_changes_made(self):
+    #     return self.has_added_student
+
+    def find_issues(self):
+        students_information = self.get_existing_students()
+
+        issues = []
+
+        if (self.id_number_lineedit.text()).strip() == "":
+            issues.append("ID Number is blank")
+        elif not self.is_valid.id_number(self.id_number_lineedit.text()):
+            issues.append("ID Number is not in the correct format")
+        elif (self.id_number_lineedit.text()).strip() in students_information["ID Number"]:
+            issues.append("ID Number has already been taken")
+
+        if (self.first_name_lineedit.text()).strip() == "":
+            issues.append("First name is blank")
+        elif not self.is_valid.first_name(self.first_name_lineedit.text()):
+            issues.append("First name is not in the correct format")
+
+        if (self.last_name_lineedit.text()).strip() == "":
+            issues.append("Last name is blank")
+        elif not self.is_valid.last_name(self.last_name_lineedit.text()):
+            issues.append("Last name is not in the correct format")
+
+        full_name = f"{(self.first_name_lineedit.text()).strip()} {(self.last_name_lineedit.text()).strip()}"
+        if full_name in students_information["Full Name"]:
+            issues.append("Name combination already exists")
+
+        return issues
+
+    def add_signals(self):
+        self.add_student_button.clicked.connect(self.add_student_to_csv)
+
+        self.program_code_combobox.currentTextChanged.connect(self.enable_add_button)
+        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
+
+    def get_existing_students(self):
+        return self.get_existing_information.from_students(self.students_table_model.get_data())
+
+    def get_program_codes(self):
+        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
+
+    def get_college_codes(self):
+        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())

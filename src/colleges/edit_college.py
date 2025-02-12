@@ -1,8 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 
-import csv
-
 from colleges.edit_college_design import Ui_Dialog as EditCollegeUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
@@ -13,6 +11,8 @@ from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
 from utils.is_valid_edit_value import IsValidEditValue
+
+import csv
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
@@ -25,19 +25,16 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = college_table_model
-        self.data_from_csv = college_table_model.data_from_csv
+        self.data_from_csv = college_table_model.get_data()
 
         self.is_valid = IsValidVerifiers()
         self.is_valid_edit_value = IsValidEditValue()
         self.get_information_codes = GetInformationCodes()
-        self.colleges_information = GetExistingInformation().from_colleges()
+        self.colleges_information = GetExistingInformation().from_colleges(self.colleges_table_model.get_data())
 
         self.add_college_codes_to_combobox()
 
-        self.edit_college_button.clicked.connect(self.edit_college_information)
-
-        self.college_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
-        self.college_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+        self.add_signals()
 
         # self.set_college_code_combobox_scrollbar()
 
@@ -160,3 +157,9 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
         for program in self.programs_table_model.get_data():
             if program[2] == old_college_code:
                 program[2] = new_college_code
+
+    def add_signals(self):
+        self.edit_college_button.clicked.connect(self.edit_college_information)
+
+        self.college_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
+        self.college_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)

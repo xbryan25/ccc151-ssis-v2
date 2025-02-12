@@ -25,10 +25,36 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         self.is_valid = IsValidVerifiers()
         self.get_existing_information = GetExistingInformation()
 
-        self.add_college_button.clicked.connect(self.add_college_to_csv)
+        self.add_signals()
 
     def add_college_to_csv(self):
-        colleges_information = self.get_existing_information.from_colleges()
+        issues = self.find_issues()
+
+        if issues:
+            self.fail_add_item_dialog = FailAddItemDialog(issues, "college")
+            self.fail_add_item_dialog.exec()
+        else:
+            # Convert college code to all caps
+            # Convert all commas in college name to underscores because it messes up the csv
+            college_to_add = [self.college_code_lineedit.text().upper(),
+                              self.college_name_lineedit.text().replace(",", "_")]
+
+            self.add_college_to_table(college_to_add)
+
+            # Notifies the CustomTableModel instance that something had changed
+            self.colleges_table_model.set_has_changes(True)
+
+            self.success_add_item_dialog = SuccessAddItemDialog("college", self)
+            self.success_add_item_dialog.exec()
+
+    def add_college_to_table(self, college_to_add):
+        self.colleges_table_model.layoutAboutToBeChanged.emit()
+        self.colleges_table_model.data_from_csv.append(college_to_add)
+        self.colleges_table_model.layoutChanged.emit()
+
+    def find_issues(self):
+        colleges_information = self.get_existing_information.from_colleges(self.colleges_table_model.get_data())
+
         issues = []
 
         if (self.college_code_lineedit.text()).strip() == "":
@@ -45,29 +71,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         elif (self.college_name_lineedit.text()).strip() in colleges_information["College Name"]:
             issues.append("College name already exists")
 
-        if issues:
-            self.fail_add_item_dialog = FailAddItemDialog(issues, "college")
-            self.fail_add_item_dialog.exec()
-        else:
-            # Convert college code to all caps
-            # Convert all commas in college name to underscores because it messes up the csv
-            college_to_add = [self.college_code_lineedit.text().upper(),
-                              self.college_name_lineedit.text().replace(",", "_")]
+        return issues
 
-            # with open("../databases/colleges.csv", 'a', newline='') as from_colleges_csv:
-            #     writer = csv.writer(from_colleges_csv)
-            #
-            #     writer.writerow(college_to_add)
-
-            self.add_college_to_table(college_to_add)
-
-            self.colleges_table_model.set_has_changes(True)
-
-            self.success_add_item_dialog = SuccessAddItemDialog("college", self)
-
-            self.success_add_item_dialog.exec()
-
-    def add_college_to_table(self, college_to_add):
-        self.colleges_table_model.layoutAboutToBeChanged.emit()
-        self.colleges_table_model.data_from_csv.append(college_to_add)
-        self.colleges_table_model.layoutChanged.emit()
+    def add_signals(self):
+        self.add_college_button.clicked.connect(self.add_college_to_csv)

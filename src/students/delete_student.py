@@ -21,17 +21,14 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
         self.add_id_numbers_to_combobox()
 
-        self.delete_student_button.clicked.connect(self.delete_student_from_table)
-
-        self.student_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
+        self.add_signals()
 
     def add_id_numbers_to_combobox(self):
-        for id_number in self.get_information_codes.for_students(self.students_table_model.get_data()):
-            print(id_number)
+        for id_number in self.get_student_id_numbers():
             self.student_to_delete_combobox.addItem(id_number)
 
     def delete_student_from_table(self):
-        for student in self.students_table_model.data_from_csv:
+        for student in self.students_table_model.get_data():
             if student[0] == self.student_to_delete_combobox.currentText():
 
                 id_number_to_delete = self.student_to_delete_combobox.currentText()
@@ -43,19 +40,24 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
                 if confirm_delete_decision:
                     self.students_table_model.layoutAboutToBeChanged.emit()
-                    self.students_table_model.data_from_csv.remove(student)
+                    self.students_table_model.get_data().remove(student)
                     self.students_table_model.layoutChanged.emit()
 
                     self.students_table_model.set_has_changes(True)
 
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("student", self)
-
                     self.success_delete_item_dialog.exec()
 
     def enable_delete_button(self):
-        if self.student_to_delete_combobox.currentText() in self.get_information_codes.for_students(
-                self.students_table_model.get_data()):
-
+        if self.student_to_delete_combobox.currentText() in self.get_student_id_numbers():
             self.delete_student_button.setEnabled(True)
         else:
             self.delete_student_button.setEnabled(False)
+
+    def add_signals(self):
+        self.delete_student_button.clicked.connect(self.delete_student_from_table)
+        self.student_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
+
+    def get_student_id_numbers(self):
+        return self.get_information_codes.for_students(self.students_table_model.get_data())
+

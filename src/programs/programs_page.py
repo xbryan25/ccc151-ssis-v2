@@ -27,9 +27,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.main_screen = main_screen
 
         self.colleges_table_model = colleges_table_model
-        print(self.colleges_table_model)
-
-        self.college_codes = GetInformationCodes.for_colleges(self.colleges_table_model.get_data())
 
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
@@ -42,17 +39,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.reset_sorting_state = ResetSortingState(self.programs_table_model,
                                                      self.programs_table_view)
 
-        self.add_program_button.clicked.connect(self.open_add_program_dialog)
-        self.edit_program_button.clicked.connect(self.open_edit_program_dialog)
-        self.delete_program_button.clicked.connect(self.open_delete_program_dialog)
-        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
-        self.back_to_main_button.clicked.connect(self.return_to_main_screen)
-
-        self.programs_table_view.horizontalHeader().sectionClicked.connect(
-            self.reset_sorting_state.reset_sorting_state)
-
-        self.search_input_lineedit.textChanged.connect(self.search_program_using_lineedit)
-        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+        self.add_signals()
 
         self.adjust_horizontal_header()
 
@@ -61,7 +48,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     def open_add_program_dialog(self):
         self.adjust_horizontal_header()
 
-        if not self.college_codes:
+        if not self.get_college_codes():
             self.input_college_dialog = InputPrerequisiteDialog("college")
             self.input_college_dialog.exec()
         else:
@@ -71,15 +58,16 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
             self.enable_delete_button()
 
-
-
     def open_edit_program_dialog(self):
-        self.edit_program_dialog = EditProgramDialog(self.programs_table_view, self.programs_table_model,
-                                                     self.students_table_model, self.colleges_table_model)
+        self.edit_program_dialog = EditProgramDialog(self.programs_table_view,
+                                                     self.programs_table_model,
+                                                     self.students_table_model,
+                                                     self.colleges_table_model)
         self.edit_program_dialog.exec()
 
     def open_delete_program_dialog(self):
-        self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view, self.programs_table_model,
+        self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view,
+                                                         self.programs_table_model,
                                                          self.students_table_model,
                                                          self.colleges_table_model)
         self.delete_program_dialog.exec()
@@ -134,6 +122,22 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         else:
             self.delete_program_button.setEnabled(False)
 
+    def add_signals(self):
+        self.add_program_button.clicked.connect(self.open_add_program_dialog)
+        self.edit_program_button.clicked.connect(self.open_edit_program_dialog)
+        self.delete_program_button.clicked.connect(self.open_delete_program_dialog)
+        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
+        self.back_to_main_button.clicked.connect(self.return_to_main_screen)
+
+        self.programs_table_view.horizontalHeader().sectionClicked.connect(
+            self.reset_sorting_state.reset_sorting_state)
+
+        self.search_input_lineedit.textChanged.connect(self.search_program_using_lineedit)
+        self.search_type_combobox.currentIndexChanged.connect(self.change_search_lineedit_placeholder)
+
+    def get_college_codes(self):
+        return GetInformationCodes.for_colleges(self.colleges_table_model.get_data())
+
     def closeEvent(self, event):
 
         if self.programs_table_model.get_has_changes():
@@ -141,7 +145,5 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         elif self.students_table_model.get_has_changes():
             self.open_confirm_save_dialog("student")
-
-        print(event)
 
         event.accept()

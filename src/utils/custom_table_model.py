@@ -26,13 +26,13 @@ class CustomTableModel(QAbstractTableModel):
         self.is_valid_edit_value = IsValidEditValue()
 
         if self.information_type == "students":
-            self.students_information = GetExistingInformation.from_students()
+            self.students_information = GetExistingInformation.from_students(self.get_data())
 
         if self.information_type == "programs":
-            self.programs_information = GetExistingInformation.from_programs()
+            self.programs_information = GetExistingInformation.from_programs(self.get_data())
 
         if self.information_type == "colleges":
-            self.colleges_information = GetExistingInformation.from_colleges()
+            self.colleges_information = GetExistingInformation.from_colleges(self.get_data())
 
     def get_data(self):
         return self.data_from_csv
