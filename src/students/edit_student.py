@@ -12,7 +12,6 @@ from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
-from utils.is_valid_edit_value import IsValidEditValue
 from utils.get_connections import GetConnections
 
 
@@ -30,7 +29,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
         # self.data_from_csv = students_table_model.data_from_csv
 
         self.is_valid = IsValidVerifiers()
-        self.is_valid_edit_value = IsValidEditValue()
         self.get_information_codes = GetInformationCodes()
         self.get_connections = GetConnections()
         self.students_information = GetExistingInformation().from_students(self.students_table_model.get_data())

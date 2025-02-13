@@ -26,9 +26,9 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.colleges_data = LoadInformationFromDatabase.get_colleges()
 
         # Generate table models in landing page so that it can be accessed in different pages
-        self.students_table_model = CustomTableModel(self.students_data, "students")
-        self.programs_table_model = CustomTableModel(self.programs_data, "programs")
-        self.colleges_table_model = CustomTableModel(self.colleges_data, "colleges")
+        self.students_table_model = CustomTableModel(self.students_data, "student")
+        self.programs_table_model = CustomTableModel(self.programs_data, "program")
+        self.colleges_table_model = CustomTableModel(self.colleges_data, "college")
 
         # ---Undo stack here---
         # self.undo_stack = UndoStack()

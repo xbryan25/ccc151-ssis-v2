@@ -10,7 +10,6 @@ from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
-from utils.is_valid_edit_value import IsValidEditValue
 
 import csv
 
@@ -29,7 +28,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.data_from_programs_model = programs_table_model.data_from_csv
 
         self.is_valid = IsValidVerifiers()
-        self.is_valid_edit_value = IsValidEditValue()
         self.get_information_codes = GetInformationCodes()
         self.programs_information = GetExistingInformation().from_programs(self.programs_table_model.get_data())
 
