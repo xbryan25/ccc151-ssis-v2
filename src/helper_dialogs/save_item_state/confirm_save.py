@@ -11,8 +11,7 @@ class ConfirmSaveDialog(QDialog, ConfirmSaveUI):
 
         self.confirm_edit_decision = False
 
-        self.yes_button.clicked.connect(self.proceed_edit)
-        self.no_button.clicked.connect(self.close_dialog)
+        self.add_signals()
 
     def proceed_edit(self):
         self.confirm_edit_decision = True
@@ -24,3 +23,6 @@ class ConfirmSaveDialog(QDialog, ConfirmSaveUI):
     def get_confirm_edit_decision(self):
         return self.confirm_edit_decision
 
+    def add_signals(self):
+        self.yes_button.clicked.connect(self.proceed_edit)
+        self.no_button.clicked.connect(self.close_dialog)

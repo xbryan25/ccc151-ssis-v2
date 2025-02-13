@@ -17,8 +17,7 @@ class ConfirmEditDialog(QDialog, ConfirmEditUI):
         self.num_of_affected = num_of_affected
         self.information_code_affected = information_code_affected
 
-        self.yes_button.clicked.connect(self.proceed_edit)
-        self.no_button.clicked.connect(self.close_dialog)
+        self.add_signals()
 
         self.edit_label_texts()
 
@@ -55,3 +54,7 @@ class ConfirmEditDialog(QDialog, ConfirmEditUI):
 
     def get_confirm_edit_decision(self):
         return self.confirm_edit_decision
+
+    def add_signals(self):
+        self.yes_button.clicked.connect(self.proceed_edit)
+        self.no_button.clicked.connect(self.close_dialog)

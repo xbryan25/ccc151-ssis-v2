@@ -22,8 +22,7 @@ class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
 
         self.information_code_affected = information_code_affected
 
-        self.yes_button.clicked.connect(self.proceed_delete)
-        self.no_button.clicked.connect(self.close_dialog)
+        self.add_signals()
 
         self.edit_label_texts()
 
@@ -69,3 +68,7 @@ class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
 
     def get_confirm_delete_decision(self):
         return self.confirm_delete_decision
+
+    def add_signals(self):
+        self.yes_button.clicked.connect(self.proceed_delete)
+        self.no_button.clicked.connect(self.close_dialog)

@@ -20,18 +20,15 @@ class LandingPage(QMainWindow, LandingPageUI):
 
         self.setupUi(self)
 
+        # Load information from database upon entering the landing page for the first time
         self.students_data = LoadInformationFromDatabase.get_students()
         self.programs_data = LoadInformationFromDatabase.get_programs()
         self.colleges_data = LoadInformationFromDatabase.get_colleges()
 
-        self.students_table_columns = ["ID Number", "First Name", "Last Name", "Year Level", "Gender", "Program Code"]
-        self.programs_table_columns = ["Program Code", "Program Name", "College Code"]
-        self.colleges_table_columns = ["College Code", "College Name"]
-
         # Generate table models in landing page so that it can be accessed in different pages
-        self.students_table_model = CustomTableModel(self.students_data, self.students_table_columns, "students")
-        self.programs_table_model = CustomTableModel(self.programs_data, self.programs_table_columns, "programs")
-        self.colleges_table_model = CustomTableModel(self.colleges_data, self.colleges_table_columns, "colleges")
+        self.students_table_model = CustomTableModel(self.students_data, "students")
+        self.programs_table_model = CustomTableModel(self.programs_data, "programs")
+        self.colleges_table_model = CustomTableModel(self.colleges_data, "colleges")
 
         # ---Undo stack here---
         # self.undo_stack = UndoStack()
@@ -44,9 +41,7 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.colleges_page = CollegesPage(self, self.students_table_model, self.programs_table_model,
                                           self.colleges_table_model)
 
-        self.students_button.clicked.connect(self.open_students_page)
-        self.programs_button.clicked.connect(self.open_programs_page)
-        self.colleges_button.clicked.connect(self.open_colleges_page)
+        self.add_signals()
 
     def open_students_page(self):
         self.students_page.show()
@@ -72,6 +67,11 @@ class LandingPage(QMainWindow, LandingPageUI):
             self.success_save_changes = SuccessSaveChangesDialog()
             self.success_save_changes.exec()
 
+    def add_signals(self):
+        self.students_button.clicked.connect(self.open_students_page)
+        self.programs_button.clicked.connect(self.open_programs_page)
+        self.colleges_button.clicked.connect(self.open_colleges_page)
+
     def closeEvent(self, event):
 
         if self.colleges_table_model.get_has_changes():
@@ -82,7 +82,5 @@ class LandingPage(QMainWindow, LandingPageUI):
 
         elif self.students_table_model.get_has_changes():
             self.open_confirm_save_dialog("student")
-
-        print(event)
 
         event.accept()

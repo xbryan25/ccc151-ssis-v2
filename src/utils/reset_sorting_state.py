@@ -11,7 +11,6 @@ class ResetSortingState:
 
         self.prev_clicked = [None, None]
 
-        # self.table_view.horizontalHeader().setSortIndicatorClearable(True)
         self.table_view.horizontalHeader().setSortIndicatorShown(False)
 
     def reset_sorting_state(self, column_number):

@@ -23,8 +23,6 @@ class FailAddItemDialog(QDialog, FailAddItemUI):
 
         additional_space = (len(self.issues) - 1) * 15
 
-        print(issues_str)
-
         self.label_2.setText(issues_str)
 
         self.setMinimumHeight(self.height() + additional_space)

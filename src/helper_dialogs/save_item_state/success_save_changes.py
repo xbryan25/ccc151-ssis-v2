@@ -13,5 +13,4 @@ class SuccessSaveChangesDialog(QDialog, SuccessChangesItemUI):
         self.proceed_button.clicked.connect(self.close_dialog)
 
     def close_dialog(self):
-
         self.close()
