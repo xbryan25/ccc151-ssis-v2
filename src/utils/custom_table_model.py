@@ -5,6 +5,8 @@ from utils.get_existing_information import GetExistingInformation
 from utils.is_valid_edit_value_for_cell import IsValidEditValueForCell
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
+from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
+from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
 
 import operator, csv
 
@@ -49,6 +51,15 @@ class CustomTableModel(QAbstractTableModel):
     def get_has_changes(self):
         return self.has_changes
 
+    # def len_of_students_under_program_code(self, old_program_code):
+    #     length = 0
+    #
+    #     for student in self.students_table_model.get_data():
+    #         if student[5] == old_program_code:
+    #             length += 1
+    #
+    #     return length
+
     # Override
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
@@ -64,7 +75,7 @@ class CustomTableModel(QAbstractTableModel):
         issue = ""
 
         if role == Qt.ItemDataRole.EditRole:
-            old_value = self.data_from_csv[index.row()][index.column()]
+            old_value = self.get_data()[index.row()][index.column()]
 
             if self.information_type == "student":
                 self.students_information = GetExistingInformation.from_students(self.get_data())
@@ -81,6 +92,15 @@ class CustomTableModel(QAbstractTableModel):
                                                                             self.programs_information["Program Code"],
                                                                             self.programs_information["Program Name"])
 
+                # if index.column() == 0:
+                #     len_of_students_under_program_code = self.len_of_students_under_program_code(old_value)
+                #
+                #     self.confirm_to_edit_dialog = ConfirmEditDialog("program",
+                #                                                     old_value,
+                #                                                     num_of_affected=len_of_students_under_program_code,
+                #                                                     information_code_affected=True)
+
+
             elif self.information_type == "college":
                 self.colleges_information = GetExistingInformation.from_colleges(self.get_data())
 
@@ -88,36 +108,22 @@ class CustomTableModel(QAbstractTableModel):
                                                                             self.colleges_information["College Code"],
                                                                             self.colleges_information["College Name"])
 
-            if valid:
+            self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type, self.get_data()[index.row()][0])
+            self.confirm_to_edit_dialog.exec()
+
+            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+
+            if confirm_edit_decision and valid:
                 # Edit the list of lists from the model
-                if (self.information_type == "program" and index.column() == 0) or (self.information_type == "program" and index.column() == 0):
+                if (self.information_type == "program" and index.column() == 0) or (self.information_type == "college" and index.column() == 0):
                     # Edit the list of lists from the model
                     self.data_from_csv[index.row()][index.column()] = value.upper()
 
-                    # Edit the list from csv to be written
-                    # data_from_database[index.row()][index.column()] = value.upper()
-
                 else:
                     self.data_from_csv[index.row()][index.column()] = value
-                    # data_from_database[index.row()][index.column()] = value
 
-                if self.information_type == "student":
-                    with open("../databases/students.csv", 'w', newline='') as from_students_csv:
-                        writer = csv.writer(from_students_csv)
-
-                        writer.writerows(self.data_from_csv)
-
-                elif self.information_type == "program":
-                    with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
-                        writer = csv.writer(from_programs_csv)
-
-                        writer.writerows(self.data_from_csv)
-
-                elif self.information_type == "college":
-                    with open("../databases/colleges.csv", 'w', newline='') as from_colleges_csv:
-                        writer = csv.writer(from_colleges_csv)
-
-                        writer.writerows(self.data_from_csv)
+                self.success_edit_item = SuccessEditItemDialog(self.information_type)
+                self.success_edit_item.exec()
 
             else:
                 self.data_from_csv[index.row()][index.column()] = old_value
