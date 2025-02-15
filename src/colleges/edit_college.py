@@ -147,8 +147,6 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             if program[2] == old_college_code:
                 length += 1
 
-        print(length)
-
         return length
 
     def edit_college_code_of_programs(self, old_college_code, new_college_code):

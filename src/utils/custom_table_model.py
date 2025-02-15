@@ -35,9 +35,12 @@ class CustomTableModel(QAbstractTableModel):
 
         if self.information_type == "program":
             self.columns = ["Program Code", "Program Name", "College Code"]
+            self.students_data = []
 
         if self.information_type == "college":
             self.columns = ["College Code", "College Name"]
+            self.students_data = []
+            self.programs_data = []
 
     def get_data(self):
         return self.data_from_csv
@@ -51,14 +54,40 @@ class CustomTableModel(QAbstractTableModel):
     def get_has_changes(self):
         return self.has_changes
 
-    # def len_of_students_under_program_code(self, old_program_code):
-    #     length = 0
-    #
-    #     for student in self.students_table_model.get_data():
-    #         if student[5] == old_program_code:
-    #             length += 1
-    #
-    #     return length
+    def set_students_data(self, students_data):
+        self.students_data = students_data
+
+    def set_programs_data(self, programs_data):
+        self.programs_data = programs_data
+
+    def len_of_students_under_program_code(self, old_program_code):
+        length = 0
+
+        for student in self.students_data:
+            if student[5] == old_program_code:
+                length += 1
+
+        return length
+
+    def edit_program_code_of_students(self, old_program_code, new_program_code):
+        for student in self.students_data:
+            if student[5] == old_program_code:
+                student[5] = new_program_code
+
+    def len_of_programs_under_college_code(self, old_college_code):
+        length = 0
+
+        for program in self.programs_data:
+            if program[2] == old_college_code:
+                length += 1
+
+        return length
+
+    def edit_college_code_of_programs(self, old_college_code, new_college_code):
+
+        for program in self.programs_data:
+            if program[2] == old_college_code:
+                program[2] = new_college_code
 
     # Override
     def data(self, index, role):
@@ -92,15 +121,6 @@ class CustomTableModel(QAbstractTableModel):
                                                                             self.programs_information["Program Code"],
                                                                             self.programs_information["Program Name"])
 
-                # if index.column() == 0:
-                #     len_of_students_under_program_code = self.len_of_students_under_program_code(old_value)
-                #
-                #     self.confirm_to_edit_dialog = ConfirmEditDialog("program",
-                #                                                     old_value,
-                #                                                     num_of_affected=len_of_students_under_program_code,
-                #                                                     information_code_affected=True)
-
-
             elif self.information_type == "college":
                 self.colleges_information = GetExistingInformation.from_colleges(self.get_data())
 
@@ -108,22 +128,61 @@ class CustomTableModel(QAbstractTableModel):
                                                                             self.colleges_information["College Code"],
                                                                             self.colleges_information["College Name"])
 
-            self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type, self.get_data()[index.row()][0])
-            self.confirm_to_edit_dialog.exec()
+            if valid:
+                # If program code is not changed, a different confirm edit dialog will show
+                if ((self.information_type == "program" or self.information_type == "college")
+                        and index.column() == 0 and old_value == value):
 
-            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+                    self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type,
+                                                                    self.get_data()[index.row()][0])
+                elif self.information_type == "program":
+                    len_of_students_under_program_code = self.len_of_students_under_program_code(self.get_data()
+                                                                                                 [index.row()][0])
 
-            if confirm_edit_decision and valid:
-                # Edit the list of lists from the model
-                if (self.information_type == "program" and index.column() == 0) or (self.information_type == "college" and index.column() == 0):
-                    # Edit the list of lists from the model
-                    self.data_from_csv[index.row()][index.column()] = value.upper()
+                    self.confirm_to_edit_dialog = ConfirmEditDialog("program",
+                                                                    old_value,
+                                                                    num_of_affected=len_of_students_under_program_code,
+                                                                    information_code_affected=True)
 
+                elif self.information_type == "college":
+                    len_of_programs_under_college_code = self.len_of_programs_under_college_code(self.get_data()
+                                                                                                 [index.row()][0])
+
+                    self.confirm_to_edit_dialog = ConfirmEditDialog("college",
+                                                                    old_value,
+                                                                    num_of_affected=len_of_programs_under_college_code,
+                                                                    information_code_affected=True)
                 else:
-                    self.data_from_csv[index.row()][index.column()] = value
+                    self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type, self.get_data()[index.row()][0])
 
-                self.success_edit_item = SuccessEditItemDialog(self.information_type)
-                self.success_edit_item.exec()
+
+                self.confirm_to_edit_dialog.exec()
+
+                confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+
+                if confirm_edit_decision:
+                    if self.information_type == "program" and index.column() == 0:
+
+                        old_program_code = self.get_data()[index.row()][0]
+
+                        # Edit the list of lists from the model
+                        self.data_from_csv[index.row()][index.column()] = value.upper()
+
+                        self.edit_program_code_of_students(old_program_code, self.get_data()[index.row()][0])
+
+                    elif self.information_type == "college" and index.column() == 0:
+                        old_college_code = self.get_data()[index.row()][0]
+
+                        # Edit the list of lists from the model
+                        self.data_from_csv[index.row()][index.column()] = value.upper()
+
+                        self.edit_college_code_of_programs(old_college_code, self.get_data()[index.row()][0])
+
+                    else:
+                        self.data_from_csv[index.row()][index.column()] = value
+
+                    self.success_edit_item = SuccessEditItemDialog(self.information_type)
+                    self.success_edit_item.exec()
 
             else:
                 self.data_from_csv[index.row()][index.column()] = old_value
