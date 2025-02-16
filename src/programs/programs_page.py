@@ -129,7 +129,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.add_program_button.clicked.connect(self.open_add_program_dialog)
         self.edit_program_button.clicked.connect(self.open_edit_program_dialog)
         self.delete_program_button.clicked.connect(self.open_delete_program_dialog)
-        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
+        self.save_changes_button.clicked.connect(lambda: self.open_confirm_save_dialog("program"))
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.programs_table_view.horizontalHeader().sectionClicked.connect(

@@ -142,7 +142,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.add_student_button.clicked.connect(self.open_add_student_dialog)
         self.edit_student_button.clicked.connect(self.open_edit_student_dialog)
         self.delete_student_button.clicked.connect(self.open_delete_student_dialog)
-        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
+        self.save_changes_button.clicked.connect(lambda: self.open_confirm_save_dialog("student"))
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.students_table_view.horizontalHeader().sectionClicked.connect(

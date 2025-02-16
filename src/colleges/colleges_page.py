@@ -113,7 +113,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.add_college_button.clicked.connect(self.open_add_college_dialog)
         self.edit_college_button.clicked.connect(self.open_edit_college_dialog)
         self.delete_college_button.clicked.connect(self.open_delete_college_dialog)
-        self.save_changes_button.clicked.connect(self.open_confirm_save_dialog)
+        self.save_changes_button.clicked.connect(lambda: self.open_confirm_save_dialog("college"))
         self.back_to_main_button.clicked.connect(self.return_to_main_screen)
 
         self.colleges_table_view.horizontalHeader().sectionClicked.connect(
