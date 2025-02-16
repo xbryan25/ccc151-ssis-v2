@@ -9,15 +9,6 @@ class ComboboxItemDelegate(QItemDelegate):
         self.items = items
         QItemDelegate.__init__(self, parent)
 
-    # def edit_editor_choices(self):
-    #     combobox = QComboBox(self.parent)
-    #     choices = []
-    #     for item in self.items:
-    #         choices.append(item)
-    #
-    #     combobox.addItems(choices)
-    #     combobox.currentIndexChanged.connect(self.change_combobox_value)
-
     def createEditor(self, parent, option, index):
         combobox = QComboBox(parent)
         choices = []

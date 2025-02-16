@@ -54,9 +54,12 @@ class StudentsPage(QMainWindow, StudentsPageUI):
             self.input_programs_dialog = InputPrerequisiteDialog("programs")
             self.input_programs_dialog.exec()
         else:
+            # Note: self.reset_item_delegates is a function
+
             self.add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model,
                                                        self.programs_table_model,
-                                                       self.colleges_table_model)
+                                                       self.colleges_table_model,
+                                                       self.reset_item_delegates)
             self.add_student_dialog.exec()
 
             self.enable_delete_button()
@@ -64,7 +67,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_edit_student_dialog(self):
         self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model,
                                                      self.programs_table_model,
-                                                     self.colleges_table_model)
+                                                     self.colleges_table_model,
+                                                     self.reset_item_delegates)
         self.edit_student_dialog.exec()
 
     def open_delete_student_dialog(self):

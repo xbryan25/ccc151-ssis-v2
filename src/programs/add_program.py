@@ -15,10 +15,12 @@ import csv
 
 
 class AddProgramDialog(QDialog, AddProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, colleges_table_model):
+    def __init__(self, programs_table_view, programs_table_model, colleges_table_model, reset_item_delegates_func):
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.colleges_table_model = colleges_table_model
 
@@ -51,6 +53,8 @@ class AddProgramDialog(QDialog, AddProgramUI):
             self.add_program_to_table(program_to_add)
 
             self.programs_table_model.set_has_changes(True)
+
+            self.reset_item_delegates_func()
 
             self.success_add_item_dialog = SuccessAddItemDialog("programs", self)
             self.success_add_item_dialog.exec()

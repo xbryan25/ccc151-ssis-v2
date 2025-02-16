@@ -16,10 +16,13 @@ import csv
 
 
 class AddStudentDialog(QDialog, AddStudentUI):
-    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model):
+    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model,
+                 reset_item_delegates_func):
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.has_added_student = False
 
@@ -59,6 +62,8 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.add_student_to_table(student_to_add)
 
             self.students_table_model.set_has_changes(True)
+
+            self.reset_item_delegates_func()
 
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
             self.success_add_item_dialog.exec()

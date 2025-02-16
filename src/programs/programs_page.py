@@ -8,6 +8,7 @@ from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
+from utils.combobox_item_delegate import ComboboxItemDelegate
 
 from programs.add_program import AddProgramDialog
 from programs.edit_program import EditProgramDialog
@@ -52,8 +53,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
             self.input_college_dialog = InputPrerequisiteDialog("college")
             self.input_college_dialog.exec()
         else:
+            # Note: self.reset_item_delegates is a function
+
             self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model,
-                                                       self.colleges_table_model)
+                                                       self.colleges_table_model, self.reset_item_delegates)
             self.add_program_dialog.exec()
 
             self.enable_delete_button()
@@ -147,3 +150,23 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
             self.open_confirm_save_dialog("student")
 
         event.accept()
+
+    def load_item_delegates_college_codes(self):
+        # For College Codes
+
+        combobox_item_delegate = ComboboxItemDelegate(self, self.get_college_codes())
+        # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+
+        self.programs_table_view.setItemDelegateForColumn(2, combobox_item_delegate)
+
+        for row in range(0, self.sort_filter_proxy_model.rowCount()):
+            self.programs_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 2))
+
+# Dynamic change of combobox
+# https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
+
+    def reset_item_delegates(self):
+        self.sort_filter_proxy_model.beginResetModel()
+        self.sort_filter_proxy_model.endResetModel()
+
+        self.load_item_delegates_college_codes()

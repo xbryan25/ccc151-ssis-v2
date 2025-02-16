@@ -135,7 +135,8 @@ class CustomTableModel(QAbstractTableModel):
 
                     self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type,
                                                                     self.get_data()[index.row()][0])
-                elif self.information_type == "program":
+
+                elif self.information_type == "program" and index.column() == 0  and old_value != value:
                     len_of_students_under_program_code = self.len_of_students_under_program_code(self.get_data()
                                                                                                  [index.row()][0])
 
@@ -144,7 +145,7 @@ class CustomTableModel(QAbstractTableModel):
                                                                     num_of_affected=len_of_students_under_program_code,
                                                                     information_code_affected=True)
 
-                elif self.information_type == "college":
+                elif self.information_type == "college" and index.column() == 0 and old_value != value:
                     len_of_programs_under_college_code = self.len_of_programs_under_college_code(self.get_data()
                                                                                                  [index.row()][0])
 

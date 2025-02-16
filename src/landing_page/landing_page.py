@@ -56,6 +56,7 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.hide()
 
     def open_programs_page(self):
+        self.programs_page.reset_item_delegates()
         self.programs_page.show()
         self.hide()
 

@@ -16,10 +16,14 @@ from utils.get_connections import GetConnections
 
 
 class EditStudentDialog(QDialog, EditStudentUI):
-    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model):
+    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model,
+                 reset_item_delegates_func):
+
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
@@ -85,6 +89,8 @@ class EditStudentDialog(QDialog, EditStudentUI):
                     self.students_table_model.get_data()[row_to_edit] = student_to_edit
 
                     self.students_table_model.set_has_changes(True)
+
+                    self.reset_item_delegates_func()
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
                     self.success_edit_item_dialog.exec()
