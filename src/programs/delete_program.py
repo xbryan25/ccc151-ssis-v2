@@ -8,18 +8,19 @@ from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteIt
 
 from utils.get_information_codes import GetInformationCodes
 from utils.get_connections import GetConnections
+from utils.adjust_horizontal_header import AdjustHorizontalHeader
 
 
 class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model,
-                 reset_item_delegates_func, adjust_horizontal_header_func):
+                 reset_item_delegates_func, horizontal_header):
 
         super().__init__()
 
         self.setupUi(self)
 
         self.reset_item_delegates_func = reset_item_delegates_func
-        self.adjust_horizontal_header_func = adjust_horizontal_header_func
+        self.horizontal_header = horizontal_header
 
         self.students_table_model = students_table_model
         self.colleges_table_model = colleges_table_model
@@ -80,7 +81,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.programs_table_model.model_data_is_empty()
 
                     self.reset_item_delegates_func()
-                    self.adjust_horizontal_header_func()
+                    AdjustHorizontalHeader.for_programs_table_view(self.horizontal_header)
 
                     self.programs_table_model.set_has_changes(True)
 

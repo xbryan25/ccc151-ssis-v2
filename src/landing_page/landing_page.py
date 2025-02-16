@@ -9,6 +9,7 @@ from colleges.colleges_page import CollegesPage
 from utils.load_information_from_database import LoadInformationFromDatabase
 from utils.custom_table_model import CustomTableModel
 from utils.save_all_changes import SaveAllChanges
+from utils.adjust_horizontal_header import AdjustHorizontalHeader
 
 from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
 from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
@@ -19,6 +20,8 @@ class LandingPage(QMainWindow, LandingPageUI):
         super().__init__()
 
         self.setupUi(self)
+
+        self.adjust_horizontal_header = AdjustHorizontalHeader()
 
         # Load information from database upon entering the landing page for the first time
         self.students_data = LoadInformationFromDatabase.get_students()
@@ -50,17 +53,25 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.add_signals()
 
     def open_students_page(self):
+        self.adjust_horizontal_header.for_students_table_view(self.students_page.horizontal_header)
+
         self.students_page.reset_item_delegates()
+
         self.students_page.show()
 
         self.hide()
 
     def open_programs_page(self):
+        self.adjust_horizontal_header.for_programs_table_view(self.programs_page.horizontal_header)
+
         self.programs_page.reset_item_delegates()
+
         self.programs_page.show()
+
         self.hide()
 
     def open_colleges_page(self):
+        self.adjust_horizontal_header.for_colleges_table_view(self.colleges_page.horizontal_header)
         self.colleges_page.show()
         self.hide()
 

@@ -37,18 +37,16 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.sort_filter_proxy_model)
 
+        self.horizontal_header = self.students_table_view.horizontalHeader()
+
         self.reset_sorting_state = ResetSortingState(self.students_table_model,
                                                      self.students_table_view)
 
         self.add_signals()
 
-        # Has no effect if model is empty
-        self.adjust_horizontal_header()
-
         self.enable_delete_button()
 
     def open_add_student_dialog(self):
-        self.adjust_horizontal_header()
 
         if self.programs_table_model.get_data()[0][0] != "":
             # Note: self.reset_item_delegates is a function
@@ -79,11 +77,11 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_delete_student_dialog(self):
 
         if self.students_table_model.get_data()[0][0] != "":
-            self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model,
-                                                             self.reset_item_delegates, self.adjust_horizontal_header)
-            self.delete_student_dialog.exec()
+            # Pass tableview here, and just import adjust horizontal header
 
-            self.adjust_horizontal_header()
+            self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model,
+                                                             self.reset_item_delegates, self.horizontal_header)
+            self.delete_student_dialog.exec()
 
             self.enable_delete_button()
         else:
@@ -100,20 +98,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
             self.success_save_changes = SuccessSaveChangesDialog()
             self.success_save_changes.exec()
-
-    def adjust_horizontal_header(self):
-        h_header = self.students_table_view.horizontalHeader()
-
-        # self.students_table_view.setColumnHidden(0, True)
-
-        h_header.resizeSection(0, 90)
-        h_header.resizeSection(1, 220)
-        h_header.resizeSection(2, 220)
-        h_header.resizeSection(3, 90)
-        h_header.resizeSection(4, 120)
-        h_header.resizeSection(5, 100)
-
-        h_header.setVisible(True)
 
     def return_to_main_screen(self):
         self.main_screen.show()

@@ -33,11 +33,12 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         self.colleges_table_view.setSortingEnabled(True)
         self.colleges_table_view.setModel(self.sort_filter_proxy_model)
 
+        self.horizontal_header = self.colleges_table_view.horizontalHeader()
+
         self.reset_sorting_state = ResetSortingState(self.colleges_table_model,
                                                      self.colleges_table_view)
 
         self.add_signals()
-        self.adjust_horizontal_header()
         self.enable_delete_button()
 
     def open_add_college_dialog(self):
@@ -61,7 +62,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
         if self.colleges_table_model.get_data()[0][0] != "":
             self.delete_college_dialog = DeleteCollegeDialog(self.colleges_table_view, self.colleges_table_model,
                                                              self.students_table_model, self.programs_table_model,
-                                                             self.reset_item_delegates, self.adjust_horizontal_header)
+                                                             self.reset_item_delegates, self.horizontal_header)
 
             self.delete_college_dialog.exec()
 
@@ -83,12 +84,6 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
             self.success_save_changes = SuccessSaveChangesDialog()
             self.success_save_changes.exec()
-
-    def adjust_horizontal_header(self):
-        h_header = self.colleges_table_view.horizontalHeader()
-
-        h_header.resizeSection(0, 100)
-        h_header.resizeSection(1, 580)
 
     def return_to_main_screen(self):
         self.main_screen.show()

@@ -6,18 +6,19 @@ from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
 from utils.get_information_codes import GetInformationCodes
+from utils.adjust_horizontal_header import AdjustHorizontalHeader
 
 
 class DeleteStudentDialog(QDialog, DeleteStudentUI):
     def __init__(self, students_table_view, students_table_model, reset_item_delegates_func,
-                 adjust_horizontal_header_func):
+                 horizontal_header):
 
         super().__init__()
 
         self.setupUi(self)
 
         self.reset_item_delegates_func = reset_item_delegates_func
-        self.adjust_horizontal_header_func = adjust_horizontal_header_func
+        self.horizontal_header = horizontal_header
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
@@ -53,7 +54,7 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
                     self.students_table_model.model_data_is_empty()
 
                     self.reset_item_delegates_func()
-                    self.adjust_horizontal_header_func()
+                    AdjustHorizontalHeader.for_students_table_view(self.horizontal_header)
 
                     self.students_table_model.set_has_changes(True)
 

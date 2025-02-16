@@ -37,17 +37,16 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.programs_table_view.setSortingEnabled(True)
         self.programs_table_view.setModel(self.sort_filter_proxy_model)
 
+        self.horizontal_header = self.programs_table_view.horizontalHeader()
+
         self.reset_sorting_state = ResetSortingState(self.programs_table_model,
                                                      self.programs_table_view)
 
         self.add_signals()
 
-        self.adjust_horizontal_header()
-
         self.enable_delete_button()
 
     def open_add_program_dialog(self):
-        self.adjust_horizontal_header()
 
         if self.colleges_table_model.get_data()[0][0] != "":
             # Note: self.reset_item_delegates is a function
@@ -81,7 +80,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                              self.students_table_model,
                                                              self.colleges_table_model,
                                                              self.reset_item_delegates,
-                                                             self.adjust_horizontal_header)
+                                                             self.horizontal_header)
             self.delete_program_dialog.exec()
 
             self.enable_delete_button()
@@ -101,13 +100,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
             self.success_save_changes = SuccessSaveChangesDialog()
             self.success_save_changes.exec()
-
-    def adjust_horizontal_header(self):
-        h_header = self.programs_table_view.horizontalHeader()
-
-        h_header.resizeSection(0, 110)
-        h_header.resizeSection(1, 460)
-        h_header.resizeSection(2, 110)
 
     def return_to_main_screen(self):
         self.main_screen.show()
@@ -177,8 +169,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
             for row in range(0, self.sort_filter_proxy_model.rowCount()):
                 self.programs_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 2))
 
-# Dynamic change of combobox
-# https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
+    # Dynamic change of combobox
+    # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
 
     def reset_item_delegates(self):
         self.sort_filter_proxy_model.beginResetModel()
