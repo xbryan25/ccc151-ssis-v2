@@ -1,10 +1,12 @@
 from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
 from PyQt6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel, QRegularExpression
+from PyQt6.QtGui import QCursor
 
 from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
+from utils.combobox_item_delegate import ComboboxItemDelegate
 
 from students.students_page_design import Ui_MainWindow as StudentsPageUI
 from students.add_student import AddStudentDialog
@@ -28,8 +30,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
-
-
 
         self.students_table_model = students_table_model
         self.sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
@@ -149,3 +149,40 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
     def get_program_codes(self):
         return GetInformationCodes.for_programs(self.programs_table_model.get_data())
+
+    def load_item_delegates_year_and_gender(self):
+
+        # For Year Level
+        self.students_table_view.setItemDelegateForColumn(3, ComboboxItemDelegate(self, ["1st", "2nd", "3rd",
+                                                                                         "4th", "5th"]))
+        for row in range(0, self.sort_filter_proxy_model.rowCount()):
+            self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 3))
+
+        # For Gender
+        self.students_table_view.setItemDelegateForColumn(4, ComboboxItemDelegate(self, ["Male", "Female", "Others",
+                                                                                         "Prefer not to say"]))
+
+        for row in range(0, self.sort_filter_proxy_model.rowCount()):
+            self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 4))
+
+
+    def load_item_delegates_program_codes(self):
+        # For Program Codes
+
+        combobox_item_delegate = ComboboxItemDelegate(self, self.get_program_codes())
+        # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+
+        self.students_table_view.setItemDelegateForColumn(5, combobox_item_delegate)
+
+        for row in range(0, self.sort_filter_proxy_model.rowCount()):
+            self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 5))
+
+# Dynamic change of combobox
+# https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
+
+    def reset_item_delegates(self):
+        self.sort_filter_proxy_model.beginResetModel()
+        self.sort_filter_proxy_model.endResetModel()
+
+        self.load_item_delegates_program_codes()
+        self.load_item_delegates_year_and_gender()

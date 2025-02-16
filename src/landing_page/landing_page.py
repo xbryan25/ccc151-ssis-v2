@@ -50,7 +50,9 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.add_signals()
 
     def open_students_page(self):
+        self.students_page.reset_item_delegates()
         self.students_page.show()
+
         self.hide()
 
     def open_programs_page(self):
