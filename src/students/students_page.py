@@ -7,6 +7,7 @@ from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
 from utils.combobox_item_delegate import ComboboxItemDelegate
+from utils.enable_edit_and_delete_buttons import EnableEditAndDeleteButtons
 
 from students.students_page_design import Ui_MainWindow as StudentsPageUI
 from students.add_student import AddStudentDialog
@@ -44,7 +45,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.add_signals()
 
-        self.enable_delete_button()
+        EnableEditAndDeleteButtons.enable_button(self.delete_student_button, self.students_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_student_button, self.students_table_model)
 
     def open_add_student_dialog(self):
 
@@ -57,35 +59,31 @@ class StudentsPage(QMainWindow, StudentsPageUI):
                                                        self.reset_item_delegates)
             self.add_student_dialog.exec()
 
-            self.enable_delete_button()
+            EnableEditAndDeleteButtons.enable_button(self.delete_student_button, self.students_table_model)
+            EnableEditAndDeleteButtons.enable_button(self.edit_student_button, self.students_table_model)
 
         else:
             self.input_programs_dialog = InputPrerequisiteDialog("programs")
             self.input_programs_dialog.exec()
 
     def open_edit_student_dialog(self):
-
-        if self.students_table_model.get_data()[0][0] != "":
-            self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model,
-                                                         self.programs_table_model,
-                                                         self.colleges_table_model,
-                                                         self.reset_item_delegates)
-            self.edit_student_dialog.exec()
-        else:
-            print("No student to edit, dialog to be added...")
+        self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model,
+                                                     self.programs_table_model,
+                                                     self.colleges_table_model,
+                                                     self.reset_item_delegates)
+        self.edit_student_dialog.exec()
 
     def open_delete_student_dialog(self):
+        # Pass tableview here, and just import adjust horizontal header
 
-        if self.students_table_model.get_data()[0][0] != "":
-            # Pass tableview here, and just import adjust horizontal header
+        self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model,
+                                                         self.reset_item_delegates, self.horizontal_header)
+        self.delete_student_dialog.exec()
 
-            self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model,
-                                                             self.reset_item_delegates, self.horizontal_header)
-            self.delete_student_dialog.exec()
+        EnableEditAndDeleteButtons.enable_button(self.delete_student_button, self.students_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_student_button, self.students_table_model)
 
-            self.enable_delete_button()
-        else:
-            print("No student to delete, dialog to be added...")
+        print("No student to delete, dialog to be added...")
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
@@ -119,12 +117,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
     def change_search_lineedit_placeholder(self):
         self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
-
-    def enable_delete_button(self):
-        if self.students_table_model.get_data():
-            self.delete_student_button.setEnabled(True)
-        else:
-            self.delete_student_button.setEnabled(False)
 
     def closeEvent(self, event):
         if self.students_table_model.get_has_changes():

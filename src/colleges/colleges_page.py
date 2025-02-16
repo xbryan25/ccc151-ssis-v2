@@ -11,6 +11,7 @@ from utils.reset_sorting_state import ResetSortingState
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
 from utils.reset_sorting_state import ResetSortingState
+from utils.enable_edit_and_delete_buttons import EnableEditAndDeleteButtons
 
 from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
 from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
@@ -39,36 +40,32 @@ class CollegesPage(QMainWindow, CollegesPageUI):
                                                      self.colleges_table_view)
 
         self.add_signals()
-        self.enable_delete_button()
+
+        EnableEditAndDeleteButtons.enable_button(self.delete_college_button, self.colleges_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_college_button, self.colleges_table_model)
 
     def open_add_college_dialog(self):
 
         self.add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model)
         self.add_college_dialog.exec()
 
-        self.enable_delete_button()
+        EnableEditAndDeleteButtons.enable_button(self.delete_college_button, self.colleges_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_college_button, self.colleges_table_model)
 
     def open_edit_college_dialog(self):
-
-        if self.colleges_table_model.get_data()[0][0] != "":
-            self.edit_college_dialog = EditCollegeDialog(self.colleges_table_view, self.colleges_table_model,
-                                                         self.programs_table_model)
-            self.edit_college_dialog.exec()
-        else:
-            print("No college to delete, dialog to be added...")
+        self.edit_college_dialog = EditCollegeDialog(self.colleges_table_view, self.colleges_table_model,
+                                                     self.programs_table_model)
+        self.edit_college_dialog.exec()
 
     def open_delete_college_dialog(self):
+        self.delete_college_dialog = DeleteCollegeDialog(self.colleges_table_view, self.colleges_table_model,
+                                                         self.students_table_model, self.programs_table_model,
+                                                         self.reset_item_delegates, self.horizontal_header)
 
-        if self.colleges_table_model.get_data()[0][0] != "":
-            self.delete_college_dialog = DeleteCollegeDialog(self.colleges_table_view, self.colleges_table_model,
-                                                             self.students_table_model, self.programs_table_model,
-                                                             self.reset_item_delegates, self.horizontal_header)
+        self.delete_college_dialog.exec()
 
-            self.delete_college_dialog.exec()
-
-            self.enable_delete_button()
-        else:
-            print("No college to delete, dialog to be added...")
+        EnableEditAndDeleteButtons.enable_button(self.delete_college_button, self.colleges_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_college_button, self.colleges_table_model)
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
@@ -105,12 +102,6 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
     def change_search_lineedit_placeholder(self):
         self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
-
-    def enable_delete_button(self):
-        if self.colleges_table_model.get_data():
-            self.delete_college_button.setEnabled(True)
-        else:
-            self.delete_college_button.setEnabled(False)
 
     def add_signals(self):
         self.add_college_button.clicked.connect(self.open_add_college_dialog)

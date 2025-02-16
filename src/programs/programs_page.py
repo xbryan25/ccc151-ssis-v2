@@ -9,6 +9,7 @@ from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
 from utils.combobox_item_delegate import ComboboxItemDelegate
+from utils.enable_edit_and_delete_buttons import EnableEditAndDeleteButtons
 
 from programs.add_program import AddProgramDialog
 from programs.edit_program import EditProgramDialog
@@ -44,7 +45,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.add_signals()
 
-        self.enable_delete_button()
+        EnableEditAndDeleteButtons.enable_button(self.delete_program_button, self.programs_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_program_button, self.programs_table_model)
 
     def open_add_program_dialog(self):
 
@@ -55,7 +57,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                        self.colleges_table_model, self.reset_item_delegates)
             self.add_program_dialog.exec()
 
-            self.enable_delete_button()
+            EnableEditAndDeleteButtons.enable_button(self.delete_program_button, self.programs_table_model)
+            EnableEditAndDeleteButtons.enable_button(self.edit_program_button, self.programs_table_model)
 
         else:
             self.input_college_dialog = InputPrerequisiteDialog("college")
@@ -63,29 +66,24 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
 
     def open_edit_program_dialog(self):
-        if self.programs_table_model.get_data()[0][0] != "":
-            self.edit_program_dialog = EditProgramDialog(self.programs_table_view,
-                                                         self.programs_table_model,
-                                                         self.students_table_model,
-                                                         self.colleges_table_model)
-            self.edit_program_dialog.exec()
-        else:
-            print("No program to edit, dialog to be added...")
+        self.edit_program_dialog = EditProgramDialog(self.programs_table_view,
+                                                     self.programs_table_model,
+                                                     self.students_table_model,
+                                                     self.colleges_table_model)
+        self.edit_program_dialog.exec()
 
     def open_delete_program_dialog(self):
+        self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view,
+                                                         self.programs_table_model,
+                                                         self.students_table_model,
+                                                         self.colleges_table_model,
+                                                         self.reset_item_delegates,
+                                                         self.horizontal_header)
+        self.delete_program_dialog.exec()
 
-        if self.programs_table_model.get_data()[0][0] != "":
-            self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view,
-                                                             self.programs_table_model,
-                                                             self.students_table_model,
-                                                             self.colleges_table_model,
-                                                             self.reset_item_delegates,
-                                                             self.horizontal_header)
-            self.delete_program_dialog.exec()
+        EnableEditAndDeleteButtons.enable_button(self.delete_program_button, self.programs_table_model)
+        EnableEditAndDeleteButtons.enable_button(self.edit_program_button, self.programs_table_model)
 
-            self.enable_delete_button()
-        else:
-            print("No program to delete, dialog to be added...")
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
@@ -121,12 +119,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
     def change_search_lineedit_placeholder(self):
         self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
-
-    def enable_delete_button(self):
-        if self.programs_table_model.get_data():
-            self.delete_program_button.setEnabled(True)
-        else:
-            self.delete_program_button.setEnabled(False)
 
     def add_signals(self):
         self.add_program_button.clicked.connect(self.open_add_program_dialog)
