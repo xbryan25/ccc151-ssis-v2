@@ -50,10 +50,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_add_student_dialog(self):
         self.adjust_horizontal_header()
 
-        if not self.get_program_codes():
-            self.input_programs_dialog = InputPrerequisiteDialog("programs")
-            self.input_programs_dialog.exec()
-        else:
+        if self.programs_table_model.get_data()[0][0] != "":
             # Note: self.reset_item_delegates is a function
 
             self.add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model,
@@ -64,18 +61,33 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
             self.enable_delete_button()
 
+        else:
+            self.input_programs_dialog = InputPrerequisiteDialog("programs")
+            self.input_programs_dialog.exec()
+
     def open_edit_student_dialog(self):
-        self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model,
-                                                     self.programs_table_model,
-                                                     self.colleges_table_model,
-                                                     self.reset_item_delegates)
-        self.edit_student_dialog.exec()
+
+        if self.students_table_model.get_data()[0][0] != "":
+            self.edit_student_dialog = EditStudentDialog(self.students_table_view, self.students_table_model,
+                                                         self.programs_table_model,
+                                                         self.colleges_table_model,
+                                                         self.reset_item_delegates)
+            self.edit_student_dialog.exec()
+        else:
+            print("No student to edit, dialog to be added...")
 
     def open_delete_student_dialog(self):
-        self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model)
-        self.delete_student_dialog.exec()
 
-        self.enable_delete_button()
+        if self.students_table_model.get_data()[0][0] != "":
+            self.delete_student_dialog = DeleteStudentDialog(self.students_table_view, self.students_table_model,
+                                                             self.reset_item_delegates, self.adjust_horizontal_header)
+            self.delete_student_dialog.exec()
+
+            self.adjust_horizontal_header()
+
+            self.enable_delete_button()
+        else:
+            print("No student to delete, dialog to be added...")
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
@@ -156,33 +168,39 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
     def load_item_delegates_year_and_gender(self):
 
-        # For Year Level
-        self.students_table_view.setItemDelegateForColumn(3, ComboboxItemDelegate(self, ["1st", "2nd", "3rd",
-                                                                                         "4th", "5th"]))
-        for row in range(0, self.sort_filter_proxy_model.rowCount()):
-            self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 3))
+        # Check if self.students_table_model is empty, if so, disable combobox item delegate
 
-        # For Gender
-        self.students_table_view.setItemDelegateForColumn(4, ComboboxItemDelegate(self, ["Male", "Female", "Others",
-                                                                                         "Prefer not to say"]))
+        if self.students_table_model.get_data()[0][3] != "" and self.students_table_model.get_data()[0][4] != "":
+            # For Year Level
+            self.students_table_view.setItemDelegateForColumn(3, ComboboxItemDelegate(self, ["1st", "2nd", "3rd",
+                                                                                             "4th", "5th"]))
+            for row in range(0, self.sort_filter_proxy_model.rowCount()):
+                self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 3))
 
-        for row in range(0, self.sort_filter_proxy_model.rowCount()):
-            self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 4))
+            # For Gender
+            self.students_table_view.setItemDelegateForColumn(4, ComboboxItemDelegate(self, ["Male", "Female", "Others",
+                                                                                             "Prefer not to say"]))
+
+            for row in range(0, self.sort_filter_proxy_model.rowCount()):
+                self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 4))
 
 
     def load_item_delegates_program_codes(self):
-        # For Program Codes
+        # Check if self.students_table_model is empty, if so, disable combobox item delegate
 
-        combobox_item_delegate = ComboboxItemDelegate(self, self.get_program_codes())
-        # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        if self.students_table_model.get_data()[0][5] != "":
+            # For Program Codes
 
-        self.students_table_view.setItemDelegateForColumn(5, combobox_item_delegate)
+            combobox_item_delegate = ComboboxItemDelegate(self, self.get_program_codes())
+            # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
-        for row in range(0, self.sort_filter_proxy_model.rowCount()):
-            self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 5))
+            self.students_table_view.setItemDelegateForColumn(5, combobox_item_delegate)
 
-# Dynamic change of combobox
-# https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
+            for row in range(0, self.sort_filter_proxy_model.rowCount()):
+                self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 5))
+
+    # Dynamic change of combobox
+    # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
 
     def reset_item_delegates(self):
         self.sort_filter_proxy_model.beginResetModel()

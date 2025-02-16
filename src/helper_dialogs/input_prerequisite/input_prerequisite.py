@@ -25,6 +25,10 @@ class InputPrerequisiteDialog(QDialog, InputPrerequisiteUI):
             self.message_label.setText("No programs found, input programs first.")
             self.setWindowTitle("No programs found")
 
+        elif self.prerequisite_type == "students":
+            self.message_label.setText("No students found, input students first.")
+            self.setWindowTitle("No students found")
+
     def close_dialog(self):
         self.close()
 

@@ -49,10 +49,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     def open_add_program_dialog(self):
         self.adjust_horizontal_header()
 
-        if not self.get_college_codes():
-            self.input_college_dialog = InputPrerequisiteDialog("college")
-            self.input_college_dialog.exec()
-        else:
+        if self.colleges_table_model.get_data()[0][0] != "":
             # Note: self.reset_item_delegates is a function
 
             self.add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model,
@@ -61,21 +58,35 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
             self.enable_delete_button()
 
-    def open_edit_program_dialog(self):
-        self.edit_program_dialog = EditProgramDialog(self.programs_table_view,
-                                                     self.programs_table_model,
-                                                     self.students_table_model,
-                                                     self.colleges_table_model)
-        self.edit_program_dialog.exec()
+        else:
+            self.input_college_dialog = InputPrerequisiteDialog("college")
+            self.input_college_dialog.exec()
 
-    def open_delete_program_dialog(self):
-        self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view,
+
+    def open_edit_program_dialog(self):
+        if self.programs_table_model.get_data()[0][0] != "":
+            self.edit_program_dialog = EditProgramDialog(self.programs_table_view,
                                                          self.programs_table_model,
                                                          self.students_table_model,
                                                          self.colleges_table_model)
-        self.delete_program_dialog.exec()
+            self.edit_program_dialog.exec()
+        else:
+            print("No program to edit, dialog to be added...")
 
-        self.enable_delete_button()
+    def open_delete_program_dialog(self):
+
+        if self.programs_table_model.get_data()[0][0] != "":
+            self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view,
+                                                             self.programs_table_model,
+                                                             self.students_table_model,
+                                                             self.colleges_table_model,
+                                                             self.reset_item_delegates,
+                                                             self.adjust_horizontal_header)
+            self.delete_program_dialog.exec()
+
+            self.enable_delete_button()
+        else:
+            print("No program to delete, dialog to be added...")
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
@@ -152,15 +163,19 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         event.accept()
 
     def load_item_delegates_college_codes(self):
-        # For College Codes
 
-        combobox_item_delegate = ComboboxItemDelegate(self, self.get_college_codes())
-        # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        # Check if self.programs_table_model is empty, if so, disable combobox item delegate
 
-        self.programs_table_view.setItemDelegateForColumn(2, combobox_item_delegate)
+        if self.programs_table_model.get_data()[0][2] != "":
+            # For College Codes
 
-        for row in range(0, self.sort_filter_proxy_model.rowCount()):
-            self.programs_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 2))
+            combobox_item_delegate = ComboboxItemDelegate(self, self.get_college_codes())
+            # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+
+            self.programs_table_view.setItemDelegateForColumn(2, combobox_item_delegate)
+
+            for row in range(0, self.sort_filter_proxy_model.rowCount()):
+                self.programs_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 2))
 
 # Dynamic change of combobox
 # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/

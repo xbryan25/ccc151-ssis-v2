@@ -11,10 +11,15 @@ from utils.get_connections import GetConnections
 
 
 class DeleteProgramDialog(QDialog, DeleteProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model):
+    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model,
+                 reset_item_delegates_func, adjust_horizontal_header_func):
+
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
+        self.adjust_horizontal_header_func = adjust_horizontal_header_func
 
         self.students_table_model = students_table_model
         self.colleges_table_model = colleges_table_model
@@ -70,6 +75,12 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.programs_table_model.layoutAboutToBeChanged.emit()
                     self.programs_table_model.get_data().remove(program)
                     self.programs_table_model.layoutChanged.emit()
+
+                    self.students_table_model.model_data_is_empty()
+                    self.programs_table_model.model_data_is_empty()
+
+                    self.reset_item_delegates_func()
+                    self.adjust_horizontal_header_func()
 
                     self.programs_table_model.set_has_changes(True)
 

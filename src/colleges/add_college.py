@@ -49,6 +49,10 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
     def add_college_to_table(self, college_to_add):
         self.colleges_table_model.layoutAboutToBeChanged.emit()
+
+        if self.colleges_table_model.get_data()[0][0] == "":
+            self.colleges_table_model.get_data().pop()
+
         self.colleges_table_model.data_from_csv.append(college_to_add)
         self.colleges_table_model.layoutChanged.emit()
 

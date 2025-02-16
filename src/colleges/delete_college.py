@@ -9,10 +9,15 @@ from utils.get_information_codes import GetInformationCodes
 
 
 class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
-    def __init__(self, colleges_table_view, colleges_table_model, students_table_model, programs_table_model):
+    def __init__(self, colleges_table_view, colleges_table_model, students_table_model, programs_table_model,
+                 reset_item_delegates_func, adjust_horizontal_header_func):
+
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
+        self.adjust_horizontal_header_func = adjust_horizontal_header_func
 
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
@@ -56,6 +61,12 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.colleges_table_model.layoutAboutToBeChanged.emit()
                     self.colleges_table_model.data_from_csv.remove(college)
                     self.colleges_table_model.layoutChanged.emit()
+
+                    self.programs_table_model.model_data_is_empty()
+                    self.colleges_table_model.model_data_is_empty()
+
+                    self.reset_item_delegates_func()
+                    self.adjust_horizontal_header_func()
 
                     self.colleges_table_model.set_has_changes(True)
 

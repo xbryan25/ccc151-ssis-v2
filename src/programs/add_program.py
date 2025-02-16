@@ -61,6 +61,10 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
     def add_program_to_table(self, program_to_add):
         self.programs_table_model.layoutAboutToBeChanged.emit()
+
+        if self.programs_table_model.get_data()[0][0] == "":
+            self.programs_table_model.get_data().pop()
+
         self.programs_table_model.data_from_csv.append(program_to_add)
         self.programs_table_model.layoutChanged.emit()
 

@@ -42,6 +42,17 @@ class CustomTableModel(QAbstractTableModel):
             self.students_data = []
             self.programs_data = []
 
+        self.model_data_is_empty()
+
+    def model_data_is_empty(self):
+        if not self.get_data():
+            if self.information_type == "student":
+                self.data_from_csv.append(["", "", "", "", "", ""])
+            elif self.information_type == "program":
+                self.data_from_csv.append(["", "", ""])
+            elif self.information_type == "college":
+                self.data_from_csv.append(["", ""])
+
     def get_data(self):
         return self.data_from_csv
 
@@ -209,10 +220,18 @@ class CustomTableModel(QAbstractTableModel):
     # Override
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):
         if orientation == Qt.Orientation.Horizontal and role == Qt.ItemDataRole.DisplayRole:
+
             return self.columns[section]
 
+        # print(self.columns)
         return super().headerData(section, orientation, role)
 
     # Override
     def flags(self, index):
-        return Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
+        # Check if the first element of the empty string list is empty
+        # If so, disable cells
+
+        if self.get_data()[0][0] != "":
+            return Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
+        else:
+            return Qt.ItemFlag.NoItemFlags

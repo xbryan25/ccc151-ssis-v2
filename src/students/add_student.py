@@ -70,6 +70,10 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
     def add_student_to_table(self, student_to_add):
         self.students_table_model.layoutAboutToBeChanged.emit()
+
+        if self.students_table_model.get_data()[0][0] == "":
+            self.students_table_model.get_data().pop()
+
         self.students_table_model.data_from_csv.append(student_to_add)
         self.students_table_model.layoutChanged.emit()
 
