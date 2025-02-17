@@ -27,6 +27,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.main_screen = main_screen
 
         self.programs_table_model = programs_table_model
@@ -37,6 +39,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.sort_filter_proxy_model)
+
+        self.students_table_view.setAlternatingRowColors(True)
 
         self.horizontal_header = self.students_table_view.horizontalHeader()
 
@@ -122,8 +126,6 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         if self.students_table_model.get_has_changes():
             self.open_confirm_save_dialog("student")
 
-        print(event)
-
         event.accept()
 
     def add_signals(self):
@@ -184,3 +186,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.load_item_delegates_program_codes()
         self.load_item_delegates_year_and_gender()
+
+    def set_external_stylesheet(self):
+        with open("../assets/qss_files/entity_page_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

@@ -21,6 +21,8 @@ class LandingPage(QMainWindow, LandingPageUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.adjust_horizontal_header = AdjustHorizontalHeader()
 
         # Load information from database upon entering the landing page for the first time
@@ -104,3 +106,7 @@ class LandingPage(QMainWindow, LandingPageUI):
             self.open_confirm_save_dialog("student")
 
         event.accept()
+
+    def set_external_stylesheet(self):
+        with open("../assets/qss_files/landing_page_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

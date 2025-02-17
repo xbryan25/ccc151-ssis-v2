@@ -1,0 +1,28 @@
+QWidget{
+background-color:rgb(230, 220, 200);
+}
+
+QPushButton{
+background-color: rgb(254, 250, 224);
+color: rgb(244, 162, 97);
+
+border-radius: 20%;
+}
+
+QPushButton::hover{
+background-color: rgb(230, 225, 200);
+}
+
+#about_this_app_button{
+border-radius: 10%;
+}
+
+#title_label{
+color: rgb(190, 165, 150);
+}
+
+
+
+
+
+

@@ -63,6 +63,7 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.colleges_table_model.data_from_csv.remove(college)
                     self.colleges_table_model.layoutChanged.emit()
 
+                    self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
                     self.colleges_table_model.model_data_is_empty()
 

@@ -1,0 +1,47 @@
+QWidget{
+background-color:rgb(230, 220, 200);
+}
+
+QPushButton{
+background-color: rgb(254, 250, 224);
+color: rgb(244, 162, 97);
+
+border-radius: 10%;
+}
+
+QPushButton::hover{
+background-color: rgb(230, 225, 200);
+}
+
+/* ::section is for the header columns */
+
+QHeaderView::section{
+background-color: rgb(200, 200, 200);
+font: 10pt "Roboto"
+}
+
+QTableView{
+alternate-background-color: rgb(215, 210, 190);
+background-color: rgb(230, 225, 200);
+}
+
+QLineEdit{
+border: 2px solid gray;
+border-radius: 5px;
+padding: 0 5px;
+
+}
+
+#search_type_combobox{
+border: 2px solid gray;
+border-radius: 5px;
+padding: 0 5px;
+}
+
+
+
+
+
+
+
+
