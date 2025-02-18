@@ -23,6 +23,8 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.main_screen = main_screen
 
         self.students_table_model = students_table_model
@@ -33,6 +35,8 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.colleges_table_view.setSortingEnabled(True)
         self.colleges_table_view.setModel(self.sort_filter_proxy_model)
+
+        self.colleges_table_view.setAlternatingRowColors(True)
 
         self.horizontal_header = self.colleges_table_view.horizontalHeader()
 
@@ -134,3 +138,7 @@ class CollegesPage(QMainWindow, CollegesPageUI):
     def reset_item_delegates(self):
         self.sort_filter_proxy_model.beginResetModel()
         self.sort_filter_proxy_model.endResetModel()
+
+    def set_external_stylesheet(self):
+        with open("../assets/qss_files/entity_page_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

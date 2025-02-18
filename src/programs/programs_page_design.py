@@ -150,7 +150,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Sequence | Programs"))
         self.edit_program_button.setText(_translate("MainWindow", "Edit program"))
         self.serach_label.setText(_translate("MainWindow", "Search by"))
         self.back_to_main_button.setText(_translate("MainWindow", "Go back to main screen"))

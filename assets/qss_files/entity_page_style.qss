@@ -1,41 +1,120 @@
 QWidget{
-background-color:rgb(230, 220, 200);
+    background-color:rgb(230, 204, 178);
 }
 
 QPushButton{
-background-color: rgb(254, 250, 224);
-color: rgb(244, 162, 97);
+    background-color: rgb(176, 137, 104);
+    color: rgb(237, 224, 212);
 
-border-radius: 10%;
+    border-radius: 10%;
+
+    border-color: rgb(156, 102, 68);
+    border-width: 2px;
+    border-style: solid;
 }
 
 QPushButton::hover{
-background-color: rgb(230, 225, 200);
+    background-color: rgb(127, 85, 57);
 }
 
-/* ::section is for the header columns */
-
 QHeaderView::section{
-background-color: rgb(200, 200, 200);
-font: 10pt "Roboto"
+    background-color: rgb(176, 137, 104);
+    font: 10pt "Roboto";
+    font-weight: bold;
+    color: rgb(237, 224, 212);
+}
+
+QHeaderView::section:checked{
+    background: rgb(127, 85, 57);
+    border: 1px solid #dcdcdc;
+    padding: 5px;
+}
+
+QHeaderView::section:focus {
+    background-color: #f0f0f0;
+    border: 1px solid #dcdcdc;
+}
+
+QHeaderView::section:selected {
+    background-color: #f0f0f0;
 }
 
 QTableView{
-alternate-background-color: rgb(215, 210, 190);
-background-color: rgb(230, 225, 200);
+    alternate-background-color: rgb(230, 204, 178);
+    background-color: rgb(221, 184, 146);
+
+    gridline-color: rgb(20, 20, 20);
+
+    selection-background-color: rgb(180, 180, 170);
+    selection-color: black;
+
+    border-color: rgb(156, 102, 68);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 3%;
+}
+
+QScrollBar:vertical {
+    background: rgb(156, 102, 68);
+
+    border-color: rgb(156, 102, 68);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 3%;
+}
+
+QScrollBar::handle:vertical {
+    height: 10px;
+    background: rgb(221, 184, 146);
+}
+
+QScrollBar::handle:vertical:hover {
+    height: 10px;
+    background: rgb(200, 165, 125);
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: none;
+    background: none;
+    color: none;
+
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+     background: none;
 }
 
 QLineEdit{
-border: 2px solid gray;
-border-radius: 5px;
-padding: 0 5px;
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 0 5px;
+}
 
+QComboBox{
+    selection-background-color: rgb(180, 180, 170);
+    selection-color: black;
 }
 
 #search_type_combobox{
-border: 2px solid gray;
-border-radius: 5px;
-padding: 0 5px;
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 0 5px;
 }
 
 

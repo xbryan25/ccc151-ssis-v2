@@ -155,7 +155,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Sequence | Students"))
         self.search_type_combobox.setItemText(0, _translate("MainWindow", "ID Number"))
         self.search_type_combobox.setItemText(1, _translate("MainWindow", "First Name"))
         self.search_type_combobox.setItemText(2, _translate("MainWindow", "Last Name"))

@@ -26,6 +26,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.main_screen = main_screen
 
         self.colleges_table_model = colleges_table_model
@@ -37,6 +39,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.programs_table_view.setSortingEnabled(True)
         self.programs_table_view.setModel(self.sort_filter_proxy_model)
+
+        self.programs_table_view.setAlternatingRowColors(True)
 
         self.horizontal_header = self.programs_table_view.horizontalHeader()
 
@@ -169,3 +173,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.sort_filter_proxy_model.endResetModel()
 
         self.load_item_delegates_college_codes()
+
+    def set_external_stylesheet(self):
+        with open("../assets/qss_files/entity_page_style.qss", "r") as file:
+            self.setStyleSheet(file.read())
