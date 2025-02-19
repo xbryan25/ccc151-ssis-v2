@@ -44,8 +44,9 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.horizontal_header = self.programs_table_view.horizontalHeader()
 
-        self.reset_sorting_state = ResetSortingState(self.programs_table_model,
-                                                     self.programs_table_view)
+        self.reset_sorting_state = ResetSortingState(self.sort_filter_proxy_model,
+                                                     self.programs_table_view,
+                                                     "program")
 
         self.add_signals()
 
@@ -157,7 +158,7 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         if self.programs_table_model.get_data()[0][2] != "":
             # For College Codes
 
-            combobox_item_delegate = ComboboxItemDelegate(self, self.get_college_codes())
+            combobox_item_delegate = ComboboxItemDelegate(self.programs_table_view, self.get_college_codes())
             # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
             self.programs_table_view.setItemDelegateForColumn(2, combobox_item_delegate)
@@ -173,6 +174,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.sort_filter_proxy_model.endResetModel()
 
         self.load_item_delegates_college_codes()
+
+        # self.reset_sorting_state.group_comboboxes_by_key()
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/entity_page_style.qss", "r") as file:

@@ -40,8 +40,9 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.horizontal_header = self.colleges_table_view.horizontalHeader()
 
-        self.reset_sorting_state = ResetSortingState(self.colleges_table_model,
-                                                     self.colleges_table_view)
+        self.reset_sorting_state = ResetSortingState(self.sort_filter_proxy_model,
+                                                     self.colleges_table_view,
+                                                     "college")
 
         self.add_signals()
 

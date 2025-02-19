@@ -12,10 +12,10 @@ class ComboboxItemDelegate(QItemDelegate):
     def createEditor(self, parent, option, index):
         combobox = QComboBox(parent)
 
-        # if index.row() % 2 == 0:
-        #     combobox.setStyleSheet("background-color: rgb(221, 184, 146)")
-        # else:
-        #     combobox.setStyleSheet("background-color: rgb(230, 204, 178);")
+        if index.row() % 2 == 0:
+            combobox.setStyleSheet("background-color: rgb(221, 184, 146)")
+        else:
+            combobox.setStyleSheet("background-color: rgb(230, 204, 178);")
 
         choices = []
         for item in self.items:

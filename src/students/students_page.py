@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView
+from PyQt6.QtWidgets import QMainWindow, QTableWidget, QTableWidgetItem, QHeaderView, QComboBox
 from PyQt6.QtCore import Qt, QSortFilterProxyModel, QAbstractTableModel, QRegularExpression
 from PyQt6.QtGui import QCursor
 
@@ -44,8 +44,9 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.horizontal_header = self.students_table_view.horizontalHeader()
 
-        self.reset_sorting_state = ResetSortingState(self.students_table_model,
-                                                     self.students_table_view)
+        self.reset_sorting_state = ResetSortingState(self.sort_filter_proxy_model,
+                                                     self.students_table_view,
+                                                     "student")
 
         self.add_signals()
 
@@ -150,18 +151,19 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         if self.students_table_model.get_data()[0][3] != "" and self.students_table_model.get_data()[0][4] != "":
             # For Year Level
-            self.students_table_view.setItemDelegateForColumn(3, ComboboxItemDelegate(self, ["1st", "2nd", "3rd",
-                                                                                             "4th", "5th"]))
+            self.students_table_view.setItemDelegateForColumn(3, ComboboxItemDelegate(self.students_table_view,
+                                                                                      ["1st", "2nd", "3rd",
+                                                                                       "4th", "5th"]))
             for row in range(0, self.sort_filter_proxy_model.rowCount()):
                 self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 3))
 
             # For Gender
-            self.students_table_view.setItemDelegateForColumn(4, ComboboxItemDelegate(self, ["Male", "Female", "Others",
+            self.students_table_view.setItemDelegateForColumn(4, ComboboxItemDelegate(self.students_table_view,
+                                                                                      ["Male", "Female", "Others",
                                                                                              "Prefer not to say"]))
 
             for row in range(0, self.sort_filter_proxy_model.rowCount()):
                 self.students_table_view.openPersistentEditor(self.sort_filter_proxy_model.index(row, 4))
-
 
     def load_item_delegates_program_codes(self):
         # Check if self.students_table_model is empty, if so, disable combobox item delegate
@@ -169,7 +171,7 @@ class StudentsPage(QMainWindow, StudentsPageUI):
         if self.students_table_model.get_data()[0][5] != "":
             # For Program Codes
 
-            combobox_item_delegate = ComboboxItemDelegate(self, self.get_program_codes())
+            combobox_item_delegate = ComboboxItemDelegate(self.students_table_view, self.get_program_codes())
             # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
             self.students_table_view.setItemDelegateForColumn(5, combobox_item_delegate)

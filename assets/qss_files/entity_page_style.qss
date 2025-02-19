@@ -107,8 +107,12 @@ QLineEdit{
 }
 
 QComboBox{
+    background-color: #ffffff;
     selection-background-color: rgb(180, 180, 170);
     selection-color: black;
+
+    font: 10pt "Segoe UI Semibold";
+    font-weight: bold;
 }
 
 #search_type_combobox{
