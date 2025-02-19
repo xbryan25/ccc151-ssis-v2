@@ -18,7 +18,7 @@ QPushButton::hover{
 }
 
 QHeaderView::section{
-    background-color: rgb(176, 137, 104);
+    background-color: rgb(156, 102, 68);
     font: 10pt "Roboto";
     font-weight: bold;
     color: rgb(237, 224, 212);
@@ -40,8 +40,8 @@ QHeaderView::section:selected {
 }
 
 QTableView{
-    alternate-background-color: rgb(230, 204, 178);
-    background-color: rgb(221, 184, 146);
+    alternate-background-color: rgb(221, 184, 146);
+    background-color: rgb(176, 137, 104);
 
     gridline-color: rgb(20, 20, 20);
 
@@ -57,7 +57,7 @@ QTableView{
 QScrollBar:vertical {
     background: rgb(156, 102, 68);
 
-    border-color: rgb(156, 102, 68);
+    border-color: rgb(127, 85, 57);
     border-width: 2px;
     border-style: solid;
     border-radius: 3%;
@@ -65,7 +65,7 @@ QScrollBar:vertical {
 
 QScrollBar::handle:vertical {
     height: 10px;
-    background: rgb(221, 184, 146);
+    background: rgb(230, 204, 178);
 }
 
 QScrollBar::handle:vertical:hover {
@@ -107,18 +107,12 @@ QLineEdit{
 }
 
 QComboBox{
-    background-color: #ffffff;
+    background-color: rgb(221, 184, 146);
     selection-background-color: rgb(180, 180, 170);
     selection-color: black;
 
     font: 10pt "Segoe UI Semibold";
     font-weight: bold;
-}
-
-#search_type_combobox{
-    border: 2px solid gray;
-    border-radius: 5px;
-    padding: 0 5px;
 }
 
 
