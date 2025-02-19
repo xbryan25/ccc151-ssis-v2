@@ -122,6 +122,8 @@ class StudentsPage(QMainWindow, StudentsPageUI):
 
         self.students_table_model.layoutChanged.emit()
 
+        self.reset_item_delegates()
+
     def change_search_lineedit_placeholder(self):
         self.search_input_lineedit.setPlaceholderText(f"Input {self.search_type_combobox.currentText()}")
 
