@@ -74,7 +74,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.edit_program_dialog = EditProgramDialog(self.programs_table_view,
                                                      self.programs_table_model,
                                                      self.students_table_model,
-                                                     self.colleges_table_model)
+                                                     self.colleges_table_model,
+                                                     self.reset_item_delegates)
         self.edit_program_dialog.exec()
 
     def open_delete_program_dialog(self):
@@ -169,13 +170,16 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
     # Dynamic change of combobox
     # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
 
-    def reset_item_delegates(self):
+    def reset_item_delegates(self, state=None):
+
+        if state:
+            self.reset_sorting_state.force_reset_sort()
+
         self.sort_filter_proxy_model.beginResetModel()
         self.sort_filter_proxy_model.endResetModel()
 
         self.load_item_delegates_college_codes()
 
-        # self.reset_sorting_state.group_comboboxes_by_key()
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/entity_page_style.qss", "r") as file:

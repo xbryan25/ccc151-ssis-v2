@@ -80,7 +80,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
 
-                    self.reset_item_delegates_func()
+                    self.reset_item_delegates_func("delete_student")
                     AdjustHorizontalHeader.for_programs_table_view(self.horizontal_header)
 
                     self.programs_table_model.set_has_changes(True)

@@ -130,15 +130,15 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             self.new_college_name_lineedit.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
-        for college in self.college_table_model.data_from_csv:
+        for college in self.colleges_table_model.data_from_csv:
             if college[0] == self.college_to_edit_combobox.currentText():
                 self.new_college_code_lineedit.setPlaceholderText(college[0])
                 self.new_college_name_lineedit.setPlaceholderText(college[1])
 
     def row_to_edit(self):
-        for college in self.college_table_model.data_from_csv:
+        for college in self.colleges_table_model.data_from_csv:
             if college[0] == self.college_to_edit_combobox.currentText():
-                return self.college_table_model.data_from_csv.index(college)
+                return self.colleges_table_model.data_from_csv.index(college)
 
     def len_of_programs_under_college_code(self, old_college_code):
         length = 0

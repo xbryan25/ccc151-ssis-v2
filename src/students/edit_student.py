@@ -90,7 +90,7 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
                     self.students_table_model.set_has_changes(True)
 
-                    self.reset_item_delegates_func()
+                    self.reset_item_delegates_func("edit_student")
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
                     self.success_edit_item_dialog.exec()

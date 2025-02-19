@@ -53,7 +53,8 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
                     self.students_table_model.model_data_is_empty()
 
-                    self.reset_item_delegates_func()
+                    self.reset_item_delegates_func("delete_student")
+
                     AdjustHorizontalHeader.for_students_table_view(self.horizontal_header)
 
                     self.students_table_model.set_has_changes(True)

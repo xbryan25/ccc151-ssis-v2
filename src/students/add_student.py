@@ -63,7 +63,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
             self.students_table_model.set_has_changes(True)
 
-            self.reset_item_delegates_func()
+            self.reset_item_delegates_func("add_student")
 
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
             self.success_add_item_dialog.exec()

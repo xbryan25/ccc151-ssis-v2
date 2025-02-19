@@ -15,10 +15,13 @@ import csv
 
 
 class EditProgramDialog(QDialog, EditProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model):
+    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model,
+                 reset_item_delegates_func):
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.students_table_model = students_table_model
         self.colleges_table_model = colleges_table_model
@@ -90,6 +93,8 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
                     self.programs_table_model.set_has_changes(True)
 
+                    self.reset_item_delegates_func("edit_program")
+
                     self.success_edit_item_dialog = SuccessEditItemDialog("program", self)
                     self.success_edit_item_dialog.exec()
 
@@ -135,7 +140,7 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         for program_code in program_codes:
             if program_code == self.program_to_edit_combobox.currentText():
-                return program_codes.index(program)
+                return program_codes.index(program_code)
 
     def len_of_students_under_program_code(self, old_program_code):
         length = 0
@@ -173,10 +178,10 @@ class EditProgramDialog(QDialog, EditProgramUI):
         return issues
 
     def get_student_codes(self):
-        return self.get_existing_information.from_students(self.students_table_model.get_data())
+        return self.get_information_codes.for_students(self.students_table_model.get_data())
 
     def get_program_codes(self):
-        return self.get_existing_information.from_programs(self.programs_table_model.get_data())
+        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
 
     def get_college_codes(self):
-        return self.get_existing_information.from_colleges(self.colleges_table_model.get_data())
+        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())

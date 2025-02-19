@@ -54,7 +54,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
             self.programs_table_model.set_has_changes(True)
 
-            self.reset_item_delegates_func()
+            self.reset_item_delegates_func("add_program")
 
             self.success_add_item_dialog = SuccessAddItemDialog("programs", self)
             self.success_add_item_dialog.exec()

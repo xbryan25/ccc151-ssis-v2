@@ -56,13 +56,15 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     def open_add_student_dialog(self):
 
         if self.programs_table_model.get_data()[0][0] != "":
-            # Note: self.reset_item_delegates is a function
+            # Note: self.reset_item_delegates and force_reset_sort is a function
 
             self.add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model,
                                                        self.programs_table_model,
                                                        self.colleges_table_model,
                                                        self.reset_item_delegates)
             self.add_student_dialog.exec()
+
+
 
             EnableEditAndDeleteButtons.enable_button(self.delete_student_button, self.students_table_model)
             EnableEditAndDeleteButtons.enable_button(self.edit_student_button, self.students_table_model)
@@ -182,7 +184,11 @@ class StudentsPage(QMainWindow, StudentsPageUI):
     # Dynamic change of combobox
     # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
 
-    def reset_item_delegates(self):
+    def reset_item_delegates(self, state=None):
+
+        if state:
+            self.reset_sorting_state.force_reset_sort()
+
         self.sort_filter_proxy_model.beginResetModel()
         self.sort_filter_proxy_model.endResetModel()
 
