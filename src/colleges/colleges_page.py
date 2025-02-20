@@ -11,7 +11,7 @@ from utils.reset_sorting_state import ResetSortingState
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
 from utils.reset_sorting_state import ResetSortingState
-from utils.enable_edit_and_delete_buttons import EnableEditAndDeleteButtons
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
 from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
@@ -46,21 +46,27 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.add_signals()
 
-        EnableEditAndDeleteButtons.enable_button(self.delete_college_button, self.colleges_table_model)
-        EnableEditAndDeleteButtons.enable_button(self.edit_college_button, self.colleges_table_model)
+        SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_college_button, self.edit_college_button],
+                                                              self.colleges_table_model)
+
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.colleges_table_model)
 
     def open_add_college_dialog(self):
 
         self.add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model)
         self.add_college_dialog.exec()
 
-        EnableEditAndDeleteButtons.enable_button(self.delete_college_button, self.colleges_table_model)
-        EnableEditAndDeleteButtons.enable_button(self.edit_college_button, self.colleges_table_model)
+        SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_college_button, self.edit_college_button],
+                                                              self.colleges_table_model)
+
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.colleges_table_model)
 
     def open_edit_college_dialog(self):
         self.edit_college_dialog = EditCollegeDialog(self.colleges_table_view, self.colleges_table_model,
                                                      self.programs_table_model)
         self.edit_college_dialog.exec()
+
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.colleges_table_model)
 
     def open_delete_college_dialog(self):
         self.delete_college_dialog = DeleteCollegeDialog(self.colleges_table_view, self.colleges_table_model,
@@ -69,20 +75,25 @@ class CollegesPage(QMainWindow, CollegesPageUI):
 
         self.delete_college_dialog.exec()
 
-        EnableEditAndDeleteButtons.enable_button(self.delete_college_button, self.colleges_table_model)
-        EnableEditAndDeleteButtons.enable_button(self.edit_college_button, self.colleges_table_model)
+        SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_college_button, self.edit_college_button],
+                                                              self.college_table_model)
+
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.colleges_table_model)
 
     def open_confirm_save_dialog(self, save_type):
         self.confirm_save_dialog = ConfirmSaveDialog()
         self.confirm_save_dialog.exec()
 
         if self.confirm_save_dialog.get_confirm_edit_decision():
+
             self.save_all_changes = SaveAllChanges(save_type,
-                                                   self.students_table_model.get_data(),
-                                                   self.programs_table_model.get_data(),
-                                                   self.colleges_table_model.get_data())
+                                                   self.students_table_model,
+                                                   self.programs_table_model,
+                                                   self.colleges_table_model)
 
             self.save_all_changes.to_csv()
+
+            SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.colleges_table_model)
 
             self.success_save_changes = SuccessSaveChangesDialog()
             self.success_save_changes.exec()

@@ -9,7 +9,7 @@ from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
 from utils.combobox_item_delegate import ComboboxItemDelegate
-from utils.enable_edit_and_delete_buttons import EnableEditAndDeleteButtons
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 from programs.add_program import AddProgramDialog
 from programs.edit_program import EditProgramDialog
@@ -50,8 +50,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         self.add_signals()
 
-        EnableEditAndDeleteButtons.enable_button(self.delete_program_button, self.programs_table_model)
-        EnableEditAndDeleteButtons.enable_button(self.edit_program_button, self.programs_table_model)
+        SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_program_button, self.edit_program_button],
+                                                              self.programs_table_model)
+
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.programs_table_model)
 
     def open_add_program_dialog(self):
 
@@ -62,8 +64,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                        self.colleges_table_model, self.reset_item_delegates)
             self.add_program_dialog.exec()
 
-            EnableEditAndDeleteButtons.enable_button(self.delete_program_button, self.programs_table_model)
-            EnableEditAndDeleteButtons.enable_button(self.edit_program_button, self.programs_table_model)
+            SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_program_button, self.edit_program_button],
+                                                                  self.programs_table_model)
+
+            SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.programs_table_model)
 
         else:
             self.input_college_dialog = InputPrerequisiteDialog("college")
@@ -78,6 +82,8 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                      self.reset_item_delegates)
         self.edit_program_dialog.exec()
 
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.programs_table_model)
+
     def open_delete_program_dialog(self):
         self.delete_program_dialog = DeleteProgramDialog(self.programs_table_view,
                                                          self.programs_table_model,
@@ -87,8 +93,10 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
                                                          self.horizontal_header)
         self.delete_program_dialog.exec()
 
-        EnableEditAndDeleteButtons.enable_button(self.delete_program_button, self.programs_table_model)
-        EnableEditAndDeleteButtons.enable_button(self.edit_program_button, self.programs_table_model)
+        SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_program_button, self.edit_program_button],
+                                                              self.programs_table_model)
+
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.programs_table_model)
 
 
     def open_confirm_save_dialog(self, save_type):
@@ -97,10 +105,12 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
 
         if self.confirm_save_dialog.get_confirm_edit_decision():
             self.save_all_changes = SaveAllChanges(save_type,
-                                                   self.students_table_model.get_data(),
-                                                   self.programs_table_model.get_data())
+                                                   self.students_table_model,
+                                                   self.programs_table_model)
 
             self.save_all_changes.to_csv()
+
+            SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.programs_table_model)
 
             self.success_save_changes = SuccessSaveChangesDialog()
             self.success_save_changes.exec()
@@ -181,7 +191,6 @@ class ProgramsPage(QMainWindow, ProgramsPageUI):
         self.sort_filter_proxy_model.endResetModel()
 
         self.load_item_delegates_college_codes()
-
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/entity_page_style.qss", "r") as file:
