@@ -25,7 +25,9 @@ QPushButton::hover{
     color: rgb(127, 85, 57);
 }
 
-
+#subtitle_label{
+    color: rgb(177, 105, 77);
+}
 
 
 

@@ -57,6 +57,14 @@ QTableView{
     border-width: 2px;
     border-style: solid;
     border-radius: 3%;
+
+}
+
+QTableView::item{
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
 }
 
 QScrollBar:vertical {
@@ -112,6 +120,9 @@ QLineEdit{
 }
 
 QComboBox{
+    border-width: 0px;
+    border-style: solid;
+
     background-color: rgb(221, 184, 146);
     selection-background-color: rgb(180, 180, 170);
     selection-color: black;
@@ -120,6 +131,59 @@ QComboBox{
     font-weight: bold;
 }
 
+QComboBox::drop-down {
+    width: 15px;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-right: 2px;
+
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+
+    border-radius: 5px;
+
+    background-color: rgb(221, 184, 146);
+}
+
+QComboBox::drop-down:hover {
+    background-color: rgb(176, 137, 104);
+}
+
+QComboBox::drop-down:pressed {
+    background-color: rgb(176, 137, 104);
+}
+
+/* src is the working directory */
+
+/* Source: https://forum.qt.io/topic/40151/solved-scaled-background-image-using-stylesheet/16 */
+QComboBox::down-arrow{
+    border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
+}
+
+#header_frame{
+    background-color: #736556;
+}
+
+#title_label{
+    background-color: #736556;
+    color: white;
+}
+
+#type_label{
+    background-color: #736556;
+    color: white;
+}
+
+#search_type_combobox{
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#search_type_combobox::dropdown{
+    background-color: blue;
+}
 
 
 

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow
+from PyQt6.QtWidgets import QMainWindow, QPushButton
 
 from landing_page.landing_page_design import Ui_MainWindow as LandingPageUI
 
@@ -40,7 +40,6 @@ class LandingPage(QMainWindow, LandingPageUI):
         self.colleges_table_model.set_students_data(self.students_table_model.get_data())
         self.colleges_table_model.set_programs_data(self.programs_table_model.get_data())
 
-
         # ---Undo stack here---
         # self.undo_stack = UndoStack()
 
@@ -51,6 +50,8 @@ class LandingPage(QMainWindow, LandingPageUI):
                                           self.colleges_table_model)
         self.colleges_page = CollegesPage(self, self.students_table_model, self.programs_table_model,
                                           self.colleges_table_model)
+
+        self.page_controls = self.get_page_controls()
 
         self.add_signals()
 
@@ -90,9 +91,11 @@ class LandingPage(QMainWindow, LandingPageUI):
             self.success_save_changes.exec()
 
     def add_signals(self):
-        self.students_button.clicked.connect(self.open_students_page)
-        self.programs_button.clicked.connect(self.open_programs_page)
-        self.colleges_button.clicked.connect(self.open_colleges_page)
+        self.page_controls["students_button"].clicked.connect(self.open_students_page)
+        self.page_controls["programs_button"].clicked.connect(self.open_programs_page)
+        self.page_controls["colleges_button"].clicked.connect(self.open_colleges_page)
+
+        self.page_controls["about_this_app_button"].clicked.connect(lambda: print("Clicked on about_this_app_button"))
 
     def closeEvent(self, event):
 
@@ -110,3 +113,18 @@ class LandingPage(QMainWindow, LandingPageUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/landing_page_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def get_page_controls(self):
+
+        students_button = (self.buttons_frame.findChild(QPushButton, "students_button"))
+
+        programs_button = (self.buttons_frame.findChild(QPushButton, "programs_button"))
+
+        colleges_button = (self.buttons_frame.findChild(QPushButton, "colleges_button"))
+
+        about_this_app_button = (self.buttons_frame.findChild(QPushButton, "about_this_app_button"))
+
+        return {"students_button": students_button,
+                "programs_button": programs_button,
+                "colleges_button": colleges_button,
+                "about_this_app_button": about_this_app_button}
