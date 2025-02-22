@@ -82,15 +82,15 @@ class ResetSortingState:
 
             if self.information_type == "student":
                 if row % 2 == 1:
-                    connections[orig_key_value][0].setStyleSheet("background-color: rgb(230, 204, 178)")
-                    connections[orig_key_value][1].setStyleSheet("background-color: rgb(230, 204, 178)")
-                    connections[orig_key_value][2].setStyleSheet("background-color: rgb(230, 204, 178)")
-                else:
                     connections[orig_key_value][0].setStyleSheet("background-color: rgb(221, 184, 146)")
                     connections[orig_key_value][1].setStyleSheet("background-color: rgb(221, 184, 146)")
                     connections[orig_key_value][2].setStyleSheet("background-color: rgb(221, 184, 146)")
+                else:
+                    connections[orig_key_value][0].setStyleSheet("background-color: rgb(176, 137, 104)")
+                    connections[orig_key_value][1].setStyleSheet("background-color: rgb(176, 137, 104)")
+                    connections[orig_key_value][2].setStyleSheet("background-color: rgb(176, 137, 104)")
             else:
                 if row % 2 == 1:
-                    connections[orig_key_value][0].setStyleSheet("background-color: rgb(230, 204, 178)")
-                else:
                     connections[orig_key_value][0].setStyleSheet("background-color: rgb(221, 184, 146)")
+                else:
+                    connections[orig_key_value][0].setStyleSheet("background-color: rgb(176, 137, 104)")

@@ -1,13 +1,13 @@
 
 from PyQt6.QtWidgets import QApplication
-from landing_page.landing_page import LandingPage
+from application.application_window import ApplicationWindow
 
 
 def main():
     app = QApplication([])
-    landing_page = LandingPage()
+    application_window = ApplicationWindow()
 
-    landing_page.show()
+    application_window.show()
     app.exec()
 
 

@@ -171,7 +171,7 @@ QComboBox::down-arrow{
     color: white;
 }
 
-#type_label{
+#entity_type_label{
     background-color: #736556;
     color: white;
 }
@@ -184,10 +184,4 @@ QComboBox::down-arrow{
 #search_type_combobox::dropdown{
     background-color: blue;
 }
-
-
-
-
-
-
 
