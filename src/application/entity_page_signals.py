@@ -15,23 +15,27 @@ class EntityPageSignals:
         self.programs_table_model = entity_page_elements[4]
         self.colleges_table_model = entity_page_elements[5]
 
-        self.add_entity_button = entity_page_elements[6]
-        self.delete_entity_button = entity_page_elements[7]
-        self.edit_entity_button = entity_page_elements[8]
-        self.save_changes_button = entity_page_elements[9]
-        self.view_demographics_button = entity_page_elements[10]
-        self.search_input_lineedit = entity_page_elements[11]
-        self.search_type_combobox = entity_page_elements[12]
+        self.students_sort_filter_proxy_model = entity_page_elements[6]
+        self.programs_sort_filter_proxy_model = entity_page_elements[7]
+        self.colleges_sort_filter_proxy_model = entity_page_elements[8]
 
-        self.students_table_horizontal_header = entity_page_elements[13]
-        self.programs_table_horizontal_header = entity_page_elements[14]
-        self.colleges_table_horizontal_header = entity_page_elements[15]
+        self.add_entity_button = entity_page_elements[9]
+        self.delete_entity_button = entity_page_elements[10]
+        self.edit_entity_button = entity_page_elements[11]
+        self.save_changes_button = entity_page_elements[12]
+        self.view_demographics_button = entity_page_elements[13]
+        self.search_input_lineedit = entity_page_elements[14]
+        self.search_type_combobox = entity_page_elements[15]
 
-        self.students_table_reset_sorting_state = entity_page_elements[16]
-        self.programs_table_reset_sorting_state = entity_page_elements[17]
-        self.colleges_table_reset_sorting_state = entity_page_elements[18]
+        self.students_table_horizontal_header = entity_page_elements[16]
+        self.programs_table_horizontal_header = entity_page_elements[17]
+        self.colleges_table_horizontal_header = entity_page_elements[18]
 
-        self.reset_item_delegates = entity_page_elements[19]
+        self.students_table_reset_sorting_state = entity_page_elements[19]
+        self.programs_table_reset_sorting_state = entity_page_elements[20]
+        self.colleges_table_reset_sorting_state = entity_page_elements[21]
+
+        self.reset_item_delegates = entity_page_elements[22]
 
         self.open_dialogs = OpenDialogs()
 
@@ -75,7 +79,8 @@ class EntityPageSignals:
                                                                            self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
-                lambda: SearchHeader.search_using_lineedit(self.search_type_combobox,
+                lambda: SearchHeader.search_using_lineedit(entity_type,
+                                                           self.search_type_combobox,
                                                            self.search_input_lineedit,
                                                            self.students_table_model,
                                                            self.students_sort_filter_proxy_model,
@@ -122,7 +127,8 @@ class EntityPageSignals:
                                                                            self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
-                lambda: SearchHeader.search_using_lineedit(self.search_type_combobox,
+                lambda: SearchHeader.search_using_lineedit(entity_type,
+                                                           self.search_type_combobox,
                                                            self.search_input_lineedit,
                                                            self.programs_table_model,
                                                            self.programs_sort_filter_proxy_model,
@@ -163,7 +169,8 @@ class EntityPageSignals:
                                                                            self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
-                lambda: SearchHeader.search_using_lineedit(self.search_type_combobox,
+                lambda: SearchHeader.search_using_lineedit(entity_type,
+                                                           self.search_type_combobox,
                                                            self.search_input_lineedit,
                                                            self.colleges_table_model,
                                                            self.colleges_sort_filter_proxy_model,
@@ -182,8 +189,6 @@ class EntityPageSignals:
         self.search_type_combobox.currentIndexChanged.connect(
             lambda: SearchHeader.change_search_lineedit_placeholder(self.search_type_combobox,
                                                                     self.search_input_lineedit))
-
-        self.view_demographics_button.clicked.connect(lambda: print(f"{entity_type} view demographics"))
 
     def remove(self):
         self.add_entity_button.disconnect()

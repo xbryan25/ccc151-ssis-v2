@@ -79,9 +79,6 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         program_to_student_connections = self.get_connections.in_students(self.students_table_model.get_data(),
                                                                          self.programs_table_model.get_data())
 
-        print(college_to_program_connections)
-        print(program_to_student_connections)
-
         for index, college_code in enumerate(self.get_college_codes()):
             if college_to_program_connections[college_code]:
 

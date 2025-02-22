@@ -84,9 +84,6 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         program_to_student_connections = self.get_connections.in_students(self.students_table_model.get_data(),
                                                                          self.programs_table_model.get_data())
 
-        print(college_to_program_connections)
-        print(program_to_student_connections)
-
         current_row = 0
 
         for college_code in self.get_college_codes():

@@ -29,7 +29,7 @@ class SearchHeader:
         search_input_lineedit.setPlaceholderText(f"Input {search_type_combobox.currentText()}")
 
     @staticmethod
-    def search_using_lineedit(search_type_combobox, search_input_lineedit, model, sort_filter_proxy_model,
+    def search_using_lineedit(entity_type, search_type_combobox, search_input_lineedit, model, sort_filter_proxy_model,
                               reset_item_delegates_func):
 
         search_type = search_type_combobox.currentIndex()
@@ -44,5 +44,5 @@ class SearchHeader:
 
         model.layoutChanged.emit()
 
-        reset_item_delegates_func()
+        reset_item_delegates_func(entity_type)
 
