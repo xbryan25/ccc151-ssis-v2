@@ -15,10 +15,12 @@ import csv
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
-    def __init__(self, colleges_table_view, college_table_model, programs_table_model):
+    def __init__(self, colleges_table_view, college_table_model, programs_table_model, reset_item_delegates_func):
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.programs_table_model = programs_table_model
 
@@ -95,12 +97,9 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                     # By doing this, the data in the model also gets updated, same reference
                     self.data_from_csv[row_to_edit] = college_to_edit
 
-                    self.colleges_table_model.set_has_changes(True)
+                    self.reset_item_delegates_func("edit_college")
 
-                    # with open("../databases/colleges.csv", 'w', newline='') as from_colleges_csv:
-                    #     writer = csv.writer(from_colleges_csv)
-                    #
-                    #     writer.writerows(self.data_from_csv)
+                    self.colleges_table_model.set_has_changes(True)
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("college", self)
 

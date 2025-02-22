@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QHeaderView
 
 from students.delete_student_design import Ui_Dialog as DeleteStudentUI
 
@@ -6,7 +6,6 @@ from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
 from utils.get_information_codes import GetInformationCodes
-from utils.adjust_horizontal_header import AdjustHorizontalHeader
 
 
 class DeleteStudentDialog(QDialog, DeleteStudentUI):
@@ -55,7 +54,12 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
                     self.reset_item_delegates_func("delete_student")
 
-                    AdjustHorizontalHeader.for_students_table_view(self.horizontal_header)
+                    self.horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+                    self.horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+                    self.horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+                    self.horizontal_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+                    self.horizontal_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+                    self.horizontal_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
                     self.students_table_model.set_has_changes(True)
 

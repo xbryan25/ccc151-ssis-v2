@@ -144,13 +144,15 @@ class EntityPageSignals:
                                                                             self.delete_entity_button,
                                                                             self.edit_entity_button,
                                                                             self.save_changes_button,
-                                                                            self.view_demographics_button)))
+                                                                            self.view_demographics_button,
+                                                                            self.reset_item_delegates.reset)))
 
             self.edit_entity_button.clicked.connect(
                 lambda: self.open_dialogs.open_edit_entity_dialog_for_colleges(self.colleges_table_view,
                                                                                self.programs_table_model,
                                                                                self.colleges_table_model,
-                                                                               self.save_changes_button))
+                                                                               self.save_changes_button,
+                                                                               self.reset_item_delegates.reset))
 
             self.delete_entity_button.clicked.connect(
                 lambda: self.open_dialogs.open_delete_entity_dialog_for_colleges(self.colleges_table_view,
@@ -160,6 +162,7 @@ class EntityPageSignals:
                                                                                  self.delete_entity_button,
                                                                                  self.edit_entity_button,
                                                                                  self.save_changes_button,
+                                                                                 self.view_demographics_button,
                                                                                  self.reset_item_delegates.reset,
                                                                                  self.colleges_table_horizontal_header))
 

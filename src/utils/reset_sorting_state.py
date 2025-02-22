@@ -22,7 +22,7 @@ class ResetSortingState:
         column_header = self.sort_filter_proxy_model.headerData(column_number, Qt.Orientation.Horizontal,
                                                                 Qt.ItemDataRole.DisplayRole)
 
-        if self.information_type != "college":
+        if self.information_type != "college" and self.sort_filter_proxy_model.get_model_data()[0] == "":
             self.update_children_combobox_colors()
 
         if not self.prev_clicked[0] and not self.prev_clicked[1]:

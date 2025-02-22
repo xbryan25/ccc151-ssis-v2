@@ -198,6 +198,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.programs_table_model,
                 self.students_sort_filter_proxy_model,
                 self.programs_sort_filter_proxy_model,
+                self.colleges_sort_filter_proxy_model,
                 self.students_table_reset_sorting_state,
                 self.programs_table_reset_sorting_state,
                 self.colleges_table_model]

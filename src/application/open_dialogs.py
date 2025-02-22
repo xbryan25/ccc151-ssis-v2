@@ -72,15 +72,16 @@ class OpenDialogs:
 
     @staticmethod
     def open_add_entity_dialog_for_colleges(colleges_table_view, colleges_table_model, delete_entity_button,
-                                            edit_entity_button, save_changes_button, view_demographics_button):
+                                            edit_entity_button, save_changes_button, view_demographics_button,
+                                            reset_item_delegates_func):
 
-        add_college_dialog = AddCollegeDialog(colleges_table_view, colleges_table_model)
+        add_college_dialog = AddCollegeDialog(colleges_table_view, colleges_table_model, reset_item_delegates_func)
         add_college_dialog.exec()
 
         SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
                                                                edit_entity_button,
                                                                view_demographics_button],
-                                                              students_table_model)
+                                                              colleges_table_model)
 
         SpecificButtonsEnabler.enable_save_button(save_changes_button, colleges_table_model)
 
@@ -107,9 +108,11 @@ class OpenDialogs:
 
     @staticmethod
     def open_edit_entity_dialog_for_colleges(colleges_table_view, programs_table_model,
-                                             colleges_table_model, save_changes_button):
+                                             colleges_table_model, save_changes_button,
+                                             reset_item_delegates_func):
 
-        edit_college_dialog = EditCollegeDialog(colleges_table_view, colleges_table_model, programs_table_model)
+        edit_college_dialog = EditCollegeDialog(colleges_table_view, colleges_table_model, programs_table_model,
+                                                reset_item_delegates_func)
         edit_college_dialog.exec()
 
         SpecificButtonsEnabler.enable_save_button(save_changes_button, colleges_table_model)

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QHeaderView
 from PyQt6.QtCore import Qt
 
 from programs.delete_program_design import Ui_Dialog as DeleteProgramUI
@@ -8,7 +8,6 @@ from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteIt
 
 from utils.get_information_codes import GetInformationCodes
 from utils.get_connections import GetConnections
-from utils.adjust_horizontal_header import AdjustHorizontalHeader
 
 
 class DeleteProgramDialog(QDialog, DeleteProgramUI):
@@ -48,8 +47,6 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
             self.program_to_delete_combobox.addItem(program_code)
 
     def delete_program_from_table(self):
-        print("clicked")
-
         for program in self.programs_table_model.get_data():
             if program[0] == self.program_to_delete_combobox.currentText():
 
@@ -70,7 +67,6 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                 confirm_delete_decision = self.confirm_to_delete_dialog.get_confirm_delete_decision()
 
                 if confirm_delete_decision:
-                    print(self.programs_table_model.get_data())
                     self.delete_students_who_have_program_code(program_code_to_delete)
 
                     self.programs_table_model.layoutAboutToBeChanged.emit()
@@ -80,8 +76,11 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
 
-                    self.reset_item_delegates_func("delete_student")
-                    AdjustHorizontalHeader.for_programs_table_view(self.horizontal_header)
+                    self.reset_item_delegates_func("delete_program")
+
+                    self.horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+                    self.horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+                    self.horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
 
                     self.programs_table_model.set_has_changes(True)
 

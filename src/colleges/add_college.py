@@ -14,10 +14,12 @@ import csv
 
 
 class AddCollegeDialog(QDialog, AddCollegeUI):
-    def __init__(self, colleges_table_view, colleges_table_model):
+    def __init__(self, colleges_table_view, colleges_table_model, reset_items_delegates_func):
         super().__init__()
 
         self.setupUi(self)
+
+        self.reset_item_delegates_func = reset_items_delegates_func
 
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = colleges_table_model
@@ -40,6 +42,8 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
                               self.college_name_lineedit.text().replace(",", "_")]
 
             self.add_college_to_table(college_to_add)
+
+            self.reset_item_delegates_func("add_college")
 
             # Notifies the CustomTableModel instance that something had changed
             self.colleges_table_model.set_has_changes(True)

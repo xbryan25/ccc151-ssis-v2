@@ -15,18 +15,18 @@ class ResetItemDelegates:
 
         self.students_sort_filter_proxy_model = reset_item_delegates_elements[4]
         self.programs_sort_filter_proxy_model = reset_item_delegates_elements[5]
+        self.colleges_sort_filter_proxy_model = reset_item_delegates_elements[6]
 
-        self.students_table_reset_sorting_state = reset_item_delegates_elements[6]
-        self.programs_table_reset_sorting_state = reset_item_delegates_elements[7]
+        self.students_table_reset_sorting_state = reset_item_delegates_elements[7]
+        self.programs_table_reset_sorting_state = reset_item_delegates_elements[8]
 
-        self.colleges_table_model = reset_item_delegates_elements[8]
+        self.colleges_table_model = reset_item_delegates_elements[9]
 
 
     # Dynamic change of combobox
     # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
 
     def reset(self, state=None):
-
         if state in ["add_student", "delete_student", "edit_student"]:
             self.students_table_reset_sorting_state.force_reset_sort()
 
@@ -40,11 +40,17 @@ class ResetItemDelegates:
             self.load_item_delegates_program_codes()
             self.load_item_delegates_year_and_gender()
 
-        elif state in ["program" "add_program", "delete_program", "edit_program"]:
+        elif state in ["program", "add_program", "delete_program", "edit_program"]:
+
             self.programs_sort_filter_proxy_model.beginResetModel()
             self.programs_sort_filter_proxy_model.endResetModel()
 
             self.load_item_delegates_college_codes()
+
+        elif state in ["add_college", "delete_college", "edit_college"]:
+
+            self.colleges_sort_filter_proxy_model.beginResetModel()
+            self.colleges_sort_filter_proxy_model.endResetModel()
 
     def load_item_delegates_year_and_gender(self):
         # Check if self.students_table_model is empty, if so, disable combobox item delegate

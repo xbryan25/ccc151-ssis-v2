@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QDialog
+from PyQt6.QtWidgets import QDialog, QHeaderView
 
 from colleges.delete_college_design import Ui_Dialog as DeleteCollegeUI
 
@@ -6,7 +6,6 @@ from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
 from utils.get_information_codes import GetInformationCodes
-from utils.adjust_horizontal_header import AdjustHorizontalHeader
 
 
 class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
@@ -60,15 +59,17 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.delete_programs_who_have_college_code(college_code_to_delete)
 
                     self.colleges_table_model.layoutAboutToBeChanged.emit()
-                    self.colleges_table_model.data_from_csv.remove(college)
+                    self.colleges_table_model.get_data().remove(college)
                     self.colleges_table_model.layoutChanged.emit()
 
                     self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
                     self.colleges_table_model.model_data_is_empty()
 
-                    self.reset_item_delegates_func()
-                    AdjustHorizontalHeader.for_colleges_table_view(self.horizontal_header)
+                    self.reset_item_delegates_func("delete_college")
+
+                    self.horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+                    self.horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
                     self.colleges_table_model.set_has_changes(True)
 
