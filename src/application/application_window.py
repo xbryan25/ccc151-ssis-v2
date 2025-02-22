@@ -129,7 +129,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
 
         SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_entity_button,
-                                                               self.edit_entity_button],
+                                                               self.edit_entity_button,
+                                                               self.view_demographics_button],
                                                               self.students_table_model)
 
         SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.students_table_model)
@@ -153,7 +154,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
 
         SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_entity_button,
-                                                               self.edit_entity_button],
+                                                               self.edit_entity_button,
+                                                               self.view_demographics_button],
                                                               self.students_table_model)
 
         SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.students_table_model)
@@ -177,7 +179,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
 
         SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_entity_button,
-                                                               self.edit_entity_button],
+                                                               self.edit_entity_button,
+                                                               self.view_demographics_button],
                                                               self.colleges_table_model)
 
         SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.colleges_table_model)

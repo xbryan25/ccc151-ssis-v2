@@ -48,6 +48,7 @@ class EntityPageSignals:
                                                                             self.delete_entity_button,
                                                                             self.edit_entity_button,
                                                                             self.save_changes_button,
+                                                                            self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
             self.edit_entity_button.clicked.connect(
@@ -64,8 +65,14 @@ class EntityPageSignals:
                                                                                  self.delete_entity_button,
                                                                                  self.edit_entity_button,
                                                                                  self.save_changes_button,
+                                                                                 self.view_demographics_button,
                                                                                  self.reset_item_delegates.reset,
                                                                                  self.students_table_horizontal_header))
+
+            self.view_demographics_button.clicked.connect(
+                lambda: self.open_dialogs.open_students_demographic_dialog(self.students_table_model,
+                                                                           self.programs_table_model,
+                                                                           self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
                 lambda: SearchHeader.search_using_lineedit(self.search_type_combobox,
@@ -73,6 +80,7 @@ class EntityPageSignals:
                                                            self.students_table_model,
                                                            self.students_sort_filter_proxy_model,
                                                            self.reset_item_delegates.reset))
+
 
             self.students_table_horizontal_header.sectionClicked.connect(
                 self.students_table_reset_sorting_state.reset_sorting_state)
@@ -85,6 +93,7 @@ class EntityPageSignals:
                                                                             self.delete_entity_button,
                                                                             self.edit_entity_button,
                                                                             self.save_changes_button,
+                                                                            self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
             self.edit_entity_button.clicked.connect(
@@ -103,8 +112,14 @@ class EntityPageSignals:
                                                                                  self.delete_entity_button,
                                                                                  self.edit_entity_button,
                                                                                  self.save_changes_button,
+                                                                                 self.view_demographics_button,
                                                                                  self.reset_item_delegates.reset,
                                                                                  self.programs_table_horizontal_header))
+
+            self.view_demographics_button.clicked.connect(
+                lambda: self.open_dialogs.open_programs_demographic_dialog(self.students_table_model,
+                                                                           self.programs_table_model,
+                                                                           self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
                 lambda: SearchHeader.search_using_lineedit(self.search_type_combobox,
@@ -122,7 +137,8 @@ class EntityPageSignals:
                                                                             self.colleges_table_model,
                                                                             self.delete_entity_button,
                                                                             self.edit_entity_button,
-                                                                            self.save_changes_button)))
+                                                                            self.save_changes_button,
+                                                                            self.view_demographics_button)))
 
             self.edit_entity_button.clicked.connect(
                 lambda: self.open_dialogs.open_edit_entity_dialog_for_colleges(self.colleges_table_view,
@@ -140,6 +156,11 @@ class EntityPageSignals:
                                                                                  self.save_changes_button,
                                                                                  self.reset_item_delegates.reset,
                                                                                  self.colleges_table_horizontal_header))
+
+            self.view_demographics_button.clicked.connect(
+                lambda: self.open_dialogs.open_colleges_demographic_dialog(self.students_table_model,
+                                                                           self.programs_table_model,
+                                                                           self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
                 lambda: SearchHeader.search_using_lineedit(self.search_type_combobox,
