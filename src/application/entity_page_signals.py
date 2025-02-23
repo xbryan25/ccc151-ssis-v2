@@ -183,8 +183,7 @@ class EntityPageSignals:
                 self.colleges_table_reset_sorting_state.reset_sorting_state)
 
         self.save_changes_button.clicked.connect(
-            lambda: self.open_dialogs.open_confirm_save_dialog(entity_type,
-                                                               self.students_table_model,
+            lambda: self.open_dialogs.open_confirm_save_dialog(self.students_table_model,
                                                                self.programs_table_model,
                                                                self.colleges_table_model,
                                                                self.save_changes_button))
