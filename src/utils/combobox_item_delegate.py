@@ -13,7 +13,7 @@ class ComboboxItemDelegate(QItemDelegate):
         combobox = QComboBox(parent)
 
         if index.row() % 2 == 0:
-            combobox.setStyleSheet("background-color: rgb(176, 137, 104)")
+            combobox.setStyleSheet("background-color: rgb(176, 137, 104);")
         else:
             combobox.setStyleSheet("background-color: rgb(221, 184, 146);")
 

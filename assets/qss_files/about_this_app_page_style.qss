@@ -1,0 +1,93 @@
+QWidget{
+    background-color:rgb(230, 204, 178);
+}
+
+QPushButton{
+    background-color: rgb(176, 137, 104);
+    color: rgb(237, 224, 212);
+
+    border-radius: 10%;
+
+    border-color: rgb(156, 102, 68);
+    border-width: 2px;
+    border-style: solid;
+}
+
+QPushButton:disabled {
+    background-color: rgb(221, 184, 146);
+    color: rgb(127, 85, 57);
+}
+
+QPushButton::hover{
+    background-color: rgb(127, 85, 57);
+}
+
+QScrollBar:vertical {
+    background: rgb(156, 102, 68);
+
+    border-color: rgb(127, 85, 57);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 3%;
+}
+
+QScrollBar::handle:vertical {
+    height: 10px;
+    background: rgb(230, 204, 178);
+}
+
+QScrollBar::handle:vertical:hover {
+    height: 10px;
+    background: rgb(200, 165, 125);
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: none;
+    background: none;
+    color: none;
+
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+     background: none;
+}
+
+QLineEdit{
+    border: 2px solid gray;
+    border-radius: 5px;
+    padding: 0 5px;
+}
+
+#about_this_app_header_frame{
+    background-color: #736556;
+}
+
+#about_this_app_title_label{
+    font: 28pt "MS Shell Dlg 2";
+
+    background-color: #736556;
+    color: rgb(220, 220, 220);
+}
+
+#about_this_app_label{
+    font: 28pt "MS Shell Dlg 2";
+
+    background-color: #736556;
+    color: rgb(220, 220, 220);
+}

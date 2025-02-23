@@ -53,12 +53,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_page_signals = None
 
         self.back_to_main_button.clicked.connect(self.change_to_landing_page)
+        self.about_this_app_back_to_main_button.clicked.connect(self.change_to_landing_page)
 
         self.setup_table_views()
 
         self.students_button.clicked.connect(self.change_to_entity_page_student)
         self.programs_button.clicked.connect(self.change_to_entity_page_program)
         self.colleges_button.clicked.connect(self.change_to_entity_page_college)
+        self.about_this_app_button.clicked.connect(self.change_to_about_this_app_page)
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/landing_page_style.qss", "r") as file:
@@ -66,6 +68,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         with open("../assets/qss_files/entity_page_style.qss", "r") as file:
             self.entity_page.setStyleSheet(file.read())
+
+        with open("../assets/qss_files/about_this_app_page_style.qss", "r") as file:
+            self.about_this_app_page.setStyleSheet(file.read())
 
     def change_to_landing_page(self):
         self.stackedWidget.setCurrentWidget(self.landing_page)
@@ -202,6 +207,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.setWindowTitle("Sequence | College")
 
+    def change_to_about_this_app_page(self):
+        self.stackedWidget.setCurrentWidget(self.about_this_app_page)
+        self.setWindowTitle("Sequence | About this app")
+
     def for_reset_item_delegates(self):
         return [self.students_table_view,
                 self.programs_table_view,
@@ -269,6 +278,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         font.setWeight(75)
 
         self.back_to_main_button.setFont(font)
+        self.about_this_app_back_to_main_button.setFont(font)
         self.add_entity_button.setFont(font)
         self.delete_entity_button.setFont(font)
         self.edit_entity_button.setFont(font)
