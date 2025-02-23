@@ -150,11 +150,16 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
                 self.program_contents_label.setObjectName(f"{college_code}_{program}_contents_label")
                 self.verticalLayout.addWidget(self.program_contents_label)
 
-                self.program_contents_label.setText(f"Number of students: {len(program_to_student_connections[program])}"
-                                                     "\n\n"
-                                                    f"{self.get_year_level_demographic_in_programs(program)}"
-                                                     "\n\n"
-                                                    f"{self.get_gender_demographic_in_programs(program)}")
+                number_of_students = len(program_to_student_connections[program])
+
+                if number_of_students == 0:
+                    self.program_contents_label.setText(f"Number of students: 0")
+                else:
+                    self.program_contents_label.setText(f"Number of students: {number_of_students}"
+                                                        "\n\n"
+                                                        f"{self.get_year_level_demographic_in_programs(program)}"
+                                                        "\n\n"
+                                                        f"{self.get_gender_demographic_in_programs(program)}")
 
                 self.gridLayout_2.addWidget(self.program_frame, current_row, 0, 1, 3)
 

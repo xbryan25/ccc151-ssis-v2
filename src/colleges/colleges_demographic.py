@@ -160,15 +160,21 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
 
             if self.get_number_of_programs_in_college(college_code) == 0:
                 self.college_contents_label.setText("Number of programs: 0")
-            else:
 
-                self.college_contents_label.setText(f"Number of programs: {self.get_number_of_programs_in_college(college_code)}"
-                                                    "\n\n"
-                                                    f"Number of students: {self.get_number_of_students_in_college(college_code)}"
-                                                    "\n\n"
-                                                    f"{self.get_year_level_demographic_in_colleges(college_code)}"
-                                                    "\n\n"
-                                                    f"{self.get_gender_demographic_in_colleges(college_code)}")
+            elif self.get_number_of_students_in_college(college_code) == 0:
+                self.college_contents_label.setText(
+                    f"Number of programs: {self.get_number_of_programs_in_college(college_code)}"
+                    "\n\n"
+                    f"Number of students: 0")
+            else:
+                self.college_contents_label.setText(
+                    f"Number of programs: {self.get_number_of_programs_in_college(college_code)}"
+                    "\n\n"
+                    f"Number of students: {self.get_number_of_students_in_college(college_code)}"
+                    "\n\n"
+                    f"{self.get_year_level_demographic_in_colleges(college_code)}"
+                    "\n\n"
+                    f"{self.get_gender_demographic_in_colleges(college_code)}")
 
 
     def get_existing_students(self):
