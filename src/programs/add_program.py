@@ -20,6 +20,8 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.reset_item_delegates_func = reset_item_delegates_func
 
         self.colleges_table_model = colleges_table_model
@@ -56,7 +58,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
             self.reset_item_delegates_func("add_program")
 
-            self.success_add_item_dialog = SuccessAddItemDialog("programs", self)
+            self.success_add_item_dialog = SuccessAddItemDialog("program", self)
             self.success_add_item_dialog.exec()
 
     def add_program_to_table(self, program_to_add):
@@ -97,3 +99,8 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
     def get_program_existing_information(self):
         return self.get_existing_information.from_programs(self.programs_table_model.get_data())
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

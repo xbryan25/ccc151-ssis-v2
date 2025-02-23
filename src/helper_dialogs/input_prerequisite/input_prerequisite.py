@@ -10,6 +10,8 @@ class InputPrerequisiteDialog(QDialog, InputPrerequisiteUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.prerequisite_type = prerequisite_type
 
         self.proceed_button.clicked.connect(self.close_dialog)
@@ -32,4 +34,8 @@ class InputPrerequisiteDialog(QDialog, InputPrerequisiteUI):
     def close_dialog(self):
         self.close()
 
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())
 

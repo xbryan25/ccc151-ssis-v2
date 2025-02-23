@@ -24,6 +24,8 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
@@ -177,3 +179,8 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
 
     def get_college_codes(self):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

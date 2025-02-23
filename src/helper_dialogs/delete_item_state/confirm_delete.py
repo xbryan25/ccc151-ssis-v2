@@ -10,6 +10,8 @@ class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.confirm_delete_decision = False
 
         self.information_type = information_type
@@ -72,3 +74,8 @@ class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
     def add_signals(self):
         self.yes_button.clicked.connect(self.proceed_delete)
         self.no_button.clicked.connect(self.close_dialog)
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

@@ -156,9 +156,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         SpecificButtonsEnabler.enable_delete_and_edit_buttons([self.delete_entity_button,
                                                                self.edit_entity_button,
                                                                self.view_demographics_button],
-                                                              self.students_table_model)
+                                                              self.programs_table_model)
 
-        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.students_table_model)
+        SpecificButtonsEnabler.enable_save_button(self.save_changes_button, self.programs_table_model)
 
         SearchHeader.change_contents("program", self.search_type_combobox)
 

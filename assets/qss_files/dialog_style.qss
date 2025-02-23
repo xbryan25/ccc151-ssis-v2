@@ -1,0 +1,87 @@
+QWidget{
+    background-color:rgb(230, 204, 178);
+}
+
+QPushButton{
+    background-color: rgb(176, 137, 104);
+    color: rgb(237, 224, 212);
+
+    border-radius: 10%;
+
+    border-color: rgb(156, 102, 68);
+    border-width: 2px;
+    border-style: solid;
+}
+
+QPushButton:disabled {
+    background-color: rgb(230, 204, 178);
+    color: rgb(127, 85, 57);
+}
+
+QPushButton::hover{
+    background-color: rgb(127, 85, 57);
+}
+
+QComboBox{
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+
+    background-color: rgb(221, 184, 146);
+    selection-background-color: rgb(180, 180, 170);
+    selection-color: black;
+
+    font: 10pt "Segoe UI Semibold";
+    font-weight: bold;
+}
+
+QComboBox:disabled{
+    background-color: rgb(230, 204, 178);
+}
+
+QComboBox::drop-down {
+    width: 16px;
+    height: 12px;
+
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-right: 5px;
+
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+
+    border-radius: 5px;
+
+    background-color: rgb(221, 184, 146);
+}
+
+QComboBox::drop-down:hover {
+    background-color: rgb(176, 137, 104);
+}
+
+QComboBox::drop-down:pressed {
+    background-color: rgb(176, 137, 104);
+}
+
+QComboBox::down-arrow{
+    border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
+}
+
+QLineEdit{
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+
+    background-color: rgb(221, 184, 146);
+}
+
+QLineEdit:disabled{
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+
+    background-color: rgb(230, 204, 178);
+}
+
+

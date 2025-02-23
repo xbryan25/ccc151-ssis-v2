@@ -10,6 +10,8 @@ class SuccessEditItemDialog(QDialog, SuccessEditItemUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.edit_item_type = edit_item_type
         self.edit_item_dialog = edit_item_dialog
 
@@ -30,3 +32,8 @@ class SuccessEditItemDialog(QDialog, SuccessEditItemUI):
             self.edit_item_dialog.close()
 
         self.close()
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

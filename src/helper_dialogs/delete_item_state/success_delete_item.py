@@ -10,6 +10,8 @@ class SuccessDeleteItemDialog(QDialog, SuccessDeleteItemUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.delete_item_type = delete_item_type
         self.delete_item_dialog = delete_item_dialog
 
@@ -30,3 +32,8 @@ class SuccessDeleteItemDialog(QDialog, SuccessDeleteItemUI):
             self.delete_item_dialog.close()
 
         self.close()
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

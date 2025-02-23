@@ -167,13 +167,17 @@ QComboBox::down-arrow{
 }
 
 #title_label{
+    font: 28pt "MS Shell Dlg 2";
+
     background-color: #736556;
-    color: white;
+    color: rgb(220, 220, 220);
 }
 
 #entity_type_label{
+    font: 28pt "MS Shell Dlg 2";
+
     background-color: #736556;
-    color: white;
+    color: rgb(220, 220, 220);
 }
 
 #search_type_combobox{

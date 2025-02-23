@@ -20,6 +20,8 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.reset_item_delegates_func = reset_item_delegates_func
 
         self.programs_table_model = programs_table_model
@@ -158,3 +160,8 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
         self.college_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
         self.college_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

@@ -19,6 +19,8 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.reset_item_delegates_func = reset_items_delegates_func
 
         self.colleges_table_view = colleges_table_view
@@ -83,3 +85,8 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
     def add_signals(self):
         self.add_college_button.clicked.connect(self.add_college_to_csv)
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

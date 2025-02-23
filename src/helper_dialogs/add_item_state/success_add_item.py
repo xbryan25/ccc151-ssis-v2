@@ -10,6 +10,8 @@ class SuccessAddItemDialog(QDialog, SuccessAddItemUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.add_item_type = add_item_type
         self.add_item_dialog = add_item_dialog
 
@@ -18,6 +20,7 @@ class SuccessAddItemDialog(QDialog, SuccessAddItemUI):
         self.edit_message()
 
     def edit_message(self):
+
         if self.add_item_type == "student":
             self.message_label.setText("No issues found when adding the student")
         elif self.add_item_type == "program":
@@ -30,5 +33,10 @@ class SuccessAddItemDialog(QDialog, SuccessAddItemUI):
             self.add_item_dialog.close()
 
         self.close()
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())
 
 

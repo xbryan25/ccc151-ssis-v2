@@ -16,6 +16,8 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.reset_item_delegates_func = reset_item_delegates_func
         self.horizontal_header = horizontal_header
 
@@ -72,3 +74,7 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
     def get_student_id_numbers(self):
         return self.get_information_codes.for_students(self.students_table_model.get_data())
 
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

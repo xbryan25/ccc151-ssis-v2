@@ -10,6 +10,8 @@ class FailToEditItemDialog(QDialog, FailToEditItemUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.issues = issues
         self.information_type = information_type
 
@@ -22,8 +24,6 @@ class FailToEditItemDialog(QDialog, FailToEditItemUI):
         issues_str = '\n'.join(self.issues)
 
         additional_space = (len(self.issues) - 1) * 15
-
-        print(issues_str)
 
         self.label_2.setText(issues_str)
 
@@ -40,3 +40,8 @@ class FailToEditItemDialog(QDialog, FailToEditItemUI):
 
     def close_dialog(self):
         self.close()
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())

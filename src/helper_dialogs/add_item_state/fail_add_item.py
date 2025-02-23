@@ -10,6 +10,8 @@ class FailAddItemDialog(QDialog, FailAddItemUI):
 
         self.setupUi(self)
 
+        self.set_external_stylesheet()
+
         self.issues = issues
         self.information_type = information_type
 
@@ -38,3 +40,8 @@ class FailAddItemDialog(QDialog, FailAddItemUI):
 
     def close_dialog(self):
         self.close()
+
+    def set_external_stylesheet(self):
+
+        with open("../assets/qss_files/dialog_style.qss", "r") as file:
+            self.setStyleSheet(file.read())
