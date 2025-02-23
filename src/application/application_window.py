@@ -194,6 +194,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
     def for_reset_item_delegates(self):
         return [self.students_table_view,
                 self.programs_table_view,
+                self.colleges_table_view,
                 self.students_table_model,
                 self.programs_table_model,
                 self.students_sort_filter_proxy_model,

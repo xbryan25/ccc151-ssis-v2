@@ -69,18 +69,18 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                 if confirm_delete_decision:
                     self.delete_students_who_have_program_code(program_code_to_delete)
 
+                    self.students_table_model.layoutAboutToBeChanged.emit()
                     self.programs_table_model.layoutAboutToBeChanged.emit()
+
                     self.programs_table_model.get_data().remove(program)
-                    self.programs_table_model.layoutChanged.emit()
 
                     self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
 
-                    self.reset_item_delegates_func("delete_program")
+                    self.students_table_model.layoutChanged.emit()
+                    self.programs_table_model.layoutChanged.emit()
 
-                    self.horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-                    self.horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-                    self.horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+                    self.reset_item_delegates_func("delete_program")
 
                     self.programs_table_model.set_has_changes(True)
 

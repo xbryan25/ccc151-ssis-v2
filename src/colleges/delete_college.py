@@ -58,13 +58,19 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                 if confirm_delete_decision:
                     self.delete_programs_who_have_college_code(college_code_to_delete)
 
+                    self.students_table_model.layoutAboutToBeChanged.emit()
+                    self.programs_table_model.layoutAboutToBeChanged.emit()
                     self.colleges_table_model.layoutAboutToBeChanged.emit()
+
                     self.colleges_table_model.get_data().remove(college)
-                    self.colleges_table_model.layoutChanged.emit()
 
                     self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
                     self.colleges_table_model.model_data_is_empty()
+
+                    self.colleges_table_model.layoutChanged.emit()
+                    self.students_table_model.layoutChanged.emit()
+                    self.programs_table_model.layoutChanged.emit()
 
                     self.reset_item_delegates_func("delete_college")
 

@@ -48,18 +48,11 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
                     self.students_table_model.get_data().remove(student)
 
-                    self.students_table_model.layoutChanged.emit()
-
                     self.students_table_model.model_data_is_empty()
 
-                    self.reset_item_delegates_func("delete_student")
+                    self.students_table_model.layoutChanged.emit()
 
-                    self.horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
-                    self.horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-                    self.horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
-                    self.horizontal_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
-                    self.horizontal_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
-                    self.horizontal_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+                    self.reset_item_delegates_func("delete_student")
 
                     self.students_table_model.set_has_changes(True)
 

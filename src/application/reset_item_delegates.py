@@ -1,3 +1,5 @@
+from PyQt6.QtWidgets import QHeaderView
+
 from utils.combobox_item_delegate import ComboboxItemDelegate
 from utils.get_information_codes import GetInformationCodes
 
@@ -9,18 +11,23 @@ class ResetItemDelegates:
 
         self.students_table_view = reset_item_delegates_elements[0]
         self.programs_table_view = reset_item_delegates_elements[1]
+        self.colleges_table_view = reset_item_delegates_elements[2]
 
-        self.students_table_model = reset_item_delegates_elements[2]
-        self.programs_table_model = reset_item_delegates_elements[3]
+        self.students_table_view_header = self.students_table_view.horizontalHeader()
+        self.programs_table_view_header = self.programs_table_view.horizontalHeader()
+        self.colleges_table_view_header = self.colleges_table_view.horizontalHeader()
 
-        self.students_sort_filter_proxy_model = reset_item_delegates_elements[4]
-        self.programs_sort_filter_proxy_model = reset_item_delegates_elements[5]
-        self.colleges_sort_filter_proxy_model = reset_item_delegates_elements[6]
+        self.students_table_model = reset_item_delegates_elements[3]
+        self.programs_table_model = reset_item_delegates_elements[4]
 
-        self.students_table_reset_sorting_state = reset_item_delegates_elements[7]
-        self.programs_table_reset_sorting_state = reset_item_delegates_elements[8]
+        self.students_sort_filter_proxy_model = reset_item_delegates_elements[5]
+        self.programs_sort_filter_proxy_model = reset_item_delegates_elements[6]
+        self.colleges_sort_filter_proxy_model = reset_item_delegates_elements[7]
 
-        self.colleges_table_model = reset_item_delegates_elements[9]
+        self.students_table_reset_sorting_state = reset_item_delegates_elements[8]
+        self.programs_table_reset_sorting_state = reset_item_delegates_elements[9]
+
+        self.colleges_table_model = reset_item_delegates_elements[10]
 
 
     # Dynamic change of combobox
@@ -37,20 +44,51 @@ class ResetItemDelegates:
             self.students_sort_filter_proxy_model.beginResetModel()
             self.students_sort_filter_proxy_model.endResetModel()
 
+            self.students_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            self.students_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+            self.students_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+
             self.load_item_delegates_program_codes()
             self.load_item_delegates_year_and_gender()
 
         elif state in ["program", "add_program", "delete_program", "edit_program"]:
-
             self.programs_sort_filter_proxy_model.beginResetModel()
             self.programs_sort_filter_proxy_model.endResetModel()
+
+            self.students_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            self.students_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+            self.students_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+
+            self.programs_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            self.programs_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            self.programs_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
 
             self.load_item_delegates_college_codes()
 
         elif state in ["add_college", "delete_college", "edit_college"]:
-
             self.colleges_sort_filter_proxy_model.beginResetModel()
             self.colleges_sort_filter_proxy_model.endResetModel()
+
+            self.students_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            self.students_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+            self.students_table_view_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+            self.students_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+
+            self.programs_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            self.programs_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            self.programs_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+
+            self.colleges_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            self.colleges_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+
 
     def load_item_delegates_year_and_gender(self):
         # Check if self.students_table_model is empty, if so, disable combobox item delegate
