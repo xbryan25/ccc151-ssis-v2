@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
@@ -51,7 +52,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         spacerItem1 = QtWidgets.QSpacerItem(20, 15, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         self.gridLayout_2.addItem(spacerItem1, 1, 1, 1, 3)
-        self.new_college_code_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.new_college_code_combobox = CustomComboBox(parent=self.frame)
         self.new_college_code_combobox.setEnabled(False)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
@@ -79,7 +80,7 @@ class Ui_Dialog(object):
         self.new_college_code_label.setFont(font)
         self.new_college_code_label.setObjectName("new_college_code_label")
         self.gridLayout_2.addWidget(self.new_college_code_label, 4, 1, 1, 1)
-        self.program_to_edit_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.program_to_edit_combobox = CustomComboBox(parent=self.frame)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)

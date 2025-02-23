@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
@@ -73,7 +74,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addWidget(self.new_gender_label, 6, 1, 1, 1)
         spacerItem2 = QtWidgets.QSpacerItem(20, 15, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         self.gridLayout_2.addItem(spacerItem2, 1, 1, 1, 3)
-        self.student_to_edit_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.student_to_edit_combobox = CustomComboBox(parent=self.frame)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -85,7 +86,7 @@ class Ui_Dialog(object):
         self.student_to_edit_combobox.setObjectName("student_to_edit_combobox")
         self.student_to_edit_combobox.addItem("")
         self.gridLayout_2.addWidget(self.student_to_edit_combobox, 0, 3, 1, 1)
-        self.new_program_code_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.new_program_code_combobox = CustomComboBox(parent=self.frame)
         self.new_program_code_combobox.setEnabled(False)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
@@ -180,7 +181,7 @@ class Ui_Dialog(object):
         self.student_to_edit_label.setFont(font)
         self.student_to_edit_label.setObjectName("student_to_edit_label")
         self.gridLayout_2.addWidget(self.student_to_edit_label, 0, 1, 1, 1)
-        self.college_code_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.college_code_combobox = CustomComboBox(parent=self.frame)
         self.college_code_combobox.setEnabled(False)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")

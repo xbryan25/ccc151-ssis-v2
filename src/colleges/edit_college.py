@@ -60,7 +60,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             # If either the new ID number, new first name, or new last name is blank, their
             #   respective placeholder texts will be used
 
-            college_to_edit = [self.new_college_code_lineedit.text()
+            college_to_edit = [self.new_college_code_lineedit.text().upper()
                                if self.new_college_code_lineedit.text().strip()
                                else self.new_college_code_lineedit.placeholderText(),
 

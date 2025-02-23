@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
@@ -47,7 +48,7 @@ class Ui_Dialog(object):
         self.horizontalLayout.addWidget(self.id_number_label)
         spacerItem = QtWidgets.QSpacerItem(10, 5, QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.student_to_delete_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.student_to_delete_combobox = CustomComboBox(parent=self.frame)
         self.student_to_delete_combobox.setMaximumSize(QtCore.QSize(200, 16777215))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")

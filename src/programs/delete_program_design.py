@@ -7,6 +7,7 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
@@ -36,7 +37,7 @@ class Ui_Dialog(object):
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(10, 20, QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Minimum)
         self.gridLayout.addItem(spacerItem, 2, 1, 1, 1)
-        self.program_to_delete_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.program_to_delete_combobox = CustomComboBox(parent=self.frame)
         self.program_to_delete_combobox.setEnabled(True)
         self.program_to_delete_combobox.setMaximumSize(QtCore.QSize(200, 16777215))
         font = QtGui.QFont()
@@ -70,7 +71,7 @@ class Ui_Dialog(object):
         self.college_code_label.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.college_code_label.setObjectName("college_code_label")
         self.gridLayout.addWidget(self.college_code_label, 1, 0, 1, 1)
-        self.college_code_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.college_code_combobox = CustomComboBox(parent=self.frame)
         self.college_code_combobox.setEnabled(True)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
