@@ -126,6 +126,9 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             self.new_college_name_lineedit.setEnabled(True)
 
         else:
+            self.new_college_code_lineedit.setPlaceholderText("")
+            self.new_college_name_lineedit.setPlaceholderText("")
+
             self.edit_college_button.setEnabled(False)
             self.new_college_code_lineedit.setEnabled(False)
             self.new_college_name_lineedit.setEnabled(False)

@@ -252,8 +252,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
             entity_type = "student"
 
         if entity_type != "":
-            OpenDialogs.open_confirm_save_dialog(entity_type,
-                                                 self.students_table_model,
+            OpenDialogs.open_confirm_save_dialog(self.students_table_model,
                                                  self.programs_table_model,
                                                  self.colleges_table_model)
 

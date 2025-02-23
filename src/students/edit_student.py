@@ -160,7 +160,8 @@ class EditStudentDialog(QDialog, EditStudentUI):
             self.new_program_code_combobox.setEnabled(False)
 
     def enable_edit_button(self, program_code):
-        if program_code != "--Select a program--" and program_code != "":
+
+        if program_code != "--Select a program--" and program_code != "" and program_code in self.get_program_codes():
             self.edit_student_button.setEnabled(True)
         else:
             self.edit_student_button.setEnabled(False)

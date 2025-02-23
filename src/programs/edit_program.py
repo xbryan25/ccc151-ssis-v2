@@ -100,16 +100,12 @@ class EditProgramDialog(QDialog, EditProgramUI):
                     self.success_edit_item_dialog = SuccessEditItemDialog("program", self)
                     self.success_edit_item_dialog.exec()
 
-                else:
-                    print("No changes made")
-            else:
-                print("Cancel edit")
-
     def add_program_codes_to_combobox(self):
         for program_code in self.get_program_codes():
             self.program_to_edit_combobox.addItem(program_code)
 
     def add_college_codes_to_combobox(self):
+        self.new_college_code_combobox.addItem("")
         for college_code in self.get_college_codes():
             self.new_college_code_combobox.addItem(college_code)
 
@@ -124,11 +120,26 @@ class EditProgramDialog(QDialog, EditProgramUI):
             self.new_program_name_lineedit.setEnabled(True)
             self.new_college_code_combobox.setEnabled(True)
 
+            if self.new_college_code_combobox.currentText() == "":
+                self.new_college_code_combobox.setItemText(0, "--Select a college--")
+
         else:
+            self.new_college_code_combobox.setItemText(0, "")
+            self.new_college_code_combobox.setCurrentIndex(0)
+
+            self.new_program_code_lineedit.setPlaceholderText("")
+            self.new_program_name_lineedit.setPlaceholderText("")
+
             self.edit_program_button.setEnabled(False)
             self.new_program_code_lineedit.setEnabled(False)
             self.new_program_name_lineedit.setEnabled(False)
             self.new_college_code_combobox.setEnabled(False)
+
+    def enable_edit_button(self, college_code):
+        if college_code != "--Select a college--" and college_code != "" and college_code in self.get_college_codes():
+            self.edit_program_button.setEnabled(True)
+        else:
+            self.edit_program_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
         for program in self.programs_table_model.get_data():
@@ -163,6 +174,8 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         self.program_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
         self.program_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+
+        self.new_college_code_combobox.currentTextChanged.connect(self.enable_edit_button)
 
     def has_issues(self):
         issues = []

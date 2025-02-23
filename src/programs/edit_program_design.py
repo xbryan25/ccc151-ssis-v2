@@ -58,6 +58,7 @@ class Ui_Dialog(object):
         font.setBold(True)
         font.setWeight(75)
         self.new_college_code_combobox.setFont(font)
+        self.new_college_code_combobox.setEditable(True)
         self.new_college_code_combobox.setObjectName("new_college_code_combobox")
         self.gridLayout_2.addWidget(self.new_college_code_combobox, 4, 3, 1, 1)
         self.program_to_edit_label = QtWidgets.QLabel(parent=self.frame)
