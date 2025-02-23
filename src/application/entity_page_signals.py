@@ -1,6 +1,6 @@
 
 from application.open_dialogs import OpenDialogs
-from application.search_header import SearchHeader
+from application.search_and_sort_header import SearchAndSortHeader
 
 # Put this in a list
 
@@ -24,18 +24,16 @@ class EntityPageSignals:
         self.edit_entity_button = entity_page_elements[11]
         self.save_changes_button = entity_page_elements[12]
         self.view_demographics_button = entity_page_elements[13]
-        self.search_input_lineedit = entity_page_elements[14]
-        self.search_type_combobox = entity_page_elements[15]
+        self.sort_type_combobox = entity_page_elements[14]
+        self.sort_order_combobox = entity_page_elements[15]
+        self.search_input_lineedit = entity_page_elements[16]
+        self.search_type_combobox = entity_page_elements[17]
 
-        self.students_table_horizontal_header = entity_page_elements[16]
-        self.programs_table_horizontal_header = entity_page_elements[17]
-        self.colleges_table_horizontal_header = entity_page_elements[18]
+        self.students_table_horizontal_header = entity_page_elements[18]
+        self.programs_table_horizontal_header = entity_page_elements[19]
+        self.colleges_table_horizontal_header = entity_page_elements[20]
 
-        self.students_table_reset_sorting_state = entity_page_elements[19]
-        self.programs_table_reset_sorting_state = entity_page_elements[20]
-        self.colleges_table_reset_sorting_state = entity_page_elements[21]
-
-        self.reset_item_delegates = entity_page_elements[22]
+        self.reset_item_delegates = entity_page_elements[21]
 
         self.open_dialogs = OpenDialogs()
 
@@ -79,16 +77,27 @@ class EntityPageSignals:
                                                                            self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
-                lambda: SearchHeader.search_using_lineedit(entity_type,
-                                                           self.search_type_combobox,
-                                                           self.search_input_lineedit,
-                                                           self.students_table_model,
-                                                           self.students_sort_filter_proxy_model,
-                                                           self.reset_item_delegates.reset))
+                lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
+                                                                        self.search_type_combobox,
+                                                                        self.search_input_lineedit,
+                                                                        self.students_table_model,
+                                                                        self.students_sort_filter_proxy_model,
+                                                                        self.reset_item_delegates.reset))
 
+            self.sort_type_combobox.currentTextChanged.connect(
+                lambda: SearchAndSortHeader.change_sort_type(entity_type,
+                                                             self.sort_order_combobox,
+                                                             self.students_table_model,
+                                                             self.students_sort_filter_proxy_model,
+                                                             self.reset_item_delegates.reset))
 
-            self.students_table_horizontal_header.sectionClicked.connect(
-                self.students_table_reset_sorting_state.reset_sorting_state)
+            self.sort_order_combobox.currentTextChanged.connect(
+                lambda: SearchAndSortHeader.sort_using_combobox(entity_type,
+                                                                self.sort_type_combobox,
+                                                                self.sort_order_combobox,
+                                                                self.students_table_model,
+                                                                self.students_sort_filter_proxy_model,
+                                                                self.reset_item_delegates.reset))
 
         elif entity_type == "program":
             (self.add_entity_button.clicked.connect
@@ -127,15 +136,27 @@ class EntityPageSignals:
                                                                            self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
-                lambda: SearchHeader.search_using_lineedit(entity_type,
-                                                           self.search_type_combobox,
-                                                           self.search_input_lineedit,
-                                                           self.programs_table_model,
-                                                           self.programs_sort_filter_proxy_model,
-                                                           self.reset_item_delegates.reset))
+                lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
+                                                                  self.search_type_combobox,
+                                                                  self.search_input_lineedit,
+                                                                  self.programs_table_model,
+                                                                  self.programs_sort_filter_proxy_model,
+                                                                  self.reset_item_delegates.reset))
 
-            self.programs_table_horizontal_header.sectionClicked.connect(
-                self.programs_table_reset_sorting_state.reset_sorting_state)
+            self.sort_type_combobox.currentTextChanged.connect(
+                lambda: SearchAndSortHeader.change_sort_type(entity_type,
+                                                             self.sort_order_combobox,
+                                                             self.programs_table_model,
+                                                             self.programs_sort_filter_proxy_model,
+                                                             self.reset_item_delegates.reset))
+
+            self.sort_order_combobox.currentTextChanged.connect(
+                lambda: SearchAndSortHeader.sort_using_combobox(entity_type,
+                                                                self.sort_type_combobox,
+                                                                self.sort_order_combobox,
+                                                                self.programs_table_model,
+                                                                self.programs_sort_filter_proxy_model,
+                                                                self.reset_item_delegates.reset))
 
         elif entity_type == "college":
             (self.add_entity_button.clicked.connect
@@ -172,15 +193,28 @@ class EntityPageSignals:
                                                                            self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(
-                lambda: SearchHeader.search_using_lineedit(entity_type,
-                                                           self.search_type_combobox,
-                                                           self.search_input_lineedit,
-                                                           self.colleges_table_model,
-                                                           self.colleges_sort_filter_proxy_model,
-                                                           self.reset_item_delegates.reset))
+                lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
+                                                                  self.search_type_combobox,
+                                                                  self.search_input_lineedit,
+                                                                  self.colleges_table_model,
+                                                                  self.colleges_sort_filter_proxy_model,
+                                                                  self.reset_item_delegates.reset))
 
-            self.colleges_table_horizontal_header.sectionClicked.connect(
-                self.colleges_table_reset_sorting_state.reset_sorting_state)
+            self.sort_type_combobox.currentTextChanged.connect(
+                lambda: SearchAndSortHeader.change_sort_type(entity_type,
+                                                             self.sort_order_combobox,
+                                                             self.colleges_table_model,
+                                                             self.colleges_sort_filter_proxy_model,
+                                                             self.reset_item_delegates.reset))
+
+            self.sort_order_combobox.currentTextChanged.connect(
+                lambda: SearchAndSortHeader.sort_using_combobox(entity_type,
+                                                                self.sort_type_combobox,
+                                                                self.sort_order_combobox,
+                                                                self.colleges_table_model,
+                                                                self.colleges_sort_filter_proxy_model,
+                                                                self.reset_item_delegates.reset))
+
 
         self.save_changes_button.clicked.connect(
             lambda: self.open_dialogs.open_confirm_save_dialog(self.students_table_model,
@@ -189,8 +223,8 @@ class EntityPageSignals:
                                                                self.save_changes_button))
 
         self.search_type_combobox.currentIndexChanged.connect(
-            lambda: SearchHeader.change_search_lineedit_placeholder(self.search_type_combobox,
-                                                                    self.search_input_lineedit))
+            lambda: SearchAndSortHeader.change_search_lineedit_placeholder(self.search_type_combobox,
+                                                                           self.search_input_lineedit))
 
     def remove(self):
         self.add_entity_button.disconnect()

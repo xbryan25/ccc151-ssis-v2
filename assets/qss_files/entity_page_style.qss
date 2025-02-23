@@ -185,7 +185,13 @@ QComboBox::down-arrow{
     border-radius: 5px;
 }
 
-#search_type_combobox::dropdown{
-    background-color: blue;
+#sort_order_combobox{
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+#sort_type_combobox{
+    border: 1px solid black;
+    border-radius: 5px;
 }
 

@@ -3,11 +3,10 @@ from PyQt6.QtGui import QFont
 
 from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
 from application.open_dialogs import OpenDialogs
-from application.search_header import SearchHeader
+from application.search_and_sort_header import SearchAndSortHeader
 from application.reset_item_delegates import ResetItemDelegates
 from application.entity_page_signals import EntityPageSignals
 
-from utils.reset_sorting_state import ResetSortingState
 from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.save_all_changes import SaveAllChanges
@@ -74,13 +73,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def setup_table_views(self):
         # Students table view
-        self.students_table_view.setSortingEnabled(True)
+        # self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.students_sort_filter_proxy_model)
         self.students_table_view.setAlternatingRowColors(True)
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
 
-        self.students_table_reset_sorting_state = ResetSortingState(self.students_sort_filter_proxy_model,
-                                                                    self.students_table_view, "student")
+        # self.students_table_reset_sorting_state = ResetSortingState(self.students_sort_filter_proxy_model,
+        #                                                             self.students_table_view, "student")
 
         self.students_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.students_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -90,26 +89,26 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_horizontal_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
         # Programs table view
-        self.programs_table_view.setSortingEnabled(True)
+        # self.programs_table_view.setSortingEnabled(True)
         self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
         self.programs_table_view.setAlternatingRowColors(True)
         self.programs_table_horizontal_header = self.programs_table_view.horizontalHeader()
 
-        self.programs_table_reset_sorting_state = ResetSortingState(self.programs_sort_filter_proxy_model,
-                                                                    self.programs_table_view, "program")
+        # self.programs_table_reset_sorting_state = ResetSortingState(self.programs_sort_filter_proxy_model,
+        #                                                             self.programs_table_view, "program")
 
         self.programs_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.programs_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.programs_table_horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
 
         # Colleges table view
-        self.colleges_table_view.setSortingEnabled(True)
+        # self.colleges_table_view.setSortingEnabled(True)
         self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
         self.colleges_table_view.setAlternatingRowColors(True)
         self.colleges_table_horizontal_header = self.colleges_table_view.horizontalHeader()
 
-        self.colleges_table_reset_sorting_state = ResetSortingState(self.colleges_sort_filter_proxy_model,
-                                                                    self.colleges_table_view, "college")
+        # self.colleges_table_reset_sorting_state = ResetSortingState(self.colleges_sort_filter_proxy_model,
+        #                                                             self.colleges_table_view, "college")
 
         self.colleges_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.colleges_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -138,7 +137,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
-        SearchHeader.change_contents("student", self.search_type_combobox)
+        SearchAndSortHeader.change_contents("student", self.search_type_combobox)
+        SearchAndSortHeader.change_contents("student", self.sort_type_combobox)
 
         self.entity_page_signals.add("student")
 
@@ -166,7 +166,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
-        SearchHeader.change_contents("program", self.search_type_combobox)
+        SearchAndSortHeader.change_contents("program", self.search_type_combobox)
+        SearchAndSortHeader.change_contents("program", self.sort_type_combobox)
 
         self.entity_page_signals.add("program")
 
@@ -194,7 +195,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
-        SearchHeader.change_contents("college", self.search_type_combobox)
+        SearchAndSortHeader.change_contents("college", self.search_type_combobox)
+        SearchAndSortHeader.change_contents("college", self.sort_type_combobox)
 
         self.entity_page_signals.add("college")
 
@@ -209,8 +211,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.students_sort_filter_proxy_model,
                 self.programs_sort_filter_proxy_model,
                 self.colleges_sort_filter_proxy_model,
-                self.students_table_reset_sorting_state,
-                self.programs_table_reset_sorting_state,
                 self.colleges_table_model]
 
     def for_entity_page_signals(self):
@@ -228,14 +228,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.edit_entity_button,
                 self.save_changes_button,
                 self.view_demographics_button,
+                self.sort_type_combobox,
+                self.sort_order_combobox,
                 self.search_input_lineedit,
                 self.search_type_combobox,
                 self.students_table_horizontal_header,
                 self.programs_table_horizontal_header,
                 self.colleges_table_horizontal_header,
-                self.students_table_reset_sorting_state,
-                self.programs_table_reset_sorting_state,
-                self.colleges_table_reset_sorting_state,
                 self.reset_item_delegates
                 ]
 
