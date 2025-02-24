@@ -86,6 +86,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         # self.students_table_reset_sorting_state = ResetSortingState(self.students_sort_filter_proxy_model,
         #                                                             self.students_table_view, "student")
 
+        self.students_table_horizontal_header.resizeSection(0, 75)
+        self.students_table_horizontal_header.resizeSection(3, 75)
+        self.students_table_horizontal_header.resizeSection(4, 150)
+
         self.students_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.students_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.students_table_horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)

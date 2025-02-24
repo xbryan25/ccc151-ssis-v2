@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import QItemDelegate, QComboBox
 from PyQt6.QtCore import Qt
 
+from utils.custom_combobox import CustomComboBox
+
 # https://stackoverflow.com/questions/51945016/pyqt-qcombobox-in-qtableview
 
 class ComboboxItemDelegate(QItemDelegate):
@@ -10,12 +12,30 @@ class ComboboxItemDelegate(QItemDelegate):
         QItemDelegate.__init__(self, parent)
 
     def createEditor(self, parent, option, index):
-        combobox = QComboBox(parent)
+        combobox = CustomComboBox(parent, True)
 
         if index.row() % 2 == 0:
-            combobox.setStyleSheet("background-color: rgb(176, 137, 104);")
+            combobox.setStyleSheet("""
+                        QComboBox {
+                            background-color: rgb(176, 137, 104);
+                            padding-left: 20px;
+                        }
+                        QComboBox QAbstractItemView {
+                            padding-right: 20px;
+                            padding-left: 20px;
+                        }
+                    """)
         else:
-            combobox.setStyleSheet("background-color: rgb(221, 184, 146);")
+            combobox.setStyleSheet("""
+                                    QComboBox {
+                                        background-color: rgb(221, 184, 146);
+                                        padding-left: 20px;
+                                    }
+                                    QComboBox QAbstractItemView {
+                                        padding-right: 20px;
+                                        padding-left: 20px;
+                                    }
+                                """)
 
         combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
@@ -23,8 +43,9 @@ class ComboboxItemDelegate(QItemDelegate):
         for item in self.items:
             choices.append(item)
 
-        combobox.addItems(choices)
+        combobox.add_items_for_delegate(choices)
         combobox.currentIndexChanged.connect(self.change_combobox_value)
+
         return combobox
 
     def setEditorData(self, editor, index):
