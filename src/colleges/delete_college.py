@@ -79,6 +79,12 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
                     self.horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
+                    if quantities_under_college_code["students"] > 0:
+                        self.students_table_model.set_has_changes(True)
+
+                    if quantities_under_college_code["programs"] > 0:
+                        self.programs_table_model.set_has_changes(True)
+
                     self.colleges_table_model.set_has_changes(True)
 
                     self.college_to_delete_combobox.setCurrentText("--Select College Code--")

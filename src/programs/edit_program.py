@@ -66,14 +66,13 @@ class EditProgramDialog(QDialog, EditProgramUI):
             row_to_edit = self.row_to_edit()
 
             old_program_code = self.program_to_edit_combobox.currentText()
+            len_of_students_under_program_code = self.len_of_students_under_program_code(old_program_code)
 
             # If program code is not changed, a different confirm edit dialog will show
             if old_program_code == program_to_edit[0]:
                 self.confirm_to_edit_dialog = ConfirmEditDialog("program",
                                                                 old_program_code)
             else:
-                len_of_students_under_program_code = self.len_of_students_under_program_code(old_program_code)
-
                 self.confirm_to_edit_dialog = ConfirmEditDialog("program",
                                                                 old_program_code,
                                                                 num_of_affected=len_of_students_under_program_code,
@@ -92,6 +91,9 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
                     # By doing this, the data in the model also gets updated, same reference
                     self.data_from_programs_model[row_to_edit] = program_to_edit
+
+                    if len_of_students_under_program_code > 0:
+                        self.students_table_model.set_has_changes(True)
 
                     self.programs_table_model.set_has_changes(True)
 

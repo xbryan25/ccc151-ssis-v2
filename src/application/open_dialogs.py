@@ -34,10 +34,10 @@ class OpenDialogs:
                                                   programs_table_model, colleges_table_model, reset_item_delegates_func)
             add_student_dialog.exec()
 
-            SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
-                                                                  edit_entity_button,
-                                                                  view_demographics_button],
-                                                                  students_table_model)
+            SpecificButtonsEnabler.enable_buttons([delete_entity_button,
+                                                   edit_entity_button,
+                                                   view_demographics_button],
+                                                  students_table_model)
 
             SpecificButtonsEnabler.enable_save_button(save_changes_button,
                                                       students_table_model=students_table_model)
@@ -58,10 +58,10 @@ class OpenDialogs:
                                                   colleges_table_model, reset_item_delegates_func)
             add_program_dialog.exec()
 
-            SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
-                                                                   edit_entity_button,
-                                                                   view_demographics_button],
-                                                                  programs_table_model)
+            SpecificButtonsEnabler.enable_buttons([delete_entity_button,
+                                                   edit_entity_button,
+                                                   view_demographics_button],
+                                                  programs_table_model)
 
             SpecificButtonsEnabler.enable_save_button(save_changes_button,
                                                       programs_table_model=programs_table_model)
@@ -78,10 +78,10 @@ class OpenDialogs:
         add_college_dialog = AddCollegeDialog(colleges_table_view, colleges_table_model, reset_item_delegates_func)
         add_college_dialog.exec()
 
-        SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
-                                                               edit_entity_button,
-                                                               view_demographics_button],
-                                                              colleges_table_model)
+        SpecificButtonsEnabler.enable_buttons([delete_entity_button,
+                                               edit_entity_button,
+                                               view_demographics_button],
+                                              colleges_table_model)
 
         SpecificButtonsEnabler.enable_save_button(save_changes_button,
                                                   colleges_table_model=colleges_table_model)
@@ -131,10 +131,10 @@ class OpenDialogs:
                                                     reset_item_delegates_func, horizontal_header)
         delete_student_dialog.exec()
 
-        SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
-                                                               edit_entity_button,
-                                                               view_demographics_button],
-                                                              students_table_model)
+        SpecificButtonsEnabler.enable_buttons([delete_entity_button,
+                                               edit_entity_button,
+                                               view_demographics_button],
+                                              students_table_model)
 
         SpecificButtonsEnabler.enable_save_button(save_changes_button,
                                                   students_table_model=students_table_model)
@@ -153,10 +153,10 @@ class OpenDialogs:
                                                     horizontal_header)
         delete_program_dialog.exec()
 
-        SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
-                                                               edit_entity_button,
-                                                               view_demographics_button],
-                                                              programs_table_model)
+        SpecificButtonsEnabler.enable_buttons([delete_entity_button,
+                                               edit_entity_button,
+                                               view_demographics_button],
+                                              programs_table_model)
 
         SpecificButtonsEnabler.enable_save_button(save_changes_button,
                                                   programs_table_model=programs_table_model)
@@ -173,10 +173,10 @@ class OpenDialogs:
 
         delete_college_dialog.exec()
 
-        SpecificButtonsEnabler.enable_delete_and_edit_buttons([delete_entity_button,
-                                                               edit_entity_button,
-                                                               view_demographics_button],
-                                                              students_table_model)
+        SpecificButtonsEnabler.enable_buttons([delete_entity_button,
+                                               edit_entity_button,
+                                               view_demographics_button],
+                                              colleges_table_model)
 
         SpecificButtonsEnabler.enable_save_button(save_changes_button,
                                                   colleges_table_model=colleges_table_model)

@@ -84,6 +84,9 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
 
                     self.reset_item_delegates_func("delete_program")
 
+                    if len_of_students_under_program_code["students"] > 0:
+                        self.students_table_model.set_has_changes(True)
+
                     self.programs_table_model.set_has_changes(True)
 
                     self.program_to_delete_combobox.setCurrentText("--Select Program Code--")

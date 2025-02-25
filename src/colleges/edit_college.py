@@ -71,14 +71,13 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             row_to_edit = self.row_to_edit()
 
             old_college_code = self.college_to_edit_combobox.currentText()
-
+            len_of_programs_under_college_code = self.len_of_programs_under_college_code(old_college_code)
 
             # If college code is not changed, a different confirm edit dialog will show
             if old_college_code == college_to_edit[0]:
                 self.confirm_to_edit_dialog = ConfirmEditDialog("college",
                                                                 old_college_code)
             else:
-                len_of_programs_under_college_code = self.len_of_programs_under_college_code(old_college_code)
 
                 self.confirm_to_edit_dialog = ConfirmEditDialog("college",
                                                                 old_college_code,
@@ -100,6 +99,9 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                     self.data_from_csv[row_to_edit] = college_to_edit
 
                     self.reset_item_delegates_func("edit_college")
+
+                    if len_of_programs_under_college_code > 0:
+                        self.programs_table_model.set_has_changes(True)
 
                     self.colleges_table_model.set_has_changes(True)
 

@@ -7,7 +7,7 @@ class SpecificButtonsEnabler:
     # [2] is the view demographic button
 
     @staticmethod
-    def enable_delete_and_edit_buttons(buttons, model):
+    def enable_buttons(buttons, model):
 
         if model.get_data()[0][0]:
             buttons[0].setEnabled(True)
