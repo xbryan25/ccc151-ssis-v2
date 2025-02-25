@@ -1,5 +1,4 @@
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import QSize
 
 from helper_dialogs.edit_item_state.success_edit_item_design import Ui_Dialog as SuccessEditItemUI
 

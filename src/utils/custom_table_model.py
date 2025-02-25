@@ -8,7 +8,6 @@ from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialo
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
 
-import operator, csv
 
 # Where I discovered QTableView:
 # https://stackoverflow.com/questions/6785481/how-to-implement-a-filter-option-in-qtablewidget

@@ -1,5 +1,4 @@
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import QSize
 
 from helper_dialogs.delete_item_state.confirm_delete_design import Ui_Dialog as ConfirmDeleteUI
 

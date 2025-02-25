@@ -1,5 +1,4 @@
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtCore import QSize
 
 from helper_dialogs.save_item_state.success_save_changes_design import Ui_Dialog as SuccessChangesItemUI
 

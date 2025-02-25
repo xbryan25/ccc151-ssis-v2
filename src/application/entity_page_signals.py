@@ -1,8 +1,6 @@
-
 from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
 
-# Put this in a list
 
 class EntityPageSignals:
     def __init__(self, entity_page_elements):

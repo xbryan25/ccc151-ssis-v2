@@ -1,7 +1,7 @@
-from utils.get_existing_information import GetExistingInformation
 from utils.is_valid_verifiers import IsValidVerifiers
 
 # The methods in this class checks if the new value that will overwrite the old value in the table is valid
+
 
 class IsValidEditValueForCell:
 

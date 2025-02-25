@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QItemDelegate, QComboBox
+from PyQt6.QtWidgets import QItemDelegate
 from PyQt6.QtCore import Qt
 
 from utils.custom_combobox import CustomComboBox

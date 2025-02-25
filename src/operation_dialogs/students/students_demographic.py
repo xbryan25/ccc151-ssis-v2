@@ -1,19 +1,14 @@
-from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem, QFrame, QVBoxLayout, QLabel
+from PyQt6.QtWidgets import QDialog, QFrame, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 
-from students.students_demographic_design import Ui_Dialog as StudentsDemographicUI
+from operation_dialogs.students.students_demographic_design import Ui_Dialog as StudentsDemographicUI
 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
-from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
-from utils.get_existing_information import GetExistingInformation
 from utils.get_connections import GetConnections
-
-import re
-import csv
 
 
 class StudentsDemographicDialog(QDialog, StudentsDemographicUI):

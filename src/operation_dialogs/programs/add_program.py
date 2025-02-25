@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 
-from programs.add_program_design import Ui_Dialog as AddProgramUI
+from operation_dialogs.programs.add_program_design import Ui_Dialog as AddProgramUI
 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
@@ -9,9 +9,6 @@ from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
-
-import re
-import csv
 
 
 class AddProgramDialog(QDialog, AddProgramUI):

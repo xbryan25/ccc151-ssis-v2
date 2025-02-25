@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QHeaderView
+from PyQt6.QtWidgets import QMainWindow, QHeaderView
 from PyQt6.QtGui import QFont
 
 from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
@@ -7,16 +7,10 @@ from application.search_and_sort_header import SearchAndSortHeader
 from application.reset_item_delegates import ResetItemDelegates
 from application.entity_page_signals import EntityPageSignals
 
-from utils.get_information_codes import GetInformationCodes
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
-from utils.save_all_changes import SaveAllChanges
-from utils.combobox_item_delegate import ComboboxItemDelegate
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
 from utils.load_information_from_database import LoadInformationFromDatabase
 from utils.custom_table_model import CustomTableModel
-
-from helper_dialogs.save_item_state.confirm_save import ConfirmSaveDialog
-from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChangesDialog
 
 
 class ApplicationWindow(QMainWindow, ApplicationWindowDesign):

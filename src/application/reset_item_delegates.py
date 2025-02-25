@@ -5,6 +5,7 @@ from utils.get_information_codes import GetInformationCodes
 
 # For the comboboxes in the student and program tables
 
+
 class ResetItemDelegates:
 
     def __init__(self, reset_item_delegates_elements):
@@ -24,9 +25,6 @@ class ResetItemDelegates:
         self.programs_sort_filter_proxy_model = reset_item_delegates_elements[6]
         self.colleges_sort_filter_proxy_model = reset_item_delegates_elements[7]
 
-        # self.students_table_reset_sorting_state = reset_item_delegates_elements[8]
-        # self.programs_table_reset_sorting_state = reset_item_delegates_elements[9]
-
         self.colleges_table_model = reset_item_delegates_elements[8]
 
 
@@ -34,11 +32,6 @@ class ResetItemDelegates:
     # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
 
     def reset(self, state=None):
-        # if state in ["add_student", "delete_student", "edit_student"]:
-        #     self.students_table_reset_sorting_state.force_reset_sort()
-        #
-        # elif state in ["add_program", "delete_program", "edit_program"]:
-        #     self.programs_table_reset_sorting_state.force_reset_sort()
 
         if state in ["student", "add_student", "delete_student", "edit_student"]:
             self.students_sort_filter_proxy_model.beginResetModel()
@@ -116,7 +109,6 @@ class ResetItemDelegates:
             # For Program Codes
 
             combobox_item_delegate = ComboboxItemDelegate(self.students_table_view, self.get_program_codes())
-            # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
             self.students_table_view.setItemDelegateForColumn(5, combobox_item_delegate)
 
@@ -131,7 +123,6 @@ class ResetItemDelegates:
             # For College Codes
 
             combobox_item_delegate = ComboboxItemDelegate(self.programs_table_view, self.get_college_codes())
-            # combobox_item_delegate.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
 
             self.programs_table_view.setItemDelegateForColumn(2, combobox_item_delegate)
 

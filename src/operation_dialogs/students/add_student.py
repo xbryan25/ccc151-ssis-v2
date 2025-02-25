@@ -1,7 +1,7 @@
-from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
+from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 
-from students.add_student_design import Ui_Dialog as AddStudentUI
+from operation_dialogs.students.add_student_design import Ui_Dialog as AddStudentUI
 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
@@ -10,10 +10,6 @@ from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
 from utils.get_connections import GetConnections
-from utils.custom_combobox import CustomComboBox
-
-import re
-import csv
 
 
 class AddStudentDialog(QDialog, AddStudentUI):

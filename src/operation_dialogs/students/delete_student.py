@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QDialog, QHeaderView
+from PyQt6.QtWidgets import QDialog
 
-from students.delete_student_design import Ui_Dialog as DeleteStudentUI
+from operation_dialogs.students.delete_student_design import Ui_Dialog as DeleteStudentUI
 
 from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog

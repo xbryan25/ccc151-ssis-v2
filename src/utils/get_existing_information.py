@@ -1,4 +1,3 @@
-import csv
 
 
 class GetExistingInformation:

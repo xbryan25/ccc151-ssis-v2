@@ -1,7 +1,5 @@
 from utils.get_information_codes import GetInformationCodes
 
-import csv
-
 # Convert this from reading into the database to reading from model
 
 

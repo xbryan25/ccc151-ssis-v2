@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 
-from colleges.edit_college_design import Ui_Dialog as EditCollegeUI
+from operation_dialogs.colleges.edit_college_design import Ui_Dialog as EditCollegeUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
@@ -10,8 +10,6 @@ from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
-
-import csv
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
@@ -121,7 +119,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             self.new_college_name_lineedit.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
-        for college in self.colleges_table_model.data_from_csv:
+        for college in self.colleges_table_model.get_data():
             if college[0] == self.college_to_edit_combobox.currentText():
                 self.new_college_code_lineedit.setPlaceholderText(college[0])
                 self.new_college_name_lineedit.setPlaceholderText(college[1])

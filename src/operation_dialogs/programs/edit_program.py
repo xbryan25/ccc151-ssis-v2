@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 
-from programs.edit_program_design import Ui_Dialog as EditProgramUI
+from operation_dialogs.programs.edit_program_design import Ui_Dialog as EditProgramUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog
@@ -10,8 +10,6 @@ from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 from utils.is_valid_verifiers import IsValidVerifiers
 from utils.get_information_codes import GetInformationCodes
 from utils.get_existing_information import GetExistingInformation
-
-import csv
 
 
 class EditProgramDialog(QDialog, EditProgramUI):

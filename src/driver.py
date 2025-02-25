@@ -1,4 +1,3 @@
-
 from PyQt6.QtWidgets import QApplication
 from application.application_window import ApplicationWindow
 

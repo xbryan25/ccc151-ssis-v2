@@ -1,7 +1,6 @@
-from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem
-from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QDialog
 
-from colleges.add_college_design import Ui_Dialog as AddCollegeUI
+from operation_dialogs.colleges.add_college_design import Ui_Dialog as AddCollegeUI
 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog

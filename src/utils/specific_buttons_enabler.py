@@ -1,5 +1,4 @@
 
-# Rename to SpecificButtonsEnabler
 
 class SpecificButtonsEnabler:
     # [0] is the delete button
