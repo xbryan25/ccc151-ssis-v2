@@ -34,13 +34,16 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Generate table models in landing page so that it can be accessed in different pages
         self.students_table_model = CustomTableModel(self.students_data, "student")
+        self.students_table_model.connect_to_save_button(self.save_changes_button)
 
         self.programs_table_model = CustomTableModel(self.programs_data, "program")
         self.programs_table_model.set_students_data(self.students_table_model.get_data())
+        self.students_table_model.connect_to_save_button(self.save_changes_button)
 
         self.colleges_table_model = CustomTableModel(self.colleges_data, "college")
         self.colleges_table_model.set_students_data(self.students_table_model.get_data())
         self.colleges_table_model.set_programs_data(self.programs_table_model.get_data())
+        self.students_table_model.connect_to_save_button(self.save_changes_button)
 
         self.students_sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
         self.programs_sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
@@ -275,13 +278,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         font = QFont()
         font.setFamily("Segoe UI Semibold")
 
-        # 48 is an arbitrary number obtained from 534/11, 534 is the minimum width, 11 is the minimum font size
-        font.setPointSize(int(self.height() / 48))
+        # 48 is an arbitrary number obtained from 561/11, 561 is the minimum width, 11 is the minimum font size
+        font.setPointSize(int(self.height() / 51))
 
         font.setBold(True)
         font.setWeight(75)
 
         self.back_to_main_button.setFont(font)
+
         self.about_this_app_back_to_main_button.setFont(font)
         self.add_entity_button.setFont(font)
         self.delete_entity_button.setFont(font)

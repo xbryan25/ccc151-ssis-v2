@@ -5,6 +5,7 @@ from utils.custom_combobox import CustomComboBox
 
 # https://stackoverflow.com/questions/51945016/pyqt-qcombobox-in-qtableview
 
+
 class ComboboxItemDelegate(QItemDelegate):
 
     def __init__(self, parent, items):
@@ -61,11 +62,12 @@ class ComboboxItemDelegate(QItemDelegate):
         editor.setCurrentIndex(i)
         editor.blockSignals(False)
 
-    def setModelData(self, editor, model, index):
-        if model.data(index) != editor.currentText():
-            model.setData(index, editor.currentText())
+    def setModelData(self, editor, sort_filter_proxy_model, index):
+        old_value = sort_filter_proxy_model.get_model_data()[index.row()][index.column()]
+
+        if (sort_filter_proxy_model.data(index) != editor.currentText() and
+                not sort_filter_proxy_model.setData(index, editor.currentText())):
+            editor.setCurrentText(old_value)
 
     def change_combobox_value(self):
         self.commitData.emit(self.sender())
-
-

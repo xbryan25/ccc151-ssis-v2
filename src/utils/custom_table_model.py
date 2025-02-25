@@ -1,8 +1,8 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt
 
-from utils.reset_sorting_state import ResetSortingState
 from utils.get_existing_information import GetExistingInformation
 from utils.is_valid_edit_value_for_cell import IsValidEditValueForCell
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
@@ -44,6 +44,8 @@ class CustomTableModel(QAbstractTableModel):
 
         self.model_data_is_empty()
 
+        self.save_button = None
+
     def model_data_is_empty(self):
         if not self.get_data():
             if self.information_type == "student":
@@ -70,6 +72,9 @@ class CustomTableModel(QAbstractTableModel):
 
     def set_programs_data(self, programs_data):
         self.programs_data = programs_data
+
+    def connect_to_save_button(self, save_button):
+        self.save_button = save_button
 
     def len_of_students_under_program_code(self, old_program_code):
         length = 0
@@ -116,6 +121,8 @@ class CustomTableModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.EditRole:
             old_value = self.get_data()[index.row()][index.column()]
+
+            print(old_value)
 
             if self.information_type == "student":
                 self.students_information = GetExistingInformation.from_students(self.get_data())
@@ -193,8 +200,15 @@ class CustomTableModel(QAbstractTableModel):
                     else:
                         self.data_from_csv[index.row()][index.column()] = value
 
+                    self.has_changes = True
+
+                    SpecificButtonsEnabler.enable_save_button(self.save_button, self)
+
                     self.success_edit_item = SuccessEditItemDialog(self.information_type)
                     self.success_edit_item.exec()
+
+                else:
+                    return False
 
             else:
                 self.data_from_csv[index.row()][index.column()] = old_value

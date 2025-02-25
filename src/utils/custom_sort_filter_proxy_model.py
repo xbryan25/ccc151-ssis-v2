@@ -13,3 +13,6 @@ class CustomSortFilterProxyModel(QSortFilterProxyModel):
 
     def get_model_data(self):
         return self.source_model.get_data()
+
+    def get_source_model(self):
+        return self.source_model
