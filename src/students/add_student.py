@@ -27,14 +27,13 @@ class AddStudentDialog(QDialog, AddStudentUI):
 
         self.reset_item_delegates_func = reset_item_delegates_func
 
-        self.has_added_student = False
-
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
 
+        # Load utils
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
         self.get_existing_information = GetExistingInformation()
@@ -48,7 +47,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.set_program_code_combobox_scrollbar()
         self.set_college_code_combobox_scrollbar()
 
-    def add_student_to_csv(self):
+    def add_student_confirmation(self):
         issues = self.find_issues()
 
         if issues:
@@ -62,8 +61,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
                               self.gender_combobox.currentText(),
                               self.program_code_combobox.currentText()]
 
-
-            self.add_student_to_table(student_to_add)
+            self.add_student_to_model(student_to_add)
 
             self.students_table_model.set_has_changes(True)
 
@@ -72,13 +70,13 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
             self.success_add_item_dialog.exec()
 
-    def add_student_to_table(self, student_to_add):
+    def add_student_to_model(self, student_to_add):
         self.students_table_model.layoutAboutToBeChanged.emit()
 
         if self.students_table_model.get_data()[0][0] == "":
             self.students_table_model.get_data().pop()
 
-        self.students_table_model.data_from_csv.append(student_to_add)
+        self.students_table_model.get_data().append(student_to_add)
         self.students_table_model.layoutChanged.emit()
 
     def add_program_codes_from_a_college_to_combobox(self, college_code):
@@ -138,12 +136,8 @@ class AddStudentDialog(QDialog, AddStudentUI):
         else:
             self.add_student_button.setEnabled(False)
 
-    # def any_changes_made(self):
-    #     return self.has_added_student
-
     def find_issues(self):
         students_information = self.get_existing_students()
-
         issues = []
 
         if (self.id_number_lineedit.text()).strip() == "":
@@ -170,7 +164,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
         return issues
 
     def add_signals(self):
-        self.add_student_button.clicked.connect(self.add_student_to_csv)
+        self.add_student_button.clicked.connect(self.add_student_confirmation)
 
         self.program_code_combobox.currentTextChanged.connect(self.enable_add_button)
         self.college_code_filter_combobox.currentTextChanged.connect(self.filter_program_codes)
@@ -185,6 +179,5 @@ class AddStudentDialog(QDialog, AddStudentUI):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

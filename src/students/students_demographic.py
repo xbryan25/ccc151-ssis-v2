@@ -1,5 +1,3 @@
-
-
 from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem, QFrame, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
@@ -44,17 +42,16 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         for student in self.students_table_model.get_data():
             year_level_demographic[student[3]] += 1
 
-
-        self.year_level_demographic_label.setText(f"1st Year: {year_level_demographic["1st"]} "
-                                                  f"({(year_level_demographic["1st"]/total_students) * 100:.2f}%)"
-                                                  f"\n2nd Year: {year_level_demographic["2nd"]} "
-                                                  f"({(year_level_demographic["2nd"]/total_students) * 100:.2f}%)"
-                                                  f"\n3rd Year: {year_level_demographic["3rd"]} "
-                                                  f"({(year_level_demographic["3rd"]/total_students) * 100:.2f}%)"
-                                                  f"\n4th Year: {year_level_demographic["4th"]} "
-                                                  f"({(year_level_demographic["4th"]/total_students) * 100:.2f}%)"
-                                                  f"\n5th Year: {year_level_demographic["5th"]} "
-                                                  f"({(year_level_demographic["5th"] / total_students) * 100:.2f}%)")
+        self.year_level_demographic_label.setText(f"1st Year: {year_level_demographic['1st']} "
+                                                  f"({(year_level_demographic['1st']/total_students) * 100:.2f}%)"
+                                                  f"\n2nd Year: {year_level_demographic['2nd']} "
+                                                  f"({(year_level_demographic['2nd']/total_students) * 100:.2f}%)"
+                                                  f"\n3rd Year: {year_level_demographic['3rd']} "
+                                                  f"({(year_level_demographic['3rd']/total_students) * 100:.2f}%)"
+                                                  f"\n4th Year: {year_level_demographic['4th']} "
+                                                  f"({(year_level_demographic['4th']/total_students) * 100:.2f}%)"
+                                                  f"\n5th Year: {year_level_demographic['5th']} "
+                                                  f"({(year_level_demographic['5th'] / total_students) * 100:.2f}%)")
 
     def get_gender_demographic(self):
         total_students = len(self.students_table_model.get_data())
@@ -63,14 +60,14 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         for student in self.students_table_model.get_data():
             gender_demographic[student[4]] += 1
 
-        self.gender_demographic_label.setText(f"Male: {gender_demographic["Male"]} "
-                                              f"({(gender_demographic["Male"] / total_students) * 100:.2f}%)"
-                                              f"\nFemale: {gender_demographic["Female"]} "
-                                              f"({(gender_demographic["Female"] / total_students) * 100:.2f}%)"
-                                              f"\nOthers: {gender_demographic["Others"]} "
-                                              f"({(gender_demographic["Others"] / total_students) * 100:.2f}%)"
-                                              f"\nPrefer not to say: {gender_demographic["Prefer not to say"]} "
-                                              f"({(gender_demographic["Prefer not to say"] / total_students) * 100:.2f}%)")
+        self.gender_demographic_label.setText(f"Male: {gender_demographic['Male']} "
+                                              f"({(gender_demographic['Male'] / total_students) * 100:.2f}%)"
+                                              f"\nFemale: {gender_demographic['Female']} "
+                                              f"({(gender_demographic['Female'] / total_students) * 100:.2f}%)"
+                                              f"\nOthers: {gender_demographic['Others']} "
+                                              f"({(gender_demographic['Others'] / total_students) * 100:.2f}%)"
+                                              f"\nPrefer not to say: {gender_demographic['Prefer not to say']} "
+                                              f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
 
     def get_students_in_programs_demographic(self):
         total_students = len(self.students_table_model.get_data())
@@ -136,6 +133,5 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

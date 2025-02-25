@@ -29,17 +29,18 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
 
+        # Load utils
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
         self.get_existing_information = GetExistingInformation()
 
         self.add_college_codes_to_combobox()
 
-        self.add_program_button.clicked.connect(self.add_program_to_csv)
+        self.add_signals()
 
         self.set_college_code_combobox_scrollbar()
 
-    def add_program_to_csv(self):
+    def add_program_confirmation(self):
         issues = self.find_issues()
 
         if issues:
@@ -52,7 +53,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
                               self.program_name_lineedit.text().replace(",", "_"),
                               self.college_code_combobox.currentText()]
 
-            self.add_program_to_table(program_to_add)
+            self.add_program_to_model(program_to_add)
 
             self.programs_table_model.set_has_changes(True)
 
@@ -61,24 +62,32 @@ class AddProgramDialog(QDialog, AddProgramUI):
             self.success_add_item_dialog = SuccessAddItemDialog("program", self)
             self.success_add_item_dialog.exec()
 
-    def add_program_to_table(self, program_to_add):
+    def add_program_to_model(self, program_to_add):
         self.programs_table_model.layoutAboutToBeChanged.emit()
 
         if self.programs_table_model.get_data()[0][0] == "":
             self.programs_table_model.get_data().pop()
 
-        self.programs_table_model.data_from_csv.append(program_to_add)
+        self.programs_table_model.get_data().append(program_to_add)
         self.programs_table_model.layoutChanged.emit()
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
+        for college_code in self.get_college_codes():
             self.college_code_combobox.addItem(college_code)
 
     def set_college_code_combobox_scrollbar(self):
         self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
+    def enable_add_button(self):
+        if ((self.college_code_combobox.currentText() != "--Select a college--") and
+                (self.college_code_combobox.currentText() in self.get_college_codes())):
+
+            self.add_program_button.setEnabled(True)
+        else:
+            self.add_program_button.setEnabled(False)
+
     def find_issues(self):
-        programs_information = self.get_program_existing_information()
+        programs_information = self.get_existing_programs()
         issues = []
 
         if (self.program_code_lineedit.text()).strip() == "":
@@ -97,10 +106,20 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
         return issues
 
-    def get_program_existing_information(self):
+    def add_signals(self):
+        self.add_program_button.clicked.connect(self.add_program_confirmation)
+
+        self.college_code_combobox.currentTextChanged.connect(self.enable_add_button)
+
+    def get_existing_programs(self):
         return self.get_existing_information.from_programs(self.programs_table_model.get_data())
 
-    def set_external_stylesheet(self):
+    def get_program_codes(self):
+        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
 
+    def get_college_codes(self):
+        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+
+    def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

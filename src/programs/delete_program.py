@@ -23,11 +23,11 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.reset_item_delegates_func = reset_item_delegates_func
         self.horizontal_header = horizontal_header
 
-        self.students_table_model = students_table_model
-        self.colleges_table_model = colleges_table_model
-
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
+
+        self.students_table_model = students_table_model
+        self.colleges_table_model = colleges_table_model
 
         self.get_information_codes = GetInformationCodes()
         self.get_connections = GetConnections()
@@ -40,15 +40,15 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.set_program_to_delete_combobox_scrollbar()
         self.set_college_code_combobox_scrollbar()
 
-    def add_college_codes_to_combobox(self):
-        for college_code in self.get_college_codes():
-            self.college_code_combobox.addItem(college_code)
-
     def add_program_codes_to_combobox(self):
         for program_code in self.get_program_codes():
             self.program_to_delete_combobox.addItem(program_code)
 
-    def delete_program_from_table(self):
+    def add_college_codes_to_combobox(self):
+        for college_code in self.get_college_codes():
+            self.college_code_combobox.addItem(college_code)
+
+    def delete_program_from_model(self):
         for program in self.programs_table_model.get_data():
             if program[0] == self.program_to_delete_combobox.currentText():
 
@@ -94,12 +94,6 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("program", self)
                     self.success_delete_item_dialog.exec()
 
-    def enable_delete_button(self):
-        if self.program_to_delete_combobox.currentText() in self.get_program_codes():
-            self.delete_program_button.setEnabled(True)
-        else:
-            self.delete_program_button.setEnabled(False)
-
     def len_of_students_under_program_code(self, program_code):
         length = {"students": 0}
 
@@ -109,40 +103,31 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
 
         return length
 
-    def set_program_to_delete_combobox_scrollbar(self):
-        self.program_to_delete_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-
-    def set_college_code_combobox_scrollbar(self):
-        self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-
     def delete_students_who_have_program_code(self, program_code):
-        new_data_from_csv = []
+        new_data_from_model = []
 
         for student in self.students_table_model.get_data():
             if student[5] != program_code:
-                new_data_from_csv.append(student)
+                new_data_from_model.append(student)
 
         self.students_table_model.layoutAboutToBeChanged.emit()
-        self.students_table_model.set_data(new_data_from_csv)
+        self.students_table_model.set_data(new_data_from_model)
         self.students_table_model.layoutChanged.emit()
 
     def filter_program_codes(self):
         college_code = self.college_code_combobox.currentText()
 
+        self.reset_program_code_combobox()
+
         if college_code != "--Select a college--" and college_code in self.get_college_codes():
-
-            # self.program_code_combobox.setEnabled(True)
-            self.reset_program_code_combobox()
-
             self.add_program_codes_from_a_college_to_combobox(college_code)
         else:
-            self.reset_program_code_combobox()
             self.add_program_codes_to_combobox()
 
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
-        college_to_program_connections = self.get_college_to_program_connection()
+        college_to_program_connections = self.get_college_to_program_connections()
 
         for program_code in self.get_program_codes():
             if program_code in college_to_program_connections[college_code]:
@@ -161,8 +146,20 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         else:
             self.program_to_delete_combobox.addItem("--No programs available--")
 
+    def set_program_to_delete_combobox_scrollbar(self):
+        self.program_to_delete_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+    def set_college_code_combobox_scrollbar(self):
+        self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+    def enable_delete_button(self):
+        if self.program_to_delete_combobox.currentText() in self.get_program_codes():
+            self.delete_program_button.setEnabled(True)
+        else:
+            self.delete_program_button.setEnabled(False)
+
     def add_signals(self):
-        self.delete_program_button.clicked.connect(self.delete_program_from_table)
+        self.delete_program_button.clicked.connect(self.delete_program_from_model)
 
         self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
         self.program_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
@@ -173,11 +170,14 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def get_college_codes(self):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
-    def get_college_to_program_connection(self):
+    def get_program_to_student_connections(self):
+        return self.get_connections.in_programs(self.students_table_model.get_data(),
+                                                self.programs_table_model.get_data())
+
+    def get_college_to_program_connections(self):
         return self.get_connections.in_programs(self.programs_table_model.get_data(),
                                                 self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

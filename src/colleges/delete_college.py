@@ -6,6 +6,7 @@ from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
 from utils.get_information_codes import GetInformationCodes
+from utils.get_connections import GetConnections
 
 
 class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
@@ -28,16 +29,19 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.colleges_table_model = colleges_table_model
 
         self.get_information_codes = GetInformationCodes()
+        self.get_connections = GetConnections()
 
         self.add_college_codes_to_combobox()
 
         self.add_signals()
 
+        self.set_college_to_delete_combobox_scrollbar()
+
     def add_college_codes_to_combobox(self):
         for college_code in self.get_college_codes():
             self.college_to_delete_combobox.addItem(college_code)
 
-    def delete_college_from_table(self):
+    def delete_college_from_model(self):
         for college in self.colleges_table_model.get_data():
             if college[0] == self.college_to_delete_combobox.currentText():
 
@@ -70,9 +74,9 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.programs_table_model.model_data_is_empty()
                     self.colleges_table_model.model_data_is_empty()
 
-                    self.colleges_table_model.layoutChanged.emit()
                     self.students_table_model.layoutChanged.emit()
                     self.programs_table_model.layoutChanged.emit()
+                    self.colleges_table_model.layoutChanged.emit()
 
                     self.reset_item_delegates_func("delete_college")
 
@@ -91,14 +95,6 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
 
                     self.success_delete_item_dialog = SuccessDeleteItemDialog("college", self)
                     self.success_delete_item_dialog.exec()
-
-    def enable_delete_button(self):
-        if self.college_to_delete_combobox.currentText() in self.get_information_codes.for_colleges(
-                self.colleges_table_model.get_data()):
-
-            self.delete_college_button.setEnabled(True)
-        else:
-            self.delete_college_button.setEnabled(False)
 
     def len_of_programs_under_college_code(self, college_code):
         lengths = {"programs": 0, "students": 0}
@@ -145,14 +141,24 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.students_table_model.set_data(new_students_data)
         self.students_table_model.layoutChanged.emit()
 
+    def set_college_to_delete_combobox_scrollbar(self):
+        self.college_to_delete_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+    def enable_delete_button(self):
+        if self.college_to_delete_combobox.currentText() in self.get_information_codes.for_colleges(
+                self.colleges_table_model.get_data()):
+
+            self.delete_college_button.setEnabled(True)
+        else:
+            self.delete_college_button.setEnabled(False)
+
     def add_signals(self):
-        self.delete_college_button.clicked.connect(self.delete_college_from_table)
+        self.delete_college_button.clicked.connect(self.delete_college_from_model)
         self.college_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def get_college_codes(self):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

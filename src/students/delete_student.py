@@ -34,7 +34,7 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
         for id_number in self.get_student_id_numbers():
             self.student_to_delete_combobox.addItem(id_number)
 
-    def delete_student_from_table(self):
+    def delete_student_from_model(self):
         for student in self.students_table_model.get_data():
             if student[0] == self.student_to_delete_combobox.currentText():
 
@@ -68,13 +68,12 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
             self.delete_student_button.setEnabled(False)
 
     def add_signals(self):
-        self.delete_student_button.clicked.connect(self.delete_student_from_table)
+        self.delete_student_button.clicked.connect(self.delete_student_from_model)
         self.student_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def get_student_id_numbers(self):
         return self.get_information_codes.for_students(self.students_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

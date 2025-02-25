@@ -18,7 +18,6 @@ from utils.get_connections import GetConnections
 class EditStudentDialog(QDialog, EditStudentUI):
     def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model,
                  reset_item_delegates_func):
-
         super().__init__()
 
         self.setupUi(self)
@@ -32,7 +31,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
-        # self.data_from_csv = students_table_model.data_from_csv
 
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
@@ -45,7 +43,9 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
         self.add_signals()
 
+        self.set_id_number_combobox_scrollbar()
         self.set_program_code_combobox_scrollbar()
+        self.set_college_code_combobox_scrollbar()
 
     def edit_student_information(self):
         issues = self.find_issues()
@@ -78,7 +78,7 @@ class EditStudentDialog(QDialog, EditStudentUI):
             self.confirm_to_edit_dialog = ConfirmEditDialog("student",
                                                             old_student_id_number)
 
-            # Halts the program where as this starts another loop
+            # Halts the program whereas this starts another loop
             self.confirm_to_edit_dialog.exec()
 
             confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
@@ -96,10 +96,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
                     self.success_edit_item_dialog.exec()
-                else:
-                    print("No changes made")
-            else:
-                print("no changes made")
 
     def add_id_numbers_to_combobox(self):
         for id_number in self.get_student_id_numbers():
@@ -113,8 +109,14 @@ class EditStudentDialog(QDialog, EditStudentUI):
         for college_code in self.get_college_codes():
             self.college_code_combobox.addItem(college_code)
 
+    def set_id_number_combobox_scrollbar(self):
+        self.student_to_edit_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
     def set_program_code_combobox_scrollbar(self):
         self.new_program_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+
+    def set_college_code_combobox_scrollbar(self):
+        self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def enable_edit_fields(self, id_number):
         if id_number != "--Select ID Number--" and id_number in self.get_existing_students()["ID Number"]:
@@ -225,16 +227,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
         else:
             self.new_program_code_combobox.addItem("--No programs available--")
 
-    def add_signals(self):
-        self.edit_student_button.clicked.connect(self.edit_student_information)
-
-        self.student_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
-        self.student_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
-
-        self.new_program_code_combobox.currentTextChanged.connect(self.enable_edit_button)
-
-        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
-
     def find_issues(self):
         issues = []
 
@@ -255,6 +247,16 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
         return issues
 
+    def add_signals(self):
+        self.edit_student_button.clicked.connect(self.edit_student_information)
+
+        self.student_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
+        self.student_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+
+        self.new_program_code_combobox.currentTextChanged.connect(self.enable_edit_button)
+
+        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
+
     def get_existing_students(self):
         return GetExistingInformation().from_students(self.students_table_model.get_data())
 
@@ -268,6 +270,5 @@ class EditStudentDialog(QDialog, EditStudentUI):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

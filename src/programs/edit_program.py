@@ -30,7 +30,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
-        self.data_from_programs_model = programs_table_model.data_from_csv
 
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
@@ -41,6 +40,7 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         self.add_signals()
 
+        self.set_program_code_combobox_scrollbar()
         self.set_college_code_combobox_scrollbar()
 
     def edit_program_information(self):
@@ -50,7 +50,7 @@ class EditProgramDialog(QDialog, EditProgramUI):
             self.fail_to_edit_item_dialog = FailToEditItemDialog(issues, "program")
             self.fail_to_edit_item_dialog.exec()
         else:
-            # If either the new ID number, new first name, or new last name is blank, their
+            # If either the program code or program name is blank, their
             #   respective placeholder texts will be used
 
             program_to_edit = [self.new_program_code_lineedit.text()
@@ -87,10 +87,10 @@ class EditProgramDialog(QDialog, EditProgramUI):
                 self.edit_program_code_of_students(old_program_code, program_to_edit[0])
 
                 # Check if there are any changes made from the old data of the program
-                if self.data_from_programs_model[row_to_edit] != program_to_edit:
+                if self.programs_table_model.get_data()[row_to_edit] != program_to_edit:
 
                     # By doing this, the data in the model also gets updated, same reference
-                    self.data_from_programs_model[row_to_edit] = program_to_edit
+                    self.programs_table_model.get_data()[row_to_edit] = program_to_edit
 
                     if len_of_students_under_program_code > 0:
                         self.students_table_model.set_has_changes(True)
@@ -110,6 +110,9 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.new_college_code_combobox.addItem("")
         for college_code in self.get_college_codes():
             self.new_college_code_combobox.addItem(college_code)
+
+    def set_program_code_combobox_scrollbar(self):
+        self.program_to_edit_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def set_college_code_combobox_scrollbar(self):
         self.new_college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
@@ -171,14 +174,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
             if student[5] == old_program_code:
                 student[5] = new_program_code
 
-    def add_signals(self):
-        self.edit_program_button.clicked.connect(self.edit_program_information)
-
-        self.program_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
-        self.program_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
-
-        self.new_college_code_combobox.currentTextChanged.connect(self.enable_edit_button)
-
     def has_issues(self):
         issues = []
 
@@ -194,6 +189,14 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         return issues
 
+    def add_signals(self):
+        self.edit_program_button.clicked.connect(self.edit_program_information)
+
+        self.program_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
+        self.program_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+
+        self.new_college_code_combobox.currentTextChanged.connect(self.enable_edit_button)
+
     def get_student_codes(self):
         return self.get_information_codes.for_students(self.students_table_model.get_data())
 
@@ -204,6 +207,5 @@ class EditProgramDialog(QDialog, EditProgramUI):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

@@ -7,7 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
@@ -104,7 +103,7 @@ class Ui_Dialog(object):
         self.program_name_label.setFont(font)
         self.program_name_label.setObjectName("program_name_label")
         self.gridLayout_2.addWidget(self.program_name_label, 2, 1, 1, 1)
-        self.college_code_combobox = CustomComboBox(parent=self.frame)
+        self.college_code_combobox = QtWidgets.QComboBox(parent=self.frame)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -113,6 +112,7 @@ class Ui_Dialog(object):
         self.college_code_combobox.setFont(font)
         self.college_code_combobox.setEditable(True)
         self.college_code_combobox.setObjectName("college_code_combobox")
+        self.college_code_combobox.addItem("")
         self.gridLayout_2.addWidget(self.college_code_combobox, 3, 3, 1, 1)
         spacerItem2 = QtWidgets.QSpacerItem(15, 15, QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Minimum)
         self.gridLayout_2.addItem(spacerItem2, 1, 0, 3, 1)
@@ -122,6 +122,7 @@ class Ui_Dialog(object):
         self.gridLayout_2.addItem(spacerItem4, 1, 4, 3, 1)
         self.gridLayout.addWidget(self.frame, 2, 0, 1, 3)
         self.add_program_button = QtWidgets.QPushButton(parent=Dialog)
+        self.add_program_button.setEnabled(False)
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(14)
@@ -142,4 +143,5 @@ class Ui_Dialog(object):
         self.last_name_label.setText(_translate("Dialog", "College Code"))
         self.program_code_label.setText(_translate("Dialog", "Program Code"))
         self.program_name_label.setText(_translate("Dialog", "Program Name"))
+        self.college_code_combobox.setItemText(0, _translate("Dialog", "--Select a college--"))
         self.add_program_button.setText(_translate("Dialog", "Add program"))

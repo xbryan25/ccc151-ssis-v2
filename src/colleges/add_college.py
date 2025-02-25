@@ -26,12 +26,13 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = colleges_table_model
 
+        # Load utils
         self.is_valid = IsValidVerifiers()
         self.get_existing_information = GetExistingInformation()
 
         self.add_signals()
 
-    def add_college_to_csv(self):
+    def add_college_to_confirmation(self):
         issues = self.find_issues()
 
         if issues:
@@ -43,7 +44,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
             college_to_add = [self.college_code_lineedit.text().upper(),
                               self.college_name_lineedit.text().replace(",", "_")]
 
-            self.add_college_to_table(college_to_add)
+            self.add_college_to_model(college_to_add)
 
             self.reset_item_delegates_func("add_college")
 
@@ -53,7 +54,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
             self.success_add_item_dialog = SuccessAddItemDialog("college", self)
             self.success_add_item_dialog.exec()
 
-    def add_college_to_table(self, college_to_add):
+    def add_college_to_model(self, college_to_add):
         self.colleges_table_model.layoutAboutToBeChanged.emit()
 
         if self.colleges_table_model.get_data()[0][0] == "":
@@ -87,6 +88,5 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         self.add_college_button.clicked.connect(self.add_college_to_csv)
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())

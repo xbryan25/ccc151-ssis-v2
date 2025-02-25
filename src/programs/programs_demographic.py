@@ -1,5 +1,3 @@
-
-
 from PyQt6.QtWidgets import QDialog, QTableWidget, QTableWidgetItem, QFrame, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QFont
@@ -33,8 +31,6 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         self.get_information_codes = GetInformationCodes()
         self.get_connections = GetConnections()
 
-        # self.get_year_level_demographic()
-        # self.get_gender_demographic()
         self.get_programs_demographic()
 
     def get_year_level_demographic_in_programs(self, program_code):
@@ -47,16 +43,16 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
             if student[0] in program_to_student_connections[program_code]:
                 year_level_demographic[student[3]] += 1
 
-        return (f"1st Year: {year_level_demographic["1st"]} "
-                f"({(year_level_demographic["1st"]/total_students) * 100:.2f}%)"
-                f"\n2nd Year: {year_level_demographic["2nd"]} "
-                f"({(year_level_demographic["2nd"]/total_students) * 100:.2f}%)"
-                f"\n3rd Year: {year_level_demographic["3rd"]} "
-                f"({(year_level_demographic["3rd"]/total_students) * 100:.2f}%)"
-                f"\n4th Year: {year_level_demographic["4th"]} "
-                f"({(year_level_demographic["4th"]/total_students) * 100:.2f}%)"
-                f"\n5th Year: {year_level_demographic["5th"]} "
-                f"({(year_level_demographic["5th"] / total_students) * 100:.2f}%)")
+        return (f"1st Year: {year_level_demographic['1st']} "
+                f"({(year_level_demographic['1st'] / total_students) * 100:.2f}%)"
+                f"\n2nd Year: {year_level_demographic['2nd']} "
+                f"({(year_level_demographic['2nd'] / total_students) * 100:.2f}%)"
+                f"\n3rd Year: {year_level_demographic['3rd']} "
+                f"({(year_level_demographic['3rd'] / total_students) * 100:.2f}%)"
+                f"\n4th Year: {year_level_demographic['4th']} "
+                f"({(year_level_demographic['4th'] / total_students) * 100:.2f}%)"
+                f"\n5th Year: {year_level_demographic['5th']} "
+                f"({(year_level_demographic['5th'] / total_students) * 100:.2f}%)")
 
     def get_gender_demographic_in_programs(self, program_code):
         total_students = len(self.students_table_model.get_data())
@@ -69,14 +65,14 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
             if student[0] in program_to_student_connections[program_code]:
                 gender_demographic[student[4]] += 1
 
-        return (f"Male: {gender_demographic["Male"]} "
-                f"({(gender_demographic["Male"] / total_students) * 100:.2f}%)"
-                f"\nFemale: {gender_demographic["Female"]} "
-                f"({(gender_demographic["Female"] / total_students) * 100:.2f}%)"
-                f"\nOthers: {gender_demographic["Others"]} "
-                f"({(gender_demographic["Others"] / total_students) * 100:.2f}%)"
-                f"\nPrefer not to say: {gender_demographic["Prefer not to say"]} "
-                f"({(gender_demographic["Prefer not to say"] / total_students) * 100:.2f}%)")
+        return (f"Male: {gender_demographic['Male']} "
+                f"({(gender_demographic['Male'] / total_students) * 100:.2f}%)"
+                f"\nFemale: {gender_demographic['Female']} "
+                f"({(gender_demographic['Female'] / total_students) * 100:.2f}%)"
+                f"\nOthers: {gender_demographic['Others']} "
+                f"({(gender_demographic['Others'] / total_students) * 100:.2f}%)"
+                f"\nPrefer not to say: {gender_demographic['Prefer not to say']} "
+                f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
 
     def get_programs_demographic(self):
 
@@ -84,7 +80,7 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
                                                                           self.colleges_table_model.get_data())
 
         program_to_student_connections = self.get_connections.in_students(self.students_table_model.get_data(),
-                                                                         self.programs_table_model.get_data())
+                                                                          self.programs_table_model.get_data())
 
         current_row = 0
 
@@ -175,6 +171,5 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
