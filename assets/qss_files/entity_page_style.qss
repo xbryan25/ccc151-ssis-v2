@@ -162,7 +162,7 @@ QComboBox::down-arrow{
     border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
 }
 
-#header_frame{
+#header_frame, #entity_type_frame, #title_frame, #entity_type_icon, #title_icon{
     background-color: #736556;
 }
 
