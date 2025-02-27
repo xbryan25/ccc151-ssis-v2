@@ -75,13 +75,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def setup_table_views(self):
         # Students table view
-        # self.students_table_view.setSortingEnabled(True)
         self.students_table_view.setModel(self.students_sort_filter_proxy_model)
         self.students_table_view.setAlternatingRowColors(True)
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
-
-        # self.students_table_reset_sorting_state = ResetSortingState(self.students_sort_filter_proxy_model,
-        #                                                             self.students_table_view, "student")
 
         self.students_table_horizontal_header.resizeSection(0, 75)
         self.students_table_horizontal_header.resizeSection(3, 75)
@@ -95,26 +91,18 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_horizontal_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
         # Programs table view
-        # self.programs_table_view.setSortingEnabled(True)
         self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
         self.programs_table_view.setAlternatingRowColors(True)
         self.programs_table_horizontal_header = self.programs_table_view.horizontalHeader()
-
-        # self.programs_table_reset_sorting_state = ResetSortingState(self.programs_sort_filter_proxy_model,
-        #                                                             self.programs_table_view, "program")
 
         self.programs_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.programs_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.programs_table_horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
 
         # Colleges table view
-        # self.colleges_table_view.setSortingEnabled(True)
         self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
         self.colleges_table_view.setAlternatingRowColors(True)
         self.colleges_table_horizontal_header = self.colleges_table_view.horizontalHeader()
-
-        # self.colleges_table_reset_sorting_state = ResetSortingState(self.colleges_sort_filter_proxy_model,
-        #                                                             self.colleges_table_view, "college")
 
         self.colleges_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.colleges_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)

@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QHeaderView, QAbstractItemView
+from PyQt6.QtWidgets import QHeaderView
 
 from utils.combobox_item_delegate import ComboboxItemDelegate
 from utils.get_information_codes import GetInformationCodes

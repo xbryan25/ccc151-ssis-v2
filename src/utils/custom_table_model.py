@@ -121,7 +121,9 @@ class CustomTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.EditRole:
             old_value = self.get_data()[index.row()][index.column()]
 
-            print(old_value)
+            if old_value == value:
+                self.data_from_csv[index.row()][index.column()] = old_value
+                return True
 
             if self.information_type == "student":
                 self.students_information = GetExistingInformation.from_students(self.get_data())

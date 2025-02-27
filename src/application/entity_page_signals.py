@@ -40,8 +40,8 @@ class EntityPageSignals:
 
         if entity_type == "student":
 
-            self.students_table_view.clicked.connect(self.reset_item_delegates.
-                                                     show_combobox_delegate_students_table_view)
+            self.students_table_view.doubleClicked.connect(self.reset_item_delegates.
+                                                           show_combobox_delegate_students_table_view)
 
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_students(self.students_table_view,
@@ -102,8 +102,8 @@ class EntityPageSignals:
 
         elif entity_type == "program":
 
-            self.programs_table_view.clicked.connect(self.reset_item_delegates.
-                                                     show_combobox_delegate_programs_table_view)
+            self.programs_table_view.doubleClicked.connect(self.reset_item_delegates.
+                                                           show_combobox_delegate_programs_table_view)
 
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_programs(self.programs_table_view,
