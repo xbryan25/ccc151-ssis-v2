@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QHeaderView
+from PyQt6.QtWidgets import QHeaderView, QAbstractItemView
 
 from utils.combobox_item_delegate import ComboboxItemDelegate
 from utils.get_information_codes import GetInformationCodes
@@ -27,6 +27,39 @@ class ResetItemDelegates:
 
         self.colleges_table_model = reset_item_delegates_elements[8]
 
+    def load_item_delegates_for_students_table_view(self):
+
+        # For Year Level
+        self.year_level_delegate = ComboboxItemDelegate(self.students_table_view,
+                                                        ["1st", "2nd", "3rd",
+                                                         "4th", "5th"])
+
+        self.students_table_view.setItemDelegateForColumn(3, self.year_level_delegate)
+
+        # For Gender
+        self.gender_delegate = ComboboxItemDelegate(self.students_table_view,
+                                                    ["Male", "Female", "Others",
+                                                     "Prefer not to say"])
+
+        self.students_table_view.setItemDelegateForColumn(4, self.gender_delegate)
+
+        # For Program Codes
+        self.program_code_delegate = ComboboxItemDelegate(self.students_table_view, self.get_program_codes())
+
+        self.students_table_view.setItemDelegateForColumn(5, self.program_code_delegate)
+
+    def load_item_delegates_for_programs_table_view(self):
+
+        # For College Codes
+        self.program_code_delegate = ComboboxItemDelegate(self.programs_table_view, self.get_college_codes())
+
+        self.programs_table_view.setItemDelegateForColumn(2, self.program_code_delegate)
+
+    def show_combobox_delegate_students_table_view(self, index):
+        self.students_table_view.edit(index)
+
+    def show_combobox_delegate_programs_table_view(self, index):
+        self.programs_table_view.edit(index)
 
     # Dynamic change of combobox
     # https://www.pythonguis.com/faq/how-to-clear-remove-combobox-delegate-data-from-qtableview/
@@ -44,9 +77,6 @@ class ResetItemDelegates:
             self.students_table_view_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
             self.students_table_view_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
-            self.load_item_delegates_program_codes()
-            self.load_item_delegates_year_and_gender()
-
         elif state in ["program", "add_program", "delete_program", "edit_program"]:
             self.programs_sort_filter_proxy_model.beginResetModel()
             self.programs_sort_filter_proxy_model.endResetModel()
@@ -61,8 +91,6 @@ class ResetItemDelegates:
             self.programs_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
             self.programs_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
             self.programs_table_view_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
-
-            self.load_item_delegates_college_codes()
 
         elif state in ["add_college", "delete_college", "edit_college"]:
             self.colleges_sort_filter_proxy_model.beginResetModel()
@@ -81,53 +109,6 @@ class ResetItemDelegates:
 
             self.colleges_table_view_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
             self.colleges_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
-
-
-    def load_item_delegates_year_and_gender(self):
-        # Check if self.students_table_model is empty, if so, disable combobox item delegate
-
-        if self.students_table_model.get_data()[0][3] != "" and self.students_table_model.get_data()[0][4] != "":
-            # For Year Level
-            self.students_table_view.setItemDelegateForColumn(3, ComboboxItemDelegate(self.students_table_view,
-                                                                                      ["1st", "2nd", "3rd",
-                                                                                       "4th", "5th"]))
-            for row in range(0, self.students_sort_filter_proxy_model.rowCount()):
-                self.students_table_view.openPersistentEditor(self.students_sort_filter_proxy_model.index(row, 3))
-
-            # For Gender
-            self.students_table_view.setItemDelegateForColumn(4, ComboboxItemDelegate(self.students_table_view,
-                                                                                      ["Male", "Female", "Others",
-                                                                                       "Prefer not to say"]))
-
-            for row in range(0, self.students_sort_filter_proxy_model.rowCount()):
-                self.students_table_view.openPersistentEditor(self.students_sort_filter_proxy_model.index(row, 4))
-
-    def load_item_delegates_program_codes(self):
-        # Check if self.students_table_model is empty, if so, disable combobox item delegate
-
-        if self.students_table_model.get_data()[0][5] != "":
-            # For Program Codes
-
-            combobox_item_delegate = ComboboxItemDelegate(self.students_table_view, self.get_program_codes())
-
-            self.students_table_view.setItemDelegateForColumn(5, combobox_item_delegate)
-
-            for row in range(0, self.students_sort_filter_proxy_model.rowCount()):
-                self.students_table_view.openPersistentEditor(self.students_sort_filter_proxy_model.index(row, 5))
-
-    def load_item_delegates_college_codes(self):
-
-        # Check if self.programs_table_model is empty, if so, disable combobox item delegate
-
-        if self.programs_table_model.get_data()[0][2] != "":
-            # For College Codes
-
-            combobox_item_delegate = ComboboxItemDelegate(self.programs_table_view, self.get_college_codes())
-
-            self.programs_table_view.setItemDelegateForColumn(2, combobox_item_delegate)
-
-            for row in range(0, self.programs_sort_filter_proxy_model.rowCount()):
-                self.programs_table_view.openPersistentEditor(self.programs_sort_filter_proxy_model.index(row, 2))
 
     def get_program_codes(self):
         return GetInformationCodes.for_programs(self.programs_table_model.get_data())

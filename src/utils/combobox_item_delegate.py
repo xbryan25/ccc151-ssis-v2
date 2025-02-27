@@ -10,33 +10,16 @@ class ComboboxItemDelegate(QItemDelegate):
 
     def __init__(self, parent, items):
         self.items = items
+
         QItemDelegate.__init__(self, parent)
 
     def createEditor(self, parent, option, index):
-        combobox = CustomComboBox(parent, True)
+        combobox = CustomComboBox(parent)
 
         if index.row() % 2 == 0:
-            combobox.setStyleSheet("""
-                        QComboBox {
-                            background-color: rgb(176, 137, 104);
-                            padding-left: 20px;
-                        }
-                        QComboBox QAbstractItemView {
-                            padding-right: 20px;
-                            padding-left: 20px;
-                        }
-                    """)
+            combobox.setStyleSheet("background-color: rgb(176, 137, 104);")
         else:
-            combobox.setStyleSheet("""
-                                    QComboBox {
-                                        background-color: rgb(221, 184, 146);
-                                        padding-left: 20px;
-                                    }
-                                    QComboBox QAbstractItemView {
-                                        padding-right: 20px;
-                                        padding-left: 20px;
-                                    }
-                                """)
+            combobox.setStyleSheet("background-color: rgb(221, 184, 146);")
 
         combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
@@ -44,7 +27,8 @@ class ComboboxItemDelegate(QItemDelegate):
         for item in self.items:
             choices.append(item)
 
-        combobox.add_items_for_delegate(choices)
+        combobox.addItems(choices)
+
         combobox.currentIndexChanged.connect(self.change_combobox_value)
 
         return combobox

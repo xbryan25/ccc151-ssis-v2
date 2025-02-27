@@ -32,12 +32,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.programs_table_model = CustomTableModel(self.programs_data, "program")
         self.programs_table_model.set_students_data(self.students_table_model.get_data())
-        self.students_table_model.connect_to_save_button(self.save_changes_button)
+        self.programs_table_model.connect_to_save_button(self.save_changes_button)
 
         self.colleges_table_model = CustomTableModel(self.colleges_data, "college")
         self.colleges_table_model.set_students_data(self.students_table_model.get_data())
         self.colleges_table_model.set_programs_data(self.programs_table_model.get_data())
-        self.students_table_model.connect_to_save_button(self.save_changes_button)
+        self.colleges_table_model.connect_to_save_button(self.save_changes_button)
 
         self.students_sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
         self.programs_sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
@@ -85,7 +85,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.students_table_horizontal_header.resizeSection(0, 75)
         self.students_table_horizontal_header.resizeSection(3, 75)
-        self.students_table_horizontal_header.resizeSection(4, 150)
+        self.students_table_horizontal_header.resizeSection(4, 130)
 
         self.students_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.students_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
@@ -125,8 +125,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_entity_page_student(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
-        self.entity_type_label.setText("Student")
+        self.reset_item_delegates.load_item_delegates_for_students_table_view()
 
+
+        self.entity_type_label.setText("Student")
         self.add_entity_button.setText("Add student")
         self.delete_entity_button.setText("Delete student")
         self.edit_entity_button.setText("Edit student")
@@ -154,8 +156,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_entity_page_program(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
-        self.entity_type_label.setText("Program")
+        self.reset_item_delegates.load_item_delegates_for_programs_table_view()
 
+        self.entity_type_label.setText("Program")
         self.add_entity_button.setText("Add program")
         self.delete_entity_button.setText("Delete program")
         self.edit_entity_button.setText("Edit program")
