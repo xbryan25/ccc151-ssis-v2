@@ -147,7 +147,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.reset_item_delegates.reset("student")
 
-        self.setWindowTitle("Sequence | Student")
+        self.setWindowTitle("Sequence | Students")
 
     def change_to_entity_page_program(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
@@ -182,7 +182,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.reset_item_delegates.reset("program")
 
-        self.setWindowTitle("Sequence | Program")
+        self.setWindowTitle("Sequence | Programs")
 
     def change_to_entity_page_college(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
@@ -214,7 +214,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.entity_page_signals.add("college")
 
-        self.setWindowTitle("Sequence | College")
+        self.setWindowTitle("Sequence | Colleges")
 
     def change_to_about_this_app_page(self):
         self.stackedWidget.setCurrentWidget(self.about_this_app_page)

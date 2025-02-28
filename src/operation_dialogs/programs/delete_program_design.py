@@ -104,7 +104,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Delete a program"))
+        Dialog.setWindowTitle(_translate("Dialog", "Sequence | Delete a program"))
         self.header_label.setText(_translate("Dialog", "Select a program to delete"))
         self.program_to_delete_combobox.setItemText(0, _translate("Dialog", "--Select a program--"))
         self.program_code_label.setText(_translate("Dialog", "Program Code"))

@@ -240,7 +240,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Add student"))
+        Dialog.setWindowTitle(_translate("Dialog", "Sequence | Add a student"))
         self.header_label.setText(_translate("Dialog", "Input information"))
         self.gender_label.setText(_translate("Dialog", "Gender"))
         self.id_number_label.setText(_translate("Dialog", "ID Number"))

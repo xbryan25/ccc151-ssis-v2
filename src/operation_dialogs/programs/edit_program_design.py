@@ -161,7 +161,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Edit program"))
+        Dialog.setWindowTitle(_translate("Dialog", "Sequence | Edit a program"))
         self.header_label.setText(_translate("Dialog", "Edit information"))
         self.edit_program_button.setText(_translate("Dialog", "Edit program"))
         self.program_to_edit_label.setText(_translate("Dialog", "Program to edit"))

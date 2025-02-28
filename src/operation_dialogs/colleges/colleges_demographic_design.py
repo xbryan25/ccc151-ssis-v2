@@ -50,5 +50,5 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Colleges demographic"))
+        Dialog.setWindowTitle(_translate("Dialog", "Sequence | Colleges demographic"))
         self.header_label.setText(_translate("Dialog", "Colleges Demographic"))

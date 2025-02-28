@@ -79,7 +79,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Delete a college"))
+        Dialog.setWindowTitle(_translate("Dialog", "Sequence | Delete a college"))
         self.header_label.setText(_translate("Dialog", "Select a college to delete"))
         self.college_code_label.setText(_translate("Dialog", "College Code"))
         self.college_to_delete_combobox.setItemText(0, _translate("Dialog", "--Select College Code--"))
