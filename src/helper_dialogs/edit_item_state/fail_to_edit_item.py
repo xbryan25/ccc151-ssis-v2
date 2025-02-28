@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from helper_dialogs.edit_item_state.fail_to_edit_item_design import Ui_Dialog as FailToEditItemUI
 
@@ -10,11 +11,12 @@ class FailToEditItemDialog(QDialog, FailToEditItemUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.issues = issues
         self.information_type = information_type
 
-        self.pushButton.clicked.connect(self.close_dialog)
+        self.proceed_button.clicked.connect(self.close_dialog)
 
         self.load_issues()
         self.edit_window_title()
@@ -24,7 +26,7 @@ class FailToEditItemDialog(QDialog, FailToEditItemUI):
 
         additional_space = (len(self.issues) - 1) * 15
 
-        self.label_2.setText(issues_str)
+        self.issues_label.setText(issues_str)
 
         self.setMinimumHeight(self.height() + additional_space)
         self.setMaximumHeight(self.height())
@@ -41,6 +43,13 @@ class FailToEditItemDialog(QDialog, FailToEditItemUI):
         self.close()
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.issues_label.setFont(QFont(self.cg_font_family, 10, QFont.Weight.Medium))
+        self.proceed_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.Medium))

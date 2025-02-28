@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.colleges.add_college_design import Ui_Dialog as AddCollegeUI
 
@@ -19,6 +20,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.reset_item_delegates_func = reset_items_delegates_func
 
@@ -31,7 +33,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
         self.add_signals()
 
-    def add_college_to_confirmation(self):
+    def add_college_confirmation(self):
         issues = self.find_issues()
 
         if issues:
@@ -84,8 +86,21 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         return issues
 
     def add_signals(self):
-        self.add_college_button.clicked.connect(self.add_college_to_csv)
+        self.add_college_button.clicked.connect(self.add_college_confirmation)
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.college_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.college_name_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+
+        self.college_code_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+        self.college_name_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+
+        self.add_college_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))

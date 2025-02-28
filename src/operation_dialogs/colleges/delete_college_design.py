@@ -7,15 +7,14 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(340, 140)
-        Dialog.setMinimumSize(QtCore.QSize(0, 140))
-        Dialog.setMaximumSize(QtCore.QSize(340, 140))
+        Dialog.resize(370, 156)
+        Dialog.setMinimumSize(QtCore.QSize(370, 156))
+        Dialog.setMaximumSize(QtCore.QSize(370, 156))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.header_label = QtWidgets.QLabel(parent=Dialog)
@@ -47,7 +46,7 @@ class Ui_Dialog(object):
         self.horizontalLayout.addWidget(self.college_code_label)
         spacerItem = QtWidgets.QSpacerItem(10, 5, QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.college_to_delete_combobox = CustomComboBox(parent=self.frame)
+        self.college_to_delete_combobox = QtWidgets.QComboBox(parent=self.frame)
         self.college_to_delete_combobox.setMaximumSize(QtCore.QSize(200, 16777215))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")

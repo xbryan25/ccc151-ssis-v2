@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QFrame, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.colleges.colleges_demographic_design import Ui_Dialog as CollegesDemographicUI
 
@@ -21,6 +21,7 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
@@ -122,12 +123,7 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
 
             self.college_label = QLabel(parent=self.scrollAreaWidgetContents)
             self.college_label.setMaximumSize(QSize(16777215, 40))
-            font = QFont()
-            font.setFamily("Segoe UI Semibold")
-            font.setPointSize(16)
-            font.setBold(True)
-            font.setWeight(75)
-            self.college_label.setFont(font)
+            self.college_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.Medium))
             self.college_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.college_label.setObjectName(f"{college_code}_label")
 
@@ -139,12 +135,7 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
 
             self.college_contents_label = QLabel(parent=self.scrollAreaWidgetContents)
             self.college_contents_label.setMaximumSize(QSize(16777215, 16777215))
-            font = QFont()
-            font.setFamily("Segoe UI Semibold")
-            font.setPointSize(10)
-            font.setBold(True)
-            font.setWeight(75)
-            self.college_contents_label.setFont(font)
+            self.college_contents_label.setFont(QFont(self.cg_font_family, 11, QFont.Weight.Normal))
             self.college_contents_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.college_contents_label.setObjectName(f"{college_code}_contents_label")
 
@@ -182,3 +173,8 @@ class CollegesDemographicDialog(QDialog, CollegesDemographicUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 22, QFont.Weight.DemiBold))

@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.students.add_student_design import Ui_Dialog as AddStudentUI
 
@@ -20,6 +21,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
 
@@ -177,3 +179,55 @@ class AddStudentDialog(QDialog, AddStudentUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.id_number_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.first_name_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.last_name_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.year_level_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.gender_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.college_code_filter_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.program_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+
+        self.id_number_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+        self.first_name_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+        self.last_name_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+
+        self.year_level_combobox.setStyleSheet(f"""
+                            QComboBox {{
+                                font-family: {self.cg_font_family};
+                                font-size: 15px;
+                                font-weight: {QFont.Weight.Normal};
+                            }}
+                        """)
+
+        self.gender_combobox.setStyleSheet(f"""
+                            QComboBox {{
+                                font-family: {self.cg_font_family};
+                                font-size: 15px;
+                                font-weight: {QFont.Weight.Normal};
+                            }}
+                        """)
+
+        self.college_code_filter_combobox.setStyleSheet(f"""
+                            QComboBox {{
+                                font-family: {self.cg_font_family};
+                                font-size: 15px;
+                                font-weight: {QFont.Weight.Normal};
+                            }}
+                        """)
+
+        self.program_code_combobox.setStyleSheet(f"""
+                            QComboBox {{
+                                font-family: {self.cg_font_family};
+                                font-size: 15px;
+                                font-weight: {QFont.Weight.Normal};
+                            }}
+                        """)
+
+        self.add_student_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))
+

@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.programs.edit_program_design import Ui_Dialog as EditProgramUI
 
@@ -20,6 +21,7 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
 
@@ -207,3 +209,34 @@ class EditProgramDialog(QDialog, EditProgramUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.program_to_edit_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.new_program_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.new_program_name_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.new_college_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+
+        self.new_program_code_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+        self.new_program_name_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+
+        self.program_to_edit_combobox.setStyleSheet(f"""
+                                                        QComboBox {{
+                                                            font-family: {self.cg_font_family};
+                                                            font-size: 15px;
+                                                            font-weight: {QFont.Weight.Normal};
+                                                        }}
+                                                    """)
+
+        self.new_college_code_combobox.setStyleSheet(f"""
+                                                        QComboBox {{
+                                                            font-family: {self.cg_font_family};
+                                                            font-size: 15px;
+                                                            font-weight: {QFont.Weight.Normal};
+                                                        }}
+                                                    """)
+
+        self.edit_program_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))

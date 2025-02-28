@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.programs.delete_program_design import Ui_Dialog as DeleteProgramUI
 
@@ -19,6 +20,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
         self.horizontal_header = horizontal_header
@@ -46,7 +48,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
 
     def add_college_codes_to_combobox(self):
         for college_code in self.get_college_codes():
-            self.college_code_combobox.addItem(college_code)
+            self.college_code_filter_combobox.addItem(college_code)
 
     def delete_program_from_model(self):
         for program in self.programs_table_model.get_data():
@@ -115,7 +117,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.students_table_model.layoutChanged.emit()
 
     def filter_program_codes(self):
-        college_code = self.college_code_combobox.currentText()
+        college_code = self.college_code_filter_combobox.currentText()
 
         self.reset_program_code_combobox()
 
@@ -150,7 +152,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.program_to_delete_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def set_college_code_combobox_scrollbar(self):
-        self.college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.college_code_filter_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def enable_delete_button(self):
         if self.program_to_delete_combobox.currentText() in self.get_program_codes():
@@ -161,7 +163,7 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def add_signals(self):
         self.delete_program_button.clicked.connect(self.delete_program_from_model)
 
-        self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
+        self.college_code_filter_combobox.currentTextChanged.connect(self.filter_program_codes)
         self.program_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def get_program_codes(self):
@@ -181,3 +183,29 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.college_code_filter_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.program_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+
+        self.college_code_filter_combobox.setStyleSheet(f"""
+                                                            QComboBox {{
+                                                                font-family: {self.cg_font_family};
+                                                                font-size: 15px;
+                                                                font-weight: {QFont.Weight.Normal};
+                                                            }}
+                                                        """)
+
+        self.program_to_delete_combobox.setStyleSheet(f"""
+                                                            QComboBox {{
+                                                                font-family: {self.cg_font_family};
+                                                                font-size: 15px;
+                                                                font-weight: {QFont.Weight.Normal};
+                                                            }}
+                                                        """)
+
+        self.delete_program_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))

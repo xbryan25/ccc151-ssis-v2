@@ -1,4 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QHeaderView
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.colleges.delete_college_design import Ui_Dialog as DeleteCollegeUI
 
@@ -18,6 +20,7 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
         self.horizontal_header = horizontal_header
@@ -162,3 +165,19 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.college_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+
+        self.college_to_delete_combobox.setStyleSheet(f"""
+                                                            QComboBox {{
+                                                                font-family: {self.cg_font_family};
+                                                                font-size: 15px;
+                                                                font-weight: {QFont.Weight.Normal};
+                                                            }}
+                                                        """)
+
+        self.delete_college_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))

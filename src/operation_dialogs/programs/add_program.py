@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.programs.add_program_design import Ui_Dialog as AddProgramUI
 
@@ -18,6 +19,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
 
@@ -120,3 +122,25 @@ class AddProgramDialog(QDialog, AddProgramUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.program_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.program_name_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.college_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+
+        self.program_code_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+        self.program_name_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
+
+        self.college_code_combobox.setStyleSheet(f"""
+                                                    QComboBox {{
+                                                        font-family: {self.cg_font_family};
+                                                        font-size: 15px;
+                                                        font-weight: {QFont.Weight.Normal};
+                                                    }}
+                                                """)
+
+        self.add_program_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))

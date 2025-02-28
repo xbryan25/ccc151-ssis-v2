@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from helper_dialogs.add_item_state.success_add_item_design import Ui_Dialog as SuccessAddItemUI
 
@@ -10,6 +11,7 @@ class SuccessAddItemDialog(QDialog, SuccessAddItemUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.add_item_type = add_item_type
         self.add_item_dialog = add_item_dialog
@@ -34,8 +36,11 @@ class SuccessAddItemDialog(QDialog, SuccessAddItemUI):
         self.close()
 
     def set_external_stylesheet(self):
-
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
 
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
 
+        self.message_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.proceed_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.Medium))

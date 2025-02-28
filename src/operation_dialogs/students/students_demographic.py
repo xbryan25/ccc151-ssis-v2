@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QDialog, QFrame, QVBoxLayout, QLabel
 from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QFont, QFontDatabase
 
 from operation_dialogs.students.students_demographic_design import Ui_Dialog as StudentsDemographicUI
 
@@ -18,6 +18,7 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
@@ -85,12 +86,7 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
                 self.verticalLayout_2.setObjectName("verticalLayout_2")
 
                 self.frame_title = QLabel(parent=self.frame)
-                font = QFont()
-                font.setFamily("Segoe UI Semibold")
-                font.setPointSize(13)
-                font.setBold(True)
-                font.setWeight(75)
-                self.frame_title.setFont(font)
+                self.frame_title.setFont(QFont(self.cg_font_family, 15, QFont.Weight.Medium))
                 self.frame_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.frame_title.setObjectName(f"{college_code}_frame_title")
                 self.verticalLayout_2.addWidget(self.frame_title)
@@ -98,11 +94,7 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
                 self.frame_title.setText(f"{college_code}")
 
                 self.frame_contents = QLabel(parent=self.frame)
-                font = QFont()
-                font.setFamily("Segoe UI Semibold")
-                font.setBold(True)
-                font.setWeight(75)
-                self.frame_contents.setFont(font)
+                self.frame_contents.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
                 self.frame_contents.setAlignment(Qt.AlignmentFlag.AlignCenter)
                 self.frame_contents.setObjectName("{college_code}_frame_contents")
                 self.verticalLayout_2.addWidget(self.frame_contents)
@@ -130,3 +122,15 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
             self.setStyleSheet(file.read())
+
+    def load_fonts(self):
+        self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
+
+        self.header_label.setFont(QFont(self.cg_font_family, 22, QFont.Weight.DemiBold))
+
+        self.year_level_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.Medium))
+        self.year_level_demographic_label.setFont(QFont(self.cg_font_family, 10, QFont.Weight.Normal))
+        self.gender_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.Medium))
+        self.gender_demographic_label.setFont(QFont(self.cg_font_family, 10, QFont.Weight.Normal))
+        self.students_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.Medium))
+
