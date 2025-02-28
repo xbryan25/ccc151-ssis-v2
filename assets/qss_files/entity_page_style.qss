@@ -147,13 +147,10 @@ QComboBox::drop-down {
     background-color: rgb(221, 184, 146);
 }
 
-QComboBox::drop-down:hover {
+QComboBox::drop-down:hover, QComboBox::drop-down:pressed{
     background-color: rgb(176, 137, 104);
 }
 
-QComboBox::drop-down:pressed {
-    background-color: rgb(176, 137, 104);
-}
 
 /* src is the working directory */
 
@@ -162,32 +159,16 @@ QComboBox::down-arrow{
     border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
 }
 
-#header_frame, #entity_type_frame, #title_frame, #entity_type_icon, #title_icon{
-    background-color: #736556;
-}
-
-#title_label{
-    background-color: #736556;
-    color: rgb(220, 220, 220);
-}
-
-#entity_type_label{
-    background-color: #736556;
-    color: rgb(220, 220, 220);
-}
-
-#search_type_combobox{
+#search_type_combobox, #sort_type_combobox, #sort_order_combobox{
     border: 1px solid black;
     border-radius: 5px;
 }
 
-#sort_order_combobox{
-    border: 1px solid black;
-    border-radius: 5px;
+#header_frame, #entity_type_frame, #title_frame, #entity_type_icon, #title_icon, #title_label, #entity_type_label{
+    background-color: rgb(127, 85, 57);
 }
 
-#sort_type_combobox{
-    border: 1px solid black;
-    border-radius: 5px;
+#title_label, #entity_type_label, #v_line_1, #v_line_2, #h_line_1{
+    color: rgb(237, 224, 212);
 }
 

@@ -74,21 +74,15 @@ QLineEdit{
     padding: 0 5px;
 }
 
-#about_this_app_header_frame, #about_this_app_frame, #about_this_app_title_frame,
-#about_this_app_title_icon, #about_this_app_icon{
-    background-color: #736556;
-}
-
-#about_this_app_title_label{
-    background-color: #736556;
-    color: rgb(220, 220, 220);
-}
-
-#about_this_app_label{
-    background-color: #736556;
-    color: rgb(220, 220, 220);
-}
-
 #scroll_area_title_label, #scroll_area_contents{
     color: rgb(127, 85, 57);
+}
+
+#about_this_app_header_frame, #about_this_app_frame, #about_this_app_title_frame,
+#about_this_app_title_icon, #about_this_app_icon, #about_this_app_title_label, #about_this_app_label{
+    background-color: rgb(127, 85, 57);
+}
+
+#about_this_app_title_label, #about_this_app_label, #h_line_4, #v_line_7, #v_line_8{
+    color: rgb(237, 224, 212);
 }

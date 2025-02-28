@@ -315,8 +315,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.scroll_area_contents.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
 
         # Entity Page
-        self.entity_type_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.Medium))
-        self.title_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.Medium))
+        self.entity_type_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
+        self.title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
         self.sort_label.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
 
         self.sort_type_combobox.setStyleSheet(f"""
