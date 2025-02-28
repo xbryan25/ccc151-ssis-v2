@@ -7,7 +7,6 @@
 
 
 from PyQt6 import QtCore, QtGui, QtWidgets
-from utils.custom_combobox import CustomComboBox
 
 
 class Ui_Dialog(object):
@@ -84,6 +83,7 @@ class Ui_Dialog(object):
         self.year_level_label.setObjectName("year_level_label")
         self.gridLayout_2.addWidget(self.year_level_label, 4, 1, 1, 1)
         self.last_name_lineedit = QtWidgets.QLineEdit(parent=self.frame)
+        self.last_name_lineedit.setMinimumSize(QtCore.QSize(200, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -104,6 +104,7 @@ class Ui_Dialog(object):
         self.first_name_label.setObjectName("first_name_label")
         self.gridLayout_2.addWidget(self.first_name_label, 2, 1, 1, 1)
         self.gender_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.gender_combobox.setMinimumSize(QtCore.QSize(200, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -117,8 +118,9 @@ class Ui_Dialog(object):
         self.gender_combobox.addItem("")
         self.gender_combobox.addItem("")
         self.gridLayout_2.addWidget(self.gender_combobox, 5, 3, 1, 1)
-        self.program_code_combobox = CustomComboBox(parent=self.frame)
+        self.program_code_combobox = QtWidgets.QComboBox(parent=self.frame)
         self.program_code_combobox.setEnabled(True)
+        self.program_code_combobox.setMinimumSize(QtCore.QSize(200, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -142,6 +144,7 @@ class Ui_Dialog(object):
         self.program_code_label.setObjectName("program_code_label")
         self.gridLayout_2.addWidget(self.program_code_label, 8, 1, 1, 1)
         self.first_name_lineedit = QtWidgets.QLineEdit(parent=self.frame)
+        self.first_name_lineedit.setMinimumSize(QtCore.QSize(200, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -152,6 +155,7 @@ class Ui_Dialog(object):
         self.first_name_lineedit.setObjectName("first_name_lineedit")
         self.gridLayout_2.addWidget(self.first_name_lineedit, 2, 3, 1, 1)
         self.id_number_lineedit = QtWidgets.QLineEdit(parent=self.frame)
+        self.id_number_lineedit.setMinimumSize(QtCore.QSize(200, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -172,6 +176,7 @@ class Ui_Dialog(object):
         self.last_name_label.setObjectName("last_name_label")
         self.gridLayout_2.addWidget(self.last_name_label, 3, 1, 1, 1)
         self.year_level_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.year_level_combobox.setMinimumSize(QtCore.QSize(200, 23))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(10)
@@ -200,7 +205,8 @@ class Ui_Dialog(object):
         self.college_code_filter_label.setFont(font)
         self.college_code_filter_label.setObjectName("college_code_filter_label")
         self.gridLayout_2.addWidget(self.college_code_filter_label, 7, 1, 1, 1)
-        self.college_code_filter_combobox = CustomComboBox(parent=self.frame)
+        self.college_code_filter_combobox = QtWidgets.QComboBox(parent=self.frame)
+        self.college_code_filter_combobox.setMinimumSize(QtCore.QSize(200, 20))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setBold(True)
@@ -218,6 +224,7 @@ class Ui_Dialog(object):
         self.gridLayout.addWidget(self.frame, 2, 0, 1, 3)
         self.add_student_button = QtWidgets.QPushButton(parent=Dialog)
         self.add_student_button.setEnabled(False)
+        self.add_student_button.setMinimumSize(QtCore.QSize(402, 35))
         font = QtGui.QFont()
         font.setFamily("Segoe UI Semibold")
         font.setPointSize(14)
