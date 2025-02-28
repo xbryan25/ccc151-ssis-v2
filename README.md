@@ -31,6 +31,17 @@ the context menu would show a delete option to edit/delete multiple students
 - Store data using SQLite/MySQL instead of .csv files
 - Add admin and viewer mode; the admin can manipulate the data, while the viewer, can only view the data
 
+## Screenshots
+![Landing Page Screenshot](assets/screenshots/screenshot1.png)
+
+![About This App Page Screenshot](assets/screenshots/screenshot2.png)
+
+![Students Page Screenshot](assets/screenshots/screenshot3.png)
+
+![Programs Page Screenshot](assets/screenshots/screenshot4.png)
+
+![Colleges Page Screenshot](assets/screenshots/screenshot5.png)
+
 ## To run the project on a local machine
 
 Clone the project
