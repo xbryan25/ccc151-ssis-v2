@@ -24,6 +24,8 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
+        self.student_to_edit_index = 0
+
         self.reset_item_delegates_func = reset_item_delegates_func
 
         self.programs_table_model = programs_table_model
@@ -74,18 +76,19 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
             row_to_edit = self.row_to_edit()
 
-            old_student_id_number = self.student_to_edit_combobox.currentText()
-            self.confirm_to_edit_dialog = ConfirmEditDialog("student",
-                                                            old_student_id_number)
+            # Check if there are any changes made from the old data of the student
+            if self.students_table_model.get_data()[row_to_edit] != student_to_edit:
 
-            # Halts the program whereas this starts another loop
-            self.confirm_to_edit_dialog.exec()
+                old_student_id_number = self.student_to_edit_combobox.currentText()
+                self.confirm_to_edit_dialog = ConfirmEditDialog("student",
+                                                                old_student_id_number)
 
-            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+                # Halts the program whereas this starts another loop
+                self.confirm_to_edit_dialog.exec()
 
-            if confirm_edit_decision:
-                # Check if there are any changes made from the old data of the student
-                if self.students_table_model.get_data()[row_to_edit] != student_to_edit:
+                confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+
+                if confirm_edit_decision:
 
                     # By doing this, the data in the model also gets updated, same reference
                     self.students_table_model.get_data()[row_to_edit] = student_to_edit
@@ -96,6 +99,9 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
                     self.success_edit_item_dialog.exec()
+            else:
+                self.fail_to_edit_item_dialog = FailToEditItemDialog(["No changes made to the student"], "student")
+                self.fail_to_edit_item_dialog.exec()
 
     def add_id_numbers_to_combobox(self):
         for id_number in self.get_student_id_numbers():
@@ -169,8 +175,10 @@ class EditStudentDialog(QDialog, EditStudentUI):
             self.edit_student_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
-        for student in self.students_table_model.get_data():
+        for index, student in enumerate(self.students_table_model.get_data()):
             if student[0] == self.student_to_edit_combobox.currentText():
+                self.student_to_edit_index = index
+
                 self.new_id_number_lineedit.setPlaceholderText(student[0])
                 self.new_first_name_lineedit.setPlaceholderText(student[1])
                 self.new_last_name_lineedit.setPlaceholderText(student[2])
@@ -232,7 +240,10 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
         if not self.is_valid.id_number(self.new_id_number_lineedit.text().strip(), edit_state=True):
             issues.append("ID Number is not in the correct format")
-        elif (self.new_id_number_lineedit.text()).strip() in self.get_existing_students()["ID Number"]:
+
+        # Checks if the id number already exists and if it is not the same as the placeholder text
+        elif (self.new_id_number_lineedit.text().strip() in self.get_existing_students()["ID Number"] and
+              self.new_id_number_lineedit.text().strip() != self.new_id_number_lineedit.placeholderText()):
             issues.append("ID Number already exists")
 
         if not self.is_valid.first_name(self.new_first_name_lineedit.text().strip(), edit_state=True):
@@ -241,8 +252,20 @@ class EditStudentDialog(QDialog, EditStudentUI):
         if not self.is_valid.last_name(self.new_last_name_lineedit.text().strip(), edit_state=True):
             issues.append("Last name is not in the correct format")
 
-        full_name = f"{(self.new_first_name_lineedit.text()).strip()} {(self.new_last_name_lineedit.text()).strip()}"
-        if full_name in self.get_existing_students()["Full Name"]:
+        full_name_list = [self.new_first_name_lineedit.text().strip()
+                          if self.new_first_name_lineedit.text().strip()
+                          else self.new_first_name_lineedit.placeholderText(),
+                          self.new_last_name_lineedit.text().strip()
+                          if self.new_last_name_lineedit.text().strip()
+                          else self.new_last_name_lineedit.placeholderText()]
+
+        full_name_str = f"{full_name_list[0]} {full_name_list[1]}"
+
+        # Checks if the name combination already exists and if it is not the same as the placeholder texts
+        if (full_name_str in self.get_existing_students()["Full Name"] and
+                full_name_list[0] != self.new_first_name_lineedit.placeholderText() and
+                full_name_list[1] != self.new_first_name_lineedit.placeholderText()):
+
             issues.append("Name combination already exists")
 
         return issues

@@ -20,6 +20,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.setupUi(self)
 
         self.set_external_stylesheet()
+        self.load_fonts()
 
         # Load information from database upon entering the landing page for the first time
         self.students_data = LoadInformationFromDatabase.get_students()
@@ -58,8 +59,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_button.clicked.connect(self.change_to_entity_page_program)
         self.colleges_button.clicked.connect(self.change_to_entity_page_college)
         self.about_this_app_button.clicked.connect(self.change_to_about_this_app_page)
-
-        self.load_font()
 
         self.setWindowIcon(QIcon("../assets/images/sequence_icon.ico"))
 
@@ -142,6 +141,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         SearchAndSortHeader.change_contents("student", self.search_type_combobox)
         SearchAndSortHeader.change_contents("student", self.sort_type_combobox)
 
+        self.search_input_lineedit.clear()
+
         self.entity_page_signals.add("student")
 
         self.reset_item_delegates.reset("student")
@@ -175,6 +176,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         SearchAndSortHeader.change_contents("program", self.search_type_combobox)
         SearchAndSortHeader.change_contents("program", self.sort_type_combobox)
 
+        self.search_input_lineedit.clear()
+
         self.entity_page_signals.add("program")
 
         self.reset_item_delegates.reset("program")
@@ -206,6 +209,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         SearchAndSortHeader.change_contents("college", self.search_type_combobox)
         SearchAndSortHeader.change_contents("college", self.sort_type_combobox)
+
+        self.search_input_lineedit.clear()
 
         self.entity_page_signals.add("college")
 
@@ -289,7 +294,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.save_changes_button.setFont(font)
         self.view_demographics_button.setFont(font)
 
-    def load_font(self):
+    def load_fonts(self):
         # Load fonts, they can be used in any part of the application
         QFontDatabase.addApplicationFont("../assets/fonts/ClashGroteskSemibold.otf")
         QFontDatabase.addApplicationFont("../assets/fonts/ClashGroteskMedium.otf")

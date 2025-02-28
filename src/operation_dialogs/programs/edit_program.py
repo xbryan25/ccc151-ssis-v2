@@ -65,29 +65,28 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
             row_to_edit = self.row_to_edit()
 
-            old_program_code = self.program_to_edit_combobox.currentText()
-            len_of_students_under_program_code = self.len_of_students_under_program_code(old_program_code)
+            # Check if there are any changes made from the old data of the program
+            if self.programs_table_model.get_data()[row_to_edit] != program_to_edit:
+                old_program_code = self.program_to_edit_combobox.currentText()
+                len_of_students_under_program_code = self.len_of_students_under_program_code(old_program_code)
 
-            # If program code is not changed, a different confirm edit dialog will show
-            if old_program_code == program_to_edit[0]:
-                self.confirm_to_edit_dialog = ConfirmEditDialog("program",
-                                                                old_program_code)
-            else:
-                self.confirm_to_edit_dialog = ConfirmEditDialog("program",
-                                                                old_program_code,
-                                                                num_of_affected=len_of_students_under_program_code,
-                                                                information_code_affected=True)
+                # If program code is not changed, a different confirm edit dialog will show
+                if old_program_code == program_to_edit[0]:
+                    self.confirm_to_edit_dialog = ConfirmEditDialog("program",
+                                                                    old_program_code)
+                else:
+                    self.confirm_to_edit_dialog = ConfirmEditDialog("program",
+                                                                    old_program_code,
+                                                                    num_of_affected=len_of_students_under_program_code,
+                                                                    information_code_affected=True)
 
-            # Halts the program as this starts another loop
-            self.confirm_to_edit_dialog.exec()
+                # Halts the program as this starts another loop
+                self.confirm_to_edit_dialog.exec()
 
-            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+                confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
 
-            if confirm_edit_decision:
-                self.edit_program_code_of_students(old_program_code, program_to_edit[0])
-
-                # Check if there are any changes made from the old data of the program
-                if self.programs_table_model.get_data()[row_to_edit] != program_to_edit:
+                if confirm_edit_decision:
+                    self.edit_program_code_of_students(old_program_code, program_to_edit[0])
 
                     # By doing this, the data in the model also gets updated, same reference
                     self.programs_table_model.get_data()[row_to_edit] = program_to_edit
@@ -101,6 +100,10 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
                     self.success_edit_item_dialog = SuccessEditItemDialog("program", self)
                     self.success_edit_item_dialog.exec()
+
+            else:
+                self.fail_to_edit_item_dialog = FailToEditItemDialog(["No changes made to the program"], "program")
+                self.fail_to_edit_item_dialog.exec()
 
     def add_program_codes_to_combobox(self):
         for program_code in self.get_program_codes():
@@ -179,12 +182,17 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         if not self.is_valid.program_code(self.new_program_code_lineedit.text().strip(), edit_state=True):
             issues.append("Program code is not in the correct format")
-        elif (self.new_program_code_lineedit.text()).strip() in self.programs_information["Program Code"]:
+
+        # Checks if the program code already exists and if it is not the same as the placeholder text
+        elif (self.new_program_code_lineedit.text().strip() in self.programs_information["Program Code"] and
+              self.new_program_code_lineedit.text().strip() != self.new_program_code_lineedit.placeholderText()):
             issues.append("Program code already exists")
 
+        # Checks if the program name already exists and if it is not the same as the placeholder text
         if not self.is_valid.program_name(self.new_program_name_lineedit.text().strip(), edit_state=True):
             issues.append("Program name is not in the correct format")
-        elif self.new_program_name_lineedit.text().strip() in self.programs_information["Program Name"]:
+        elif (self.new_program_name_lineedit.text().strip() in self.programs_information["Program Name"] and
+              self.new_program_name_lineedit.text().strip() != self.new_program_name_lineedit.placeholderText()):
             issues.append("Program name already exists")
 
         return issues

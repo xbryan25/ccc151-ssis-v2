@@ -14,7 +14,7 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(450, 330)
         Dialog.setMinimumSize(QtCore.QSize(450, 330))
-        Dialog.setMaximumSize(QtCore.QSize(483, 330))
+        Dialog.setMaximumSize(QtCore.QSize(450, 330))
         self.gridLayout = QtWidgets.QGridLayout(Dialog)
         self.gridLayout.setObjectName("gridLayout")
         spacerItem = QtWidgets.QSpacerItem(20, 5, QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)

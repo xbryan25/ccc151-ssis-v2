@@ -59,30 +59,29 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
             row_to_edit = self.row_to_edit()
 
-            old_college_code = self.college_to_edit_combobox.currentText()
-            len_of_programs_under_college_code = self.len_of_programs_under_college_code(old_college_code)
+            # Check if there are any changes made from the old data of the college
+            if self.colleges_table_model.get_data()[row_to_edit] != college_to_edit:
+                old_college_code = self.college_to_edit_combobox.currentText()
+                len_of_programs_under_college_code = self.len_of_programs_under_college_code(old_college_code)
 
-            # If college code is not changed, a different confirm edit dialog will show
-            if old_college_code == college_to_edit[0]:
-                self.confirm_to_edit_dialog = ConfirmEditDialog("college",
-                                                                old_college_code)
-            else:
+                # If college code is not changed, a different confirm edit dialog will show
+                if old_college_code == college_to_edit[0]:
+                    self.confirm_to_edit_dialog = ConfirmEditDialog("college",
+                                                                    old_college_code)
+                else:
 
-                self.confirm_to_edit_dialog = ConfirmEditDialog("college",
-                                                                old_college_code,
-                                                                num_of_affected=len_of_programs_under_college_code,
-                                                                information_code_affected=True)
+                    self.confirm_to_edit_dialog = ConfirmEditDialog("college",
+                                                                    old_college_code,
+                                                                    num_of_affected=len_of_programs_under_college_code,
+                                                                    information_code_affected=True)
 
-            # Halts the program where as this starts another loop
-            self.confirm_to_edit_dialog.exec()
+                # Halts the program where as this starts another loop
+                self.confirm_to_edit_dialog.exec()
 
-            confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
+                confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
 
-            if confirm_edit_decision:
-                self.edit_college_code_of_programs(old_college_code, college_to_edit[0])
-
-                # Check if there are any changes made from the old data of the college
-                if self.colleges_table_model.get_data()[row_to_edit] != college_to_edit:
+                if confirm_edit_decision:
+                    self.edit_college_code_of_programs(old_college_code, college_to_edit[0])
 
                     # By doing this, the data in the model also gets updated, same reference
                     self.colleges_table_model.get_data()[row_to_edit] = college_to_edit
@@ -97,6 +96,10 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                     self.success_edit_item_dialog = SuccessEditItemDialog("college", self)
 
                     self.success_edit_item_dialog.exec()
+
+            else:
+                self.fail_to_edit_item_dialog = FailToEditItemDialog(["No changes made to the college"], "college")
+                self.fail_to_edit_item_dialog.exec()
 
     def add_college_codes_to_combobox(self):
         for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
@@ -152,12 +155,18 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
         if not self.is_valid.college_code(self.new_college_code_lineedit.text().strip(), edit_state=True):
             issues.append("College code is not in the correct format")
-        elif (self.new_college_code_lineedit.text()).strip() in self.colleges_information["College Code"]:
+
+        # Checks if the college code already exists and if it is not the same as the placeholder text
+        elif (self.new_college_code_lineedit.text().strip() in self.colleges_information["College Code"] and
+              self.new_college_code_lineedit.text().strip() != self.new_college_code_lineedit.placeholderText()):
             issues.append("College code already exists")
 
         if not self.is_valid.college_name(self.new_college_name_lineedit.text().strip(), edit_state=True):
             issues.append("College name is not in the correct format")
-        elif self.new_college_name_lineedit.text().strip() in self.colleges_information["College Name"]:
+
+        # Checks if the college name already exists and if it is not the same as the placeholder text
+        elif (self.new_college_name_lineedit.text().strip() in self.colleges_information["College Name"] and
+              self.new_college_name_lineedit.text().strip() != self.new_college_name_lineedit.placeholderText()):
             issues.append("College name already exists")
 
         return issues
