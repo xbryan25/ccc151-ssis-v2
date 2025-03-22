@@ -17,13 +17,14 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 
 
 class CustomTableModel(QAbstractTableModel):
-    def __init__(self, data_from_csv, information_type):
+    def __init__(self, data_from_csv, information_type, db_handler):
         super().__init__()
 
         self.has_changes = False
 
         self.data_from_csv = data_from_csv
         self.information_type = information_type
+        self.db_handler = db_handler
 
         self.is_valid_edit_value = IsValidEditValueForCell()
 
@@ -99,10 +100,13 @@ class CustomTableModel(QAbstractTableModel):
         return length
 
     def edit_college_code_of_programs(self, old_college_code, new_college_code):
-
         for program in self.programs_data:
             if program[2] == old_college_code:
                 program[2] = new_college_code
+
+    def add_entity(self, entity_to_add, entity_type):
+        self.data_from_csv.append(entity_to_add)
+        self.db_handler.add_entity(entity_to_add, entity_type)
 
     # Override
     def data(self, index, role):

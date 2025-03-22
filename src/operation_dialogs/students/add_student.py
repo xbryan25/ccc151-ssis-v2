@@ -74,7 +74,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
         if self.students_table_model.get_data()[0][0] == "":
             self.students_table_model.get_data().pop()
 
-        self.students_table_model.get_data().append(student_to_add)
+        self.students_table_model.add_entity(student_to_add, "student")
         self.students_table_model.layoutChanged.emit()
 
     def add_program_codes_from_a_college_to_combobox(self, college_code):

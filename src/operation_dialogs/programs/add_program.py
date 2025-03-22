@@ -67,7 +67,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
         if self.programs_table_model.get_data()[0][0] == "":
             self.programs_table_model.get_data().pop()
 
-        self.programs_table_model.get_data().append(program_to_add)
+        self.programs_table_model.add_entity(program_to_add, "program")
         self.programs_table_model.layoutChanged.emit()
 
     def add_college_codes_to_combobox(self):
