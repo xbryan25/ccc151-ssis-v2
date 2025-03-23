@@ -25,9 +25,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.load_information_from_database = LoadInformationFromDatabase()
 
         # Load information from database upon entering the landing page for the first time
-        self.students_data = self.load_information_from_database.get_students()
-        self.programs_data = self.load_information_from_database.get_programs()
-        self.colleges_data = self.load_information_from_database.get_colleges()
+        self.students_data = self.load_information_from_database.get_all_entities('student')
+        self.programs_data = self.load_information_from_database.get_all_entities('program')
+        self.colleges_data = self.load_information_from_database.get_all_entities('college')
 
         # Generate table models in landing page so that it can be accessed in different pages
         self.students_table_model = CustomTableModel(self.students_data, "student", self.load_information_from_database)

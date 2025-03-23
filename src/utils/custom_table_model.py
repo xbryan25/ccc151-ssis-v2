@@ -108,6 +108,15 @@ class CustomTableModel(QAbstractTableModel):
         self.data_from_csv.append(entity_to_add)
         self.db_handler.add_entity(entity_to_add, entity_type)
 
+    def update_entity(self, identifier, entity_to_edit, entity_type, row_to_edit=None, edit_type="from_dialog"):
+
+        if edit_type == "from_dialog":
+            self.data_from_csv[row_to_edit] = entity_to_edit
+
+        # If edited 'from_model', no need to update the internal list
+
+        self.db_handler.update_entity(identifier, entity_to_edit, entity_type)
+
     # Override
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
@@ -179,12 +188,12 @@ class CustomTableModel(QAbstractTableModel):
                 else:
                     self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type, self.get_data()[index.row()][0])
 
-
                 self.confirm_to_edit_dialog.exec()
 
                 confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
 
                 if confirm_edit_decision:
+                    # If program code is edited
                     if self.information_type == "program" and index.column() == 0:
 
                         old_program_code = self.get_data()[index.row()][0]
@@ -192,18 +201,36 @@ class CustomTableModel(QAbstractTableModel):
                         # Edit the list of lists from the model
                         self.data_from_csv[index.row()][index.column()] = value.upper()
 
+                        self.update_entity(old_program_code,
+                                           self.data_from_csv[index.row()],
+                                           self.information_type,
+                                           edit_type='from_model')
+
                         self.edit_program_code_of_students(old_program_code, self.get_data()[index.row()][0])
 
+                    # If college code is edited
                     elif self.information_type == "college" and index.column() == 0:
                         old_college_code = self.get_data()[index.row()][0]
 
                         # Edit the list of lists from the model
                         self.data_from_csv[index.row()][index.column()] = value.upper()
 
+                        self.update_entity(old_college_code,
+                                           self.data_from_csv[index.row()],
+                                           self.information_type,
+                                           edit_type='from_model')
+
                         self.edit_college_code_of_programs(old_college_code, self.get_data()[index.row()][0])
 
+                    # If everything else is edited
                     else:
+                        identifier = self.data_from_csv[index.row()][0]
                         self.data_from_csv[index.row()][index.column()] = value
+
+                        self.update_entity(identifier,
+                                           self.data_from_csv[index.row()],
+                                           self.information_type,
+                                           edit_type='from_model')
 
                     self.has_changes = True
 

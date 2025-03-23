@@ -84,7 +84,11 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                     self.edit_college_code_of_programs(old_college_code, college_to_edit[0])
 
                     # By doing this, the data in the model also gets updated, same reference
-                    self.colleges_table_model.get_data()[row_to_edit] = college_to_edit
+                    # self.colleges_table_model.get_data()[row_to_edit] = college_to_edit
+                    self.colleges_table_model.update_entity(old_college_code,
+                                                            college_to_edit,
+                                                            'college',
+                                                            row_to_edit=row_to_edit)
 
                     if len_of_programs_under_college_code > 0:
                         self.programs_table_model.set_has_changes(True)

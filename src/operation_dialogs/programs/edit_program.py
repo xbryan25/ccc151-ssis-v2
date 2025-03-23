@@ -89,7 +89,11 @@ class EditProgramDialog(QDialog, EditProgramUI):
                     self.edit_program_code_of_students(old_program_code, program_to_edit[0])
 
                     # By doing this, the data in the model also gets updated, same reference
-                    self.programs_table_model.get_data()[row_to_edit] = program_to_edit
+                    # self.programs_table_model.get_data()[row_to_edit] = program_to_edit
+                    self.programs_table_model.update_entity(old_program_code,
+                                                            program_to_edit,
+                                                            'program',
+                                                            row_to_edit=row_to_edit)
 
                     if len_of_students_under_program_code > 0:
                         self.students_table_model.set_has_changes(True)

@@ -91,7 +91,11 @@ class EditStudentDialog(QDialog, EditStudentUI):
                 if confirm_edit_decision:
 
                     # By doing this, the data in the model also gets updated, same reference
-                    self.students_table_model.get_data()[row_to_edit] = student_to_edit
+                    # self.students_table_model.get_data()[row_to_edit] = student_to_edit
+                    self.students_table_model.update_entity(old_student_id_number,
+                                                            student_to_edit,
+                                                            'student',
+                                                            row_to_edit=row_to_edit)
 
                     self.students_table_model.set_has_changes(True)
 
