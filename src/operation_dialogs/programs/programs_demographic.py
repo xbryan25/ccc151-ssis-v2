@@ -7,9 +7,6 @@ from operation_dialogs.programs.programs_demographic_design import Ui_Dialog as 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
-from utils.get_information_codes import GetInformationCodes
-from utils.get_connections import GetConnections
-
 
 class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
     def __init__(self, students_table_model, programs_table_model, colleges_table_model):
@@ -24,17 +21,14 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
 
-        self.get_information_codes = GetInformationCodes()
-        self.get_connections = GetConnections()
-
         self.get_programs_demographic()
 
     def get_year_level_demographic_in_programs(self, program_code):
         total_students = len(self.students_table_model.get_data())
         year_level_demographic = {"1st": 0, "2nd": 0, "3rd": 0, "4th": 0, "5th": 0}
 
-        program_to_student_connections = self.get_connections.in_students(self.students_table_model.get_data(),
-                                                                          self.programs_table_model.get_data())
+        program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
+
         for student in self.students_table_model.get_data():
             if student[0] in program_to_student_connections[program_code]:
                 year_level_demographic[student[3]] += 1
@@ -54,8 +48,7 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         total_students = len(self.students_table_model.get_data())
         gender_demographic = {"Male": 0, "Female": 0, "Others": 0, "Prefer not to say": 0}
 
-        program_to_student_connections = self.get_connections.in_students(self.students_table_model.get_data(),
-                                                                          self.programs_table_model.get_data())
+        program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
 
         for student in self.students_table_model.get_data():
             if student[0] in program_to_student_connections[program_code]:
@@ -72,11 +65,9 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
 
     def get_programs_demographic(self):
 
-        college_to_program_connections = self.get_connections.in_programs(self.programs_table_model.get_data(),
-                                                                          self.colleges_table_model.get_data())
+        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
 
-        program_to_student_connections = self.get_connections.in_students(self.students_table_model.get_data(),
-                                                                          self.programs_table_model.get_data())
+        program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
 
         current_row = 0
 
@@ -147,10 +138,10 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_program_codes(self):
-        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

@@ -8,8 +8,6 @@ from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
-from utils.get_information_codes import GetInformationCodes
-from utils.get_existing_information import GetExistingInformation
 
 
 class AddProgramDialog(QDialog, AddProgramUI):
@@ -30,8 +28,6 @@ class AddProgramDialog(QDialog, AddProgramUI):
 
         # Load utils
         self.is_valid = IsValidVerifiers()
-        self.get_information_codes = GetInformationCodes()
-        self.get_existing_information = GetExistingInformation()
 
         self.add_college_codes_to_combobox()
 
@@ -114,10 +110,10 @@ class AddProgramDialog(QDialog, AddProgramUI):
         return self.programs_table_model.db_handler.get_all_existing_programs()
 
     def get_program_codes(self):
-        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

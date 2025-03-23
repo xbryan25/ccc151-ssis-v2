@@ -82,6 +82,66 @@ class DatabaseHandler:
 
         return colleges_information
 
+    def get_all_entity_information_codes(self, entity_type):
+        sql = ""
+
+        if entity_type == "student":
+            sql = "SELECT id_number FROM students"
+        elif entity_type == "program":
+            sql = "SELECT program_code FROM programs"
+        elif entity_type == "college":
+            sql = "SELECT college_code FROM colleges"
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        entity_codes = []
+
+        for entity_code in results:
+            entity_codes.append(entity_code[0])
+
+        return entity_codes
+
+    def get_colleges_and_programs_connections(self):
+        sql = ("SELECT colleges.college_code, programs.program_code "
+               "FROM colleges LEFT JOIN programs ON colleges.college_code = programs.college_code")
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        college_to_program_connections = {}
+
+        for college_to_program_connection in results:
+            if college_to_program_connection[0] not in college_to_program_connections.keys():
+                college_to_program_connections.update({college_to_program_connection[0]: []})
+
+            if college_to_program_connection[1]:
+                college_to_program_connections[college_to_program_connection[0]].append(
+                    college_to_program_connection[1])
+
+        return college_to_program_connections
+
+    def get_programs_and_students_connections(self):
+        sql = ("SELECT programs.program_code, students.id_number "
+               "FROM programs LEFT JOIN students ON programs.program_code = students.program_code")
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        program_to_student_connections = {}
+
+        for program_to_student_connection in results:
+            if program_to_student_connection[0] not in program_to_student_connections.keys():
+                program_to_student_connections.update({program_to_student_connection[0]: []})
+
+            if program_to_student_connection[1]:
+                program_to_student_connections[program_to_student_connection[0]].append(program_to_student_connection[1])
+
+        return program_to_student_connections
+
     def add_entity(self, entity_data, entity_type):
         sql = ""
         values = ()

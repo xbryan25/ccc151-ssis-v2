@@ -9,8 +9,6 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
-from utils.get_information_codes import GetInformationCodes
-from utils.get_existing_information import GetExistingInformation
 
 
 class EditProgramDialog(QDialog, EditProgramUI):
@@ -32,7 +30,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.programs_table_model = programs_table_model
 
         self.is_valid = IsValidVerifiers()
-        self.get_information_codes = GetInformationCodes()
         self.get_existing_programs = self.programs_table_model.db_handler.get_all_existing_programs()
 
         self.add_program_codes_to_combobox()
@@ -210,13 +207,13 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.new_college_code_combobox.currentTextChanged.connect(self.enable_edit_button)
 
     def get_student_codes(self):
-        return self.get_information_codes.for_students(self.students_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_entity_information_codes('student')
 
     def get_program_codes(self):
-        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

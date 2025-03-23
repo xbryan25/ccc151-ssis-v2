@@ -7,9 +7,6 @@ from operation_dialogs.programs.delete_program_design import Ui_Dialog as Delete
 from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
-from utils.get_information_codes import GetInformationCodes
-from utils.get_connections import GetConnections
-
 
 class DeleteProgramDialog(QDialog, DeleteProgramUI):
     def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model,
@@ -30,9 +27,6 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
 
         self.students_table_model = students_table_model
         self.colleges_table_model = colleges_table_model
-
-        self.get_information_codes = GetInformationCodes()
-        self.get_connections = GetConnections()
 
         self.add_program_codes_to_combobox()
         self.add_college_codes_to_combobox()
@@ -164,18 +158,16 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         self.program_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def get_program_codes(self):
-        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
 
     def get_program_to_student_connections(self):
-        return self.get_connections.in_programs(self.students_table_model.get_data(),
-                                                self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_programs_and_students_connections()
 
     def get_college_to_program_connections(self):
-        return self.get_connections.in_programs(self.programs_table_model.get_data(),
-                                                self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

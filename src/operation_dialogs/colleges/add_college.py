@@ -7,7 +7,6 @@ from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
-from utils.get_existing_information import GetExistingInformation
 
 import re
 import csv
@@ -29,7 +28,6 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
         # Load utils
         self.is_valid = IsValidVerifiers()
-        self.get_existing_information = GetExistingInformation()
 
         self.add_signals()
 

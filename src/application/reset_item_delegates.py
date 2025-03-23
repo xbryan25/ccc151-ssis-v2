@@ -1,7 +1,6 @@
 from PyQt6.QtWidgets import QHeaderView
 
 from utils.combobox_item_delegate import ComboboxItemDelegate
-from utils.get_information_codes import GetInformationCodes
 
 # For the comboboxes in the student and program tables
 
@@ -111,7 +110,7 @@ class ResetItemDelegates:
             self.colleges_table_view_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
     def get_program_codes(self):
-        return GetInformationCodes.for_programs(self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return GetInformationCodes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')

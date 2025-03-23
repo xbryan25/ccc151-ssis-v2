@@ -6,8 +6,6 @@ from operation_dialogs.students.delete_student_design import Ui_Dialog as Delete
 from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
-from utils.get_information_codes import GetInformationCodes
-
 
 class DeleteStudentDialog(QDialog, DeleteStudentUI):
     def __init__(self, students_table_view, students_table_model, reset_item_delegates_func,
@@ -25,8 +23,6 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
-
-        self.get_information_codes = GetInformationCodes()
 
         self.add_id_numbers_to_combobox()
 
@@ -72,7 +68,7 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
         self.student_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def get_student_id_numbers(self):
-        return self.get_information_codes.for_students(self.students_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_entity_information_codes('student')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

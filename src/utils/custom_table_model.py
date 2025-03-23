@@ -1,6 +1,5 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt
 
-from utils.get_existing_information import GetExistingInformation
 from utils.is_valid_edit_value_for_cell import IsValidEditValueForCell
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
 

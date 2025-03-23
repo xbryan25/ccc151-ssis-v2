@@ -9,8 +9,6 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
-from utils.get_information_codes import GetInformationCodes
-from utils.get_existing_information import GetExistingInformation
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
@@ -30,7 +28,6 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
         self.colleges_table_model = college_table_model
 
         self.is_valid = IsValidVerifiers()
-        self.get_information_codes = GetInformationCodes()
         self.existing_colleges_information = self.colleges_table_model.db_handler.get_all_existing_colleges()
 
         self.add_college_codes_to_combobox()
@@ -106,7 +103,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                 self.fail_to_edit_item_dialog.exec()
 
     def add_college_codes_to_combobox(self):
-        for college_code in self.get_information_codes.for_colleges(self.colleges_table_model.get_data()):
+        for college_code in self.colleges_table_model.db_handler.get_all_entity_information_codes('college'):
             self.college_to_edit_combobox.addItem(college_code)
 
     def set_college_code_combobox_scrollbar(self):
@@ -182,7 +179,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
         self.college_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

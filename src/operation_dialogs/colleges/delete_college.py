@@ -7,9 +7,6 @@ from operation_dialogs.colleges.delete_college_design import Ui_Dialog as Delete
 from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
-from utils.get_information_codes import GetInformationCodes
-from utils.get_connections import GetConnections
-
 
 class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
     def __init__(self, colleges_table_view, colleges_table_model, students_table_model, programs_table_model,
@@ -30,9 +27,6 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
 
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = colleges_table_model
-
-        self.get_information_codes = GetInformationCodes()
-        self.get_connections = GetConnections()
 
         self.add_college_codes_to_combobox()
 
@@ -123,8 +117,8 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.college_to_delete_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def enable_delete_button(self):
-        if self.college_to_delete_combobox.currentText() in self.get_information_codes.for_colleges(
-                self.colleges_table_model.get_data()):
+        if (self.college_to_delete_combobox.currentText() in self.colleges_table_model.db_handler.
+                get_all_entity_information_codes('college')):
 
             self.delete_college_button.setEnabled(True)
         else:
@@ -135,7 +129,7 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.college_to_delete_combobox.currentTextChanged.connect(self.enable_delete_button)
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

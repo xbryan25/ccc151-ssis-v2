@@ -9,9 +9,6 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
-from utils.get_information_codes import GetInformationCodes
-from utils.get_existing_information import GetExistingInformation
-from utils.get_connections import GetConnections
 
 
 class EditStudentDialog(QDialog, EditStudentUI):
@@ -35,8 +32,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.students_table_model = students_table_model
 
         self.is_valid = IsValidVerifiers()
-        self.get_information_codes = GetInformationCodes()
-        self.get_connections = GetConnections()
 
         self.add_id_numbers_to_combobox()
         self.add_program_codes_to_combobox()
@@ -189,9 +184,8 @@ class EditStudentDialog(QDialog, EditStudentUI):
                 self.new_gender_combobox.setCurrentText(student[4])
 
                 # student[5] is the program code
-                for program_college_connection in self.get_connections.in_programs(
-                        self.programs_table_model.get_data(),
-                        self.colleges_table_model.get_data()).items():
+                for program_college_connection in (self.colleges_table_model.db_handler.
+                        get_colleges_and_programs_connections().items()):
 
                     if student[5] in program_college_connection[1]:
                         self.college_code_combobox.setCurrentText(program_college_connection[0])
@@ -218,8 +212,7 @@ class EditStudentDialog(QDialog, EditStudentUI):
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
-        college_to_program_connections = self.get_connections.in_programs(self.programs_table_model.get_data(),
-                                                                          self.colleges_table_model.get_data())
+        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
 
         for program_code in self.get_program_codes():
             if program_code in college_to_program_connections[college_code]:
@@ -287,13 +280,13 @@ class EditStudentDialog(QDialog, EditStudentUI):
         return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_student_id_numbers(self):
-        return self.get_information_codes.for_students(self.students_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_entity_information_codes('student')
 
     def get_program_codes(self):
-        return self.get_information_codes.for_programs(self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.get_information_codes.for_colleges(self.colleges_table_model.get_data())
+        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
