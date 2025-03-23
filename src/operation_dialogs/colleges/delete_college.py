@@ -69,13 +69,11 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
 
                     self.students_table_model.layoutAboutToBeChanged.emit()
                     self.programs_table_model.layoutAboutToBeChanged.emit()
-                    self.colleges_table_model.layoutAboutToBeChanged.emit()
 
-                    self.colleges_table_model.get_data().remove(college)
+                    self.colleges_table_model.delete_entity(college, 'college')
 
                     self.students_table_model.model_data_is_empty()
                     self.programs_table_model.model_data_is_empty()
-                    self.colleges_table_model.model_data_is_empty()
 
                     self.students_table_model.layoutChanged.emit()
                     self.programs_table_model.layoutChanged.emit()
@@ -120,6 +118,9 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         return length
 
     def delete_programs_who_have_college_code(self, college_code):
+        # MySQL cascades deletion of programs when a college_code is deleted
+        # What is done here is only for the programs_table_model, not the MySQL database
+
         new_programs_data = []
 
         for program in self.programs_table_model.get_data():
@@ -134,6 +135,9 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
         self.programs_table_model.layoutChanged.emit()
 
     def delete_students_who_have_program_code(self, program_code):
+        # MySQL cascades deletion of students when a program_code is deleted
+        # What is done here is only for the students_table_model, not the MySQL database
+
         new_students_data = []
 
         for student in self.students_table_model.get_data():

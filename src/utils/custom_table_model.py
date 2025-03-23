@@ -117,6 +117,15 @@ class CustomTableModel(QAbstractTableModel):
 
         self.db_handler.update_entity(identifier, entity_to_edit, entity_type)
 
+    def delete_entity(self, entity_to_delete, entity_type):
+        identifier = entity_to_delete[0]
+
+        self.data_from_csv.remove(entity_to_delete)
+
+        self.model_data_is_empty()
+
+        self.db_handler.delete_entity(identifier, entity_type)
+
     # Override
     def data(self, index, role):
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:

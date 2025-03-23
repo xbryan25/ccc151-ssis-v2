@@ -103,28 +103,28 @@ class LoadInformationFromDatabase:
 
         self.db.commit()
 
-    # def delete_entity(self, identifier, entity_type):
-    #     # Identifier is the primary key of each table
-    #
-    #     sql = ""
-    #     values = ()
-    #
-    #     if entity_type == 'student':
-    #         sql = "DELETE FROM students WHERE id_number=%s"
-    #
-    #         # Has an extra comma because this is a tuple
-    #         values = (identifier,)
-    #
-    #     elif entity_type == 'program':
-    #         sql = "DELETE FROM programs WHERE program_code=%s"
-    #
-    #         values = (identifier,)
-    #
-    #     elif entity_type == 'colleges':
-    #         sql = "DELETE FROM colleges WHERE college_code=%s"
-    #
-    #         values = (identifier,)
-    #
-    #     self.cursor.execute(sql, values)
-    #
-    #     self.db.commit()
+    def delete_entity(self, identifier, entity_type):
+        # Identifier is the primary key of each table
+
+        sql = ""
+        values = ()
+
+        if entity_type == 'student':
+            sql = "DELETE FROM students WHERE id_number=%s"
+
+            # Has an extra comma because this is a tuple
+            values = (identifier,)
+
+        elif entity_type == 'program':
+            sql = "DELETE FROM programs WHERE program_code=%s"
+
+            values = (identifier,)
+
+        elif entity_type == 'college':
+            sql = "DELETE FROM colleges WHERE college_code=%s"
+
+            values = (identifier,)
+
+        self.cursor.execute(sql, values)
+
+        self.db.commit()

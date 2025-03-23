@@ -50,9 +50,7 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
                 if confirm_delete_decision:
                     self.students_table_model.layoutAboutToBeChanged.emit()
 
-                    self.students_table_model.get_data().remove(student)
-
-                    self.students_table_model.model_data_is_empty()
+                    self.students_table_model.delete_entity(student, 'student')
 
                     self.students_table_model.layoutChanged.emit()
 

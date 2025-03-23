@@ -76,10 +76,9 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.students_table_model.layoutAboutToBeChanged.emit()
                     self.programs_table_model.layoutAboutToBeChanged.emit()
 
-                    self.programs_table_model.get_data().remove(program)
+                    self.programs_table_model.delete_entity(program, 'program')
 
                     self.students_table_model.model_data_is_empty()
-                    self.programs_table_model.model_data_is_empty()
 
                     self.students_table_model.layoutChanged.emit()
                     self.programs_table_model.layoutChanged.emit()
@@ -106,6 +105,9 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
         return length
 
     def delete_students_who_have_program_code(self, program_code):
+        # MySQL cascades deletion of students when a program_code is deleted
+        # What is done here is only for the students_table_model, not the MySQL database
+
         new_data_from_model = []
 
         for student in self.students_table_model.get_data():
