@@ -37,7 +37,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
         self.get_connections = GetConnections()
-        self.students_information = GetExistingInformation().from_students(self.students_table_model.get_data())
 
         self.add_id_numbers_to_combobox()
         self.add_program_codes_to_combobox()
@@ -285,7 +284,7 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.college_code_combobox.currentTextChanged.connect(self.filter_program_codes)
 
     def get_existing_students(self):
-        return GetExistingInformation().from_students(self.students_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_student_id_numbers(self):
         return self.get_information_codes.for_students(self.students_table_model.get_data())

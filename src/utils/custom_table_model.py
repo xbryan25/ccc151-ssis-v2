@@ -148,26 +148,27 @@ class CustomTableModel(QAbstractTableModel):
                 return True
 
             if self.information_type == "student":
-                self.students_information = GetExistingInformation.from_students(self.get_data())
+                self.existing_students_information = self.db_handler.get_all_existing_students()
 
                 valid, issue = self.is_valid_edit_value.for_students_cell(index, value,
-                                                                            self.students_information["ID Number"],
-                                                                            self.students_information["Full Name"],
+                                                                            self.existing_students_information["ID Number"],
+                                                                            self.existing_students_information["Full Name"],
                                                                             self.data_from_csv)
 
             elif self.information_type == "program":
-                self.programs_information = GetExistingInformation.from_programs(self.get_data())
+                self.existing_programs_information = self.db_handler.get_all_existing_programs()
 
                 valid, issue = self.is_valid_edit_value.for_programs_cell(index, value,
-                                                                            self.programs_information["Program Code"],
-                                                                            self.programs_information["Program Name"])
+                                                                            self.existing_programs_information["Program Code"],
+                                                                            self.existing_programs_information["Program Name"])
 
             elif self.information_type == "college":
-                self.colleges_information = GetExistingInformation.from_colleges(self.get_data())
+                self.existing_colleges_information = self.db_handler.get_all_existing_colleges()
 
-                valid, issue = self.is_valid_edit_value.for_colleges_cell(index, value,
-                                                                            self.colleges_information["College Code"],
-                                                                            self.colleges_information["College Name"])
+                valid, issue = self.is_valid_edit_value.for_colleges_cell(index,
+                                                                          value,
+                                                                          self.existing_colleges_information["College Code"],
+                                                                          self.existing_colleges_information["College Name"])
 
             if valid:
                 # If program code is not changed, a different confirm edit dialog will show

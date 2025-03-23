@@ -31,7 +31,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
-        self.colleges_information = GetExistingInformation().from_colleges(self.colleges_table_model.get_data())
+        self.existing_colleges_information = self.colleges_table_model.db_handler.get_all_existing_colleges()
 
         self.add_college_codes_to_combobox()
 

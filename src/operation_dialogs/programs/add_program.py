@@ -111,7 +111,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.college_code_combobox.currentTextChanged.connect(self.enable_add_button)
 
     def get_existing_programs(self):
-        return self.get_existing_information.from_programs(self.programs_table_model.get_data())
+        return self.programs_table_model.db_handler.get_all_existing_programs()
 
     def get_program_codes(self):
         return self.get_information_codes.for_programs(self.programs_table_model.get_data())

@@ -24,26 +24,5 @@ class SaveAllChanges:
             self.colleges_table_model_data = self.colleges_table_model.get_data()
 
     def to_csv(self):
-        if self.students_table_model.get_has_changes():
-            self.students_table_model.set_has_changes(False)
+        print("Null")
 
-            with open("../databases/students.csv", 'w', newline='') as from_students_csv:
-                writer = csv.writer(from_students_csv)
-
-                writer.writerows(self.students_table_model_data)
-
-        if self.programs_table_model.get_has_changes():
-            self.programs_table_model.set_has_changes(False)
-
-            with open("../databases/programs.csv", 'w', newline='') as from_programs_csv:
-                writer = csv.writer(from_programs_csv)
-
-                writer.writerows(self.programs_table_model_data)
-
-        if self.colleges_table_model.get_has_changes():
-            self.colleges_table_model.set_has_changes(False)
-
-            with open("../databases/colleges.csv", 'w', newline='') as from_colleges_csv:
-                writer = csv.writer(from_colleges_csv)
-
-                writer.writerows(self.colleges_table_model_data)

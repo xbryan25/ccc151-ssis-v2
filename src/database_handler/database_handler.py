@@ -23,9 +23,9 @@ class DatabaseHandler:
         elif entity_type == "college":
             self.cursor.execute("SELECT * FROM colleges")
 
-        result = self.cursor.fetchall()
+        results = self.cursor.fetchall()
 
-        for row in result:
+        for row in results:
             list_row = list(row)
 
             if entity_type == 'student' and not list_row[5]:
@@ -36,6 +36,51 @@ class DatabaseHandler:
             entities_data.append(list_row)
 
         return entities_data
+
+    def get_all_existing_students(self):
+        sql = "SELECT id_number, first_name, last_name FROM students"
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        students_information = {"ID Number": [], "Full Name": []}
+
+        for student_information in results:
+            students_information["ID Number"].append(student_information[0])
+            students_information["Full Name"].append(f"{student_information[1].strip()} {student_information[2].strip()}")
+
+        return students_information
+
+    def get_all_existing_programs(self):
+        sql = "SELECT program_code, program_name FROM programs"
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        programs_information = {"Program Code": [], "Program Name": []}
+
+        for program_information in results:
+            programs_information["Program Code"].append(program_information[0])
+            programs_information["Program Name"].append(program_information[1])
+
+        return programs_information
+
+    def get_all_existing_colleges(self):
+        sql = "SELECT college_code, college_name FROM colleges"
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        colleges_information = {"College Code": [], "College Name": []}
+
+        for college_information in results:
+            colleges_information["College Code"].append(college_information[0])
+            colleges_information["College Name"].append(college_information[1])
+
+        return colleges_information
 
     def add_entity(self, entity_data, entity_type):
         sql = ""

@@ -111,7 +111,7 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
                 self.gridLayout_2.addWidget(self.frame, 5 + (index + 1), 0, 1, 3)
 
     def get_existing_students(self):
-        return self.get_existing_information.from_students(self.students_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_program_codes(self):
         return self.get_information_codes.for_programs(self.programs_table_model.get_data())

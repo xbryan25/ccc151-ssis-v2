@@ -65,7 +65,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         self.colleges_table_model.layoutChanged.emit()
 
     def find_issues(self):
-        colleges_information = self.get_existing_information.from_colleges(self.colleges_table_model.get_data())
+        colleges_information = self.colleges_table_model.db_handler.get_all_existing_colleges()
 
         issues = []
 

@@ -33,7 +33,7 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
         self.is_valid = IsValidVerifiers()
         self.get_information_codes = GetInformationCodes()
-        self.programs_information = GetExistingInformation().from_programs(self.programs_table_model.get_data())
+        self.get_existing_programs = self.programs_table_model.db_handler.get_all_existing_programs()
 
         self.add_program_codes_to_combobox()
         self.add_college_codes_to_combobox()

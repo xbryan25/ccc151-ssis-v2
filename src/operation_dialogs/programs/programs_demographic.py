@@ -144,7 +144,7 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
                 current_row += 1
 
     def get_existing_students(self):
-        return self.get_existing_information.from_students(self.students_table_model.get_data())
+        return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_program_codes(self):
         return self.get_information_codes.for_programs(self.programs_table_model.get_data())
