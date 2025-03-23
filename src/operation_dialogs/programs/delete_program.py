@@ -61,17 +61,14 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("program", program_code_to_delete)
                 else:
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("program",
-                                                                        program_code_to_delete,
-                                                                        num_of_affected=
-                                                                        len_of_students_under_program_code,
-                                                                        information_code_affected=True)
+                                                                        program_code_to_delete)
 
                 self.confirm_to_delete_dialog.exec()
 
                 confirm_delete_decision = self.confirm_to_delete_dialog.get_confirm_delete_decision()
 
                 if confirm_delete_decision:
-                    self.delete_students_who_have_program_code(program_code_to_delete)
+                    self.add_na_to_students(program_code_to_delete)
 
                     self.students_table_model.layoutAboutToBeChanged.emit()
                     self.programs_table_model.layoutAboutToBeChanged.emit()
@@ -104,19 +101,17 @@ class DeleteProgramDialog(QDialog, DeleteProgramUI):
 
         return length
 
-    def delete_students_who_have_program_code(self, program_code):
+    def add_na_to_students(self, program_code):
         # MySQL cascades deletion of students when a program_code is deleted
         # What is done here is only for the students_table_model, not the MySQL database
 
-        new_data_from_model = []
-
         for student in self.students_table_model.get_data():
-            if student[5] != program_code:
-                new_data_from_model.append(student)
+            if student[5] == program_code:
+                student[5] = 'N/A'
 
-        self.students_table_model.layoutAboutToBeChanged.emit()
-        self.students_table_model.set_data(new_data_from_model)
-        self.students_table_model.layoutChanged.emit()
+        # self.students_table_model.layoutAboutToBeChanged.emit()
+        # self.students_table_model.set_data(new_data_from_model)
+        # self.students_table_model.layoutChanged.emit()
 
     def filter_program_codes(self):
         college_code = self.college_code_filter_combobox.currentText()

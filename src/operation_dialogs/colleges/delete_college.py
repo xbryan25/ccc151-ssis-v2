@@ -55,17 +55,14 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("college", college_code_to_delete)
                 else:
                     self.confirm_to_delete_dialog = ConfirmDeleteDialog("college",
-                                                                        college_code_to_delete,
-                                                                        num_of_affected=
-                                                                        quantities_under_college_code,
-                                                                        information_code_affected=True)
+                                                                        college_code_to_delete)
 
                 self.confirm_to_delete_dialog.exec()
 
                 confirm_delete_decision = self.confirm_to_delete_dialog.get_confirm_delete_decision()
 
                 if confirm_delete_decision:
-                    self.delete_programs_who_have_college_code(college_code_to_delete)
+                    self.add_na_to_programs(college_code_to_delete)
 
                     self.students_table_model.layoutAboutToBeChanged.emit()
                     self.programs_table_model.layoutAboutToBeChanged.emit()
@@ -117,36 +114,10 @@ class DeleteCollegeDialog(QDialog, DeleteCollegeUI):
 
         return length
 
-    def delete_programs_who_have_college_code(self, college_code):
-        # MySQL cascades deletion of programs when a college_code is deleted
-        # What is done here is only for the programs_table_model, not the MySQL database
-
-        new_programs_data = []
-
+    def add_na_to_programs(self, college_code):
         for program in self.programs_table_model.get_data():
-            if program[2] != college_code:
-                new_programs_data.append(program)
-            else:
-                # Delete all students in program
-                self.delete_students_who_have_program_code(program[0])
-
-        self.programs_table_model.layoutAboutToBeChanged.emit()
-        self.programs_table_model.set_data(new_programs_data)
-        self.programs_table_model.layoutChanged.emit()
-
-    def delete_students_who_have_program_code(self, program_code):
-        # MySQL cascades deletion of students when a program_code is deleted
-        # What is done here is only for the students_table_model, not the MySQL database
-
-        new_students_data = []
-
-        for student in self.students_table_model.get_data():
-            if student[5] != program_code:
-                new_students_data.append(student)
-
-        self.students_table_model.layoutAboutToBeChanged.emit()
-        self.students_table_model.set_data(new_students_data)
-        self.students_table_model.layoutChanged.emit()
+            if program[2] == college_code:
+                program[2] = "N/A"
 
     def set_college_to_delete_combobox_scrollbar(self):
         self.college_to_delete_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)

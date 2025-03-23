@@ -14,21 +14,18 @@ The name 'Sequence' comes from the fact that the data in this application is sto
 - Create, read, update, delete, and list (CRUDL) operations for students, programs, and colleges
 - Search and sort operations
 - Full screen mode
-- Data storage using lightweight .csv files
+- Data storage using MySQL
 
 ## Planned Features
 
 - Undo changes, step by step restoration of the state of the data
 - Undo all changes, reset from last save point
-- Invalidate a student that has a program that's not in the .csv file
-- Invalidate a program that is in a college that's not in the .csv file
 - A way to enable/disable table view manipulation
 - Delete multiple entries using a checkbox using the delete button 
 - Context menu popup upon right click while multiple entities are selected in the table, 
 the context menu would show a delete option to edit/delete multiple students
 - Search feature in view demographics
 - Filter feature in view demographics
-- Store data using SQLite/MySQL instead of .csv files
 - Add admin and viewer mode; the admin can manipulate the data, while the viewer, can only view the data
 
 ## Screenshots

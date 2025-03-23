@@ -1,7 +1,7 @@
 import pymysql
 
 
-class LoadInformationFromDatabase:
+class DatabaseHandler:
     
     def __init__(self):
         self.db = pymysql.connect(
@@ -26,7 +26,14 @@ class LoadInformationFromDatabase:
         result = self.cursor.fetchall()
 
         for row in result:
-            entities_data.append(list(row))
+            list_row = list(row)
+
+            if entity_type == 'student' and not list_row[5]:
+                list_row[5] = "N/A"
+            elif entity_type == 'program' and not list_row[2]:
+                list_row[2] = "N/A"
+
+            entities_data.append(list_row)
 
         return entities_data
 

@@ -9,8 +9,9 @@ from application.entity_page_signals import EntityPageSignals
 
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
-from utils.load_information_from_database import LoadInformationFromDatabase
 from utils.custom_table_model import CustomTableModel
+
+from database_handler.database_handler import DatabaseHandler
 
 
 class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
@@ -22,22 +23,22 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.load_information_from_database = LoadInformationFromDatabase()
+        self.database_handler = DatabaseHandler()
 
         # Load information from database upon entering the landing page for the first time
-        self.students_data = self.load_information_from_database.get_all_entities('student')
-        self.programs_data = self.load_information_from_database.get_all_entities('program')
-        self.colleges_data = self.load_information_from_database.get_all_entities('college')
+        self.students_data = self.database_handler.get_all_entities('student')
+        self.programs_data = self.database_handler.get_all_entities('program')
+        self.colleges_data = self.database_handler.get_all_entities('college')
 
         # Generate table models in landing page so that it can be accessed in different pages
-        self.students_table_model = CustomTableModel(self.students_data, "student", self.load_information_from_database)
+        self.students_table_model = CustomTableModel(self.students_data, "student", self.database_handler)
         self.students_table_model.connect_to_save_button(self.save_changes_button)
 
-        self.programs_table_model = CustomTableModel(self.programs_data, "program", self.load_information_from_database)
+        self.programs_table_model = CustomTableModel(self.programs_data, "program", self.database_handler)
         self.programs_table_model.set_students_data(self.students_table_model.get_data())
         self.programs_table_model.connect_to_save_button(self.save_changes_button)
 
-        self.colleges_table_model = CustomTableModel(self.colleges_data, "college", self.load_information_from_database)
+        self.colleges_table_model = CustomTableModel(self.colleges_data, "college", self.database_handler)
         self.colleges_table_model.set_students_data(self.students_table_model.get_data())
         self.colleges_table_model.set_programs_data(self.programs_table_model.get_data())
         self.colleges_table_model.connect_to_save_button(self.save_changes_button)
