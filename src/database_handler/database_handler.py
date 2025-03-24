@@ -142,6 +142,88 @@ class DatabaseHandler:
 
         return program_to_student_connections
 
+    def get_sorted_entities(self, entity_type, sort_column, sort_order):
+        sql = ""
+
+        if entity_type == "student":
+            sql = f"SELECT * FROM students ORDER BY {sort_column} IS NULL, {sort_column}"
+        elif entity_type == "program":
+            sql = f"SELECT * FROM programs ORDER BY {sort_column} IS NULL, {sort_column}"
+        elif entity_type == "college":
+            sql = f"SELECT * FROM colleges ORDER BY {sort_column} IS NULL, {sort_column}"
+
+        if sort_order == "ascending":
+            sql += " ASC"
+        else:
+            sql += " DESC"
+
+        self.cursor.execute(sql)
+
+        results = self.cursor.fetchall()
+
+        entities_data = []
+
+        for row in results:
+            list_row = list(row)
+
+            if entity_type == 'student' and not list_row[5]:
+                list_row[5] = "N/A"
+            elif entity_type == 'program' and not list_row[2]:
+                list_row[2] = "N/A"
+
+            entities_data.append(list_row)
+
+        return entities_data
+
+    def search_entities(self, entity_type, search_type, search_text):
+        if search_type != "all":
+            sql = ""
+            values = (f"{search_text}%",)
+
+            if entity_type == "student":
+                sql = f"SELECT * FROM students WHERE {search_type} LIKE %s"
+            elif entity_type == "program":
+                sql = f"SELECT * FROM programs WHERE {search_type} LIKE %s"
+            elif entity_type == "college":
+                sql = f"SELECT * FROM colleges WHERE {search_type} LIKE %s"
+        else:
+            sql = ""
+            values = ()
+
+            if entity_type == "student":
+                sql = ("SELECT * FROM students "
+                       "WHERE id_number LIKE %s OR "
+                       "first_name LIKE %s OR "
+                       "last_name LIKE %s OR "
+                       "year_level LIKE %s OR "
+                       "gender LIKE %s OR "
+                       "program_code LIKE %s")
+
+                values = (f"{search_text}%",
+                          f"{search_text}%",
+                          f"{search_text}%",
+                          f"{search_text}%",
+                          f"{search_text}%",
+                          f"{search_text}%")
+
+        self.cursor.execute(sql, values)
+        results = self.cursor.fetchall()
+
+        entities_data = []
+
+        for row in results:
+            list_row = list(row)
+
+            if entity_type == 'student' and not list_row[5]:
+                list_row[5] = "N/A"
+            elif entity_type == 'program' and not list_row[2]:
+                list_row[2] = "N/A"
+
+            entities_data.append(list_row)
+
+        return entities_data
+
+
     def add_entity(self, entity_data, entity_type):
         sql = ""
         values = ()

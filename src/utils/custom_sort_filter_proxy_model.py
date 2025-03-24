@@ -16,3 +16,8 @@ class CustomSortFilterProxyModel(QSortFilterProxyModel):
 
     def get_source_model(self):
         return self.source_model
+
+    def update_pagination_after_search(self):
+        self.source_model.update_after_search(self.rowCount())
+
+        self.source_model.layoutChanged.emit()

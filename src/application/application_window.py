@@ -1,5 +1,6 @@
-from PyQt6.QtWidgets import QMainWindow, QHeaderView
+from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView
 from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon
+from PyQt6.QtCore import Qt
 
 from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
 from application.open_dialogs import OpenDialogs
@@ -10,6 +11,7 @@ from application.entity_page_signals import EntityPageSignals
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
 from utils.custom_table_model import CustomTableModel
+# from utils.custom_table_view import CustomTableView
 
 from database_handler.database_handler import DatabaseHandler
 
@@ -25,20 +27,15 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.database_handler = DatabaseHandler()
 
-        # Load information from database upon entering the landing page for the first time
-        self.students_data = self.database_handler.get_all_entities('student')
-        self.programs_data = self.database_handler.get_all_entities('program')
-        self.colleges_data = self.database_handler.get_all_entities('college')
-
         # Generate table models in landing page so that it can be accessed in different pages
-        self.students_table_model = CustomTableModel(self.students_data, "student", self.database_handler)
+        self.students_table_model = CustomTableModel("student", self.database_handler)
         self.students_table_model.connect_to_save_button(self.save_changes_button)
 
-        self.programs_table_model = CustomTableModel(self.programs_data, "program", self.database_handler)
+        self.programs_table_model = CustomTableModel("program", self.database_handler)
         self.programs_table_model.set_students_data(self.students_table_model.get_data())
         self.programs_table_model.connect_to_save_button(self.save_changes_button)
 
-        self.colleges_table_model = CustomTableModel(self.colleges_data, "college", self.database_handler)
+        self.colleges_table_model = CustomTableModel("college", self.database_handler)
         self.colleges_table_model.set_students_data(self.students_table_model.get_data())
         self.colleges_table_model.set_programs_data(self.programs_table_model.get_data())
         self.colleges_table_model.connect_to_save_button(self.save_changes_button)
@@ -81,8 +78,15 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def setup_table_views(self):
         # Students table view
-        self.students_table_view.setModel(self.students_sort_filter_proxy_model)
+        self.students_table_view.setModel(self.students_table_model)
         self.students_table_view.setAlternatingRowColors(True)
+
+        # self.students_table_view.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerItem)
+        # self.students_table_view.setHorizontalScrollMode(QTableView.ScrollMode.ScrollPerItem)
+        #
+        # # Disable keyboard scrolling
+        # self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
 
         self.students_table_horizontal_header.resizeSection(0, 110)
@@ -98,6 +102,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Programs table view
         self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
+        # self.programs_table_model.update_page_view(self.programs_table_view)
         self.programs_table_view.setAlternatingRowColors(True)
         self.programs_table_horizontal_header = self.programs_table_view.horizontalHeader()
 
@@ -107,6 +112,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Colleges table view
         self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
+        # self.colleges_table_model.update_page_view(self.colleges_table_view)
         self.colleges_table_view.setAlternatingRowColors(True)
         self.colleges_table_horizontal_header = self.colleges_table_view.horizontalHeader()
 
@@ -119,6 +125,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_entity_page_student(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
+
         self.reset_item_delegates.load_item_delegates_for_students_table_view()
 
         self.entity_type_icon.setPixmap(QPixmap("../assets/images/student_icon.svg"))
@@ -130,6 +137,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.edit_entity_button.setText(" Edit student")
 
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
+        self.current_page_lineedit.setPlaceholderText("1")
+
+        self.students_table_model.update_page_view(self.students_table_view)
+
+        self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+        # self.students_table_model.update_internal_data()
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -141,8 +154,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
-        SearchAndSortHeader.change_contents("student", self.search_type_combobox)
-        SearchAndSortHeader.change_contents("student", self.sort_type_combobox)
+        SearchAndSortHeader.change_contents("student", self.search_type_combobox, "search")
+        SearchAndSortHeader.change_contents("student", self.sort_type_combobox, "sort")
 
         self.search_input_lineedit.clear()
 
@@ -176,8 +189,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
-        SearchAndSortHeader.change_contents("program", self.search_type_combobox)
-        SearchAndSortHeader.change_contents("program", self.sort_type_combobox)
+        SearchAndSortHeader.change_contents("program", self.search_type_combobox, "search")
+        SearchAndSortHeader.change_contents("program", self.sort_type_combobox, "sort")
 
         self.search_input_lineedit.clear()
 
@@ -210,8 +223,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
-        SearchAndSortHeader.change_contents("college", self.search_type_combobox)
-        SearchAndSortHeader.change_contents("college", self.sort_type_combobox)
+        SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
+        SearchAndSortHeader.change_contents("college", self.sort_type_combobox, "sort")
 
         self.search_input_lineedit.clear()
 
@@ -256,7 +269,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.students_table_horizontal_header,
                 self.programs_table_horizontal_header,
                 self.colleges_table_horizontal_header,
-                self.reset_item_delegates
+                self.reset_item_delegates,
+                self.previous_page_button,
+                self.next_page_button,
+                self.current_page_lineedit,
+                self.max_pages_label
                 ]
 
     def closeEvent(self, event):
@@ -296,6 +313,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.edit_entity_button.setFont(font)
         self.save_changes_button.setFont(font)
         self.view_demographics_button.setFont(font)
+
+        if (self.stackedWidget.currentWidget() == self.entity_page and
+                self.table_view_widgets.currentWidget() == self.students_table_view_widget):
+
+            self.students_table_model.update_page_view(self.students_table_view)
+            self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+
+        # self.students_table_model.update_page_view(self.students_table_view)
 
     def load_fonts(self):
         # Load fonts, they can be used in any part of the application

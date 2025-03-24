@@ -1,5 +1,6 @@
 from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
+from utils.table_view_page_controls import TableViewPageControls
 
 
 class EntityPageSignals:
@@ -32,6 +33,11 @@ class EntityPageSignals:
         self.colleges_table_horizontal_header = entity_page_elements[20]
 
         self.reset_item_delegates = entity_page_elements[21]
+
+        self.previous_page_button = entity_page_elements[22]
+        self.next_page_button = entity_page_elements[23]
+        self.current_page_lineedit = entity_page_elements[24]
+        self.max_pages_label = entity_page_elements[25]
 
         self.open_dialogs = OpenDialogs()
 
@@ -82,8 +88,10 @@ class EntityPageSignals:
                                                                         self.search_type_combobox,
                                                                         self.search_input_lineedit,
                                                                         self.students_table_model,
-                                                                        self.students_sort_filter_proxy_model,
-                                                                        self.reset_item_delegates.reset))
+                                                                        self.reset_item_delegates.reset,
+                                                                        self.students_table_view,
+                                                                        self.current_page_lineedit,
+                                                                        self.max_pages_label))
 
             self.sort_type_combobox.currentTextChanged.connect(
                 lambda: SearchAndSortHeader.change_sort_type(entity_type,
@@ -97,8 +105,22 @@ class EntityPageSignals:
                                                                 self.sort_type_combobox,
                                                                 self.sort_order_combobox,
                                                                 self.students_table_model,
-                                                                self.students_sort_filter_proxy_model,
-                                                                self.reset_item_delegates.reset))
+                                                                self.reset_item_delegates.reset,
+                                                                self.students_table_view,
+                                                                self.current_page_lineedit,
+                                                                self.max_pages_label))
+
+            # self.previous_page_button.clicked.connect(self.students_table_model.set_previous_page)
+            #
+            # self.next_page_button.clicked.connect(self.students_table_model.set_next_page)
+
+            self.previous_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_previous_page(self.students_table_model,
+                                                                  self.current_page_lineedit))
+
+            self.next_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_next_page(self.students_table_model,
+                                                              self.current_page_lineedit))
 
         elif entity_type == "program":
 
@@ -145,8 +167,10 @@ class EntityPageSignals:
                                                                   self.search_type_combobox,
                                                                   self.search_input_lineedit,
                                                                   self.programs_table_model,
-                                                                  self.programs_sort_filter_proxy_model,
-                                                                  self.reset_item_delegates.reset))
+                                                                  self.reset_item_delegates.reset,
+                                                                  self.programs_table_view,
+                                                                  self.current_page_lineedit,
+                                                                  self.max_pages_label))
 
             self.sort_type_combobox.currentTextChanged.connect(
                 lambda: SearchAndSortHeader.change_sort_type(entity_type,
@@ -160,8 +184,10 @@ class EntityPageSignals:
                                                                 self.sort_type_combobox,
                                                                 self.sort_order_combobox,
                                                                 self.programs_table_model,
-                                                                self.programs_sort_filter_proxy_model,
-                                                                self.reset_item_delegates.reset))
+                                                                self.reset_item_delegates.reset,
+                                                                self.programs_table_view,
+                                                                self.current_page_lineedit,
+                                                                self.max_pages_label))
 
         elif entity_type == "college":
             (self.add_entity_button.clicked.connect
@@ -202,8 +228,10 @@ class EntityPageSignals:
                                                                   self.search_type_combobox,
                                                                   self.search_input_lineedit,
                                                                   self.colleges_table_model,
-                                                                  self.colleges_sort_filter_proxy_model,
-                                                                  self.reset_item_delegates.reset))
+                                                                  self.reset_item_delegates.reset,
+                                                                  self.colleges_table_view,
+                                                                  self.current_page_lineedit,
+                                                                  self.max_pages_label))
 
             self.sort_type_combobox.currentTextChanged.connect(
                 lambda: SearchAndSortHeader.change_sort_type(entity_type,
@@ -217,8 +245,10 @@ class EntityPageSignals:
                                                                 self.sort_type_combobox,
                                                                 self.sort_order_combobox,
                                                                 self.colleges_table_model,
-                                                                self.colleges_sort_filter_proxy_model,
-                                                                self.reset_item_delegates.reset))
+                                                                self.reset_item_delegates.reset,
+                                                                self.colleges_table_view,
+                                                                self.current_page_lineedit,
+                                                                self.max_pages_label))
 
 
         self.save_changes_button.clicked.connect(
