@@ -8,6 +8,7 @@ class SearchAndSortHeader:
         combobox.clear()
 
         if entity_type == "student":
+            combobox.addItem("All")
             combobox.addItem("ID Number")
             combobox.addItem("First Name")
             combobox.addItem("Last Name")
@@ -16,11 +17,13 @@ class SearchAndSortHeader:
             combobox.addItem("Program Code")
 
         elif entity_type == "program":
+            combobox.addItem("All")
             combobox.addItem("Program Code")
             combobox.addItem("Program Name")
             combobox.addItem("College Code")
 
         elif entity_type == "college":
+            combobox.addItem("All")
             combobox.addItem("College Code")
             combobox.addItem("College Name")
 
@@ -32,7 +35,7 @@ class SearchAndSortHeader:
     def search_using_lineedit(entity_type, search_type_combobox, search_input_lineedit, model, sort_filter_proxy_model,
                               reset_item_delegates_func):
 
-        search_type = search_type_combobox.currentIndex()
+        search_type = search_type_combobox.currentIndex() - 1
 
         model.layoutAboutToBeChanged.emit()
 
