@@ -81,12 +81,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_view.setModel(self.students_table_model)
         self.students_table_view.setAlternatingRowColors(True)
 
-        # self.students_table_view.setVerticalScrollMode(QTableView.ScrollMode.ScrollPerItem)
-        # self.students_table_view.setHorizontalScrollMode(QTableView.ScrollMode.ScrollPerItem)
-        #
-        # # Disable keyboard scrolling
-        # self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
 
         self.students_table_horizontal_header.resizeSection(0, 110)
@@ -102,8 +96,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Programs table view
         self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
-        # self.programs_table_model.update_page_view(self.programs_table_view)
         self.programs_table_view.setAlternatingRowColors(True)
+
         self.programs_table_horizontal_header = self.programs_table_view.horizontalHeader()
 
         self.programs_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
@@ -112,7 +106,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Colleges table view
         self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
-        # self.colleges_table_model.update_page_view(self.colleges_table_view)
+
         self.colleges_table_view.setAlternatingRowColors(True)
         self.colleges_table_horizontal_header = self.colleges_table_view.horizontalHeader()
 
@@ -139,10 +133,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
 
-        self.students_table_model.update_page_view(self.students_table_view)
+        self.students_table_model.update_page_view(self.students_table_view,
+                                                   self.previous_page_button,
+                                                   self.next_page_button)
 
         self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
-        # self.students_table_model.update_internal_data()
+
+        self.previous_page_button.setEnabled(False)
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -167,6 +164,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_entity_page_program(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
+
         self.reset_item_delegates.load_item_delegates_for_programs_table_view()
 
         self.entity_type_icon.setPixmap(QPixmap("../assets/images/book_icon.svg"))
@@ -178,6 +176,15 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.edit_entity_button.setText(" Edit program")
 
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
+        self.current_page_lineedit.setPlaceholderText("1")
+
+        self.programs_table_model.update_page_view(self.programs_table_view,
+                                                   self.previous_page_button,
+                                                   self.next_page_button)
+
+        self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
+
+        self.previous_page_button.setEnabled(False)
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -212,6 +219,15 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.edit_entity_button.setText(" Edit college")
 
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
+        self.current_page_lineedit.setPlaceholderText("1")
+
+        self.colleges_table_model.update_page_view(self.colleges_table_view,
+                                                   self.previous_page_button,
+                                                   self.next_page_button)
+
+        self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
+
+        self.previous_page_button.setEnabled(False)
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -317,8 +333,20 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         if (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
 
-            self.students_table_model.update_page_view(self.students_table_view)
+            self.students_table_model.update_page_view(self.students_table_view,
+                                                       self.previous_page_button,
+                                                       self.next_page_button)
+
             self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+
+        if (self.stackedWidget.currentWidget() == self.entity_page and
+                self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
+
+            self.programs_table_model.update_page_view(self.programs_table_view,
+                                                       self.previous_page_button,
+                                                       self.next_page_button)
+
+            self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
         # self.students_table_model.update_page_view(self.students_table_view)
 

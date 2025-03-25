@@ -34,7 +34,7 @@ class SearchAndSortHeader:
     @staticmethod
     def search_using_lineedit(entity_type, search_type_combobox, search_input_lineedit, model,
                               reset_item_delegates_func, table_view, current_page_lineedit,
-                              max_pages_label):
+                              max_pages_label, prev_button, next_button):
 
         search_type = search_type_combobox.currentText().lower().replace(" ", "_")
 
@@ -44,7 +44,7 @@ class SearchAndSortHeader:
 
         model.search_entities(search_type, search_text)
 
-        model.update_page_view(table_view)
+        model.update_page_view(table_view, prev_button, next_button)
 
         max_pages_label.setText(f"/ {model.max_pages}")
 

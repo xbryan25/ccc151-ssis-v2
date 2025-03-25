@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QAbstractTableModel, Qt
+from PyQt6.QtCore import QAbstractTableModel, Qt, QTimer, QMetaObject
 
 from utils.is_valid_edit_value_for_cell import IsValidEditValueForCell
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
@@ -57,6 +57,8 @@ class CustomTableModel(QAbstractTableModel):
 
         self.model_data_is_empty()
 
+        self.is_loading = False
+
         self.save_button = None
 
     def model_data_is_empty(self):
@@ -91,9 +93,19 @@ class CustomTableModel(QAbstractTableModel):
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
 
-    def update_page_view(self, table_view):
+    def update_page_view(self, table_view, prev_button, next_button):
         self.max_row_per_page = TableViewPageControls.get_max_visible_rows(table_view)
         self.max_pages = (self.total_num // self.max_row_per_page) + 1
+
+        if self.current_page_number == 1:
+            prev_button.setEnabled(False)
+        else:
+            prev_button.setEnabled(True)
+
+        if self.current_page_number == self.max_pages:
+            next_button.setEnabled(False)
+        else:
+            next_button.setEnabled(True)
 
         self.layoutChanged.emit()
 
@@ -170,22 +182,35 @@ class CustomTableModel(QAbstractTableModel):
         else:
             self.initialize_data()
 
-    def set_next_page(self):
+    def set_next_page(self, prev_button, next_button):
+
         if self.current_page_number + 1 <= self.max_pages:
             self.current_page_number += 1
             self.layoutChanged.emit()
-        else:
-            print("Error: overflow page number")
 
-    def set_previous_page(self):
+        if self.current_page_number == self.max_pages:
+
+            next_button.setEnabled(False)
+
+        else:
+            prev_button.setEnabled(True)
+
+
+    def set_previous_page(self, prev_button, next_button):
+
         if self.current_page_number - 1 >= 1:
             self.current_page_number -= 1
             self.layoutChanged.emit()
+
+        if self.current_page_number == 1:
+
+            prev_button.setDisabled(True)
         else:
-            print("Error: underflow page number")
+            next_button.setEnabled(True)
 
     # Override
     def data(self, index, role):
+
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
             if index.row() < self.max_row_per_page and index.row() + ((self.current_page_number - 1) * self.max_row_per_page) < len(self.data_from_db):
                 return self.data_from_db[index.row() + ((self.current_page_number - 1) * self.max_row_per_page)][
