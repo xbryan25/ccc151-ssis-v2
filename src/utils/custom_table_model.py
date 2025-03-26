@@ -93,19 +93,19 @@ class CustomTableModel(QAbstractTableModel):
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
 
-    def update_page_view(self, table_view, prev_button, next_button):
+    def update_page_view(self, table_view):
         self.max_row_per_page = TableViewPageControls.get_max_visible_rows(table_view)
         self.max_pages = (self.total_num // self.max_row_per_page) + 1
 
-        if self.current_page_number == 1:
-            prev_button.setEnabled(False)
-        else:
-            prev_button.setEnabled(True)
-
-        if self.current_page_number == self.max_pages:
-            next_button.setEnabled(False)
-        else:
-            next_button.setEnabled(True)
+        # if self.current_page_number == 1:
+        #     prev_button.setEnabled(False)
+        # else:
+        #     prev_button.setEnabled(True)
+        #
+        # if self.current_page_number == self.max_pages:
+        #     next_button.setEnabled(False)
+        # else:
+        #     next_button.setEnabled(True)
 
         self.layoutChanged.emit()
 
@@ -182,31 +182,15 @@ class CustomTableModel(QAbstractTableModel):
         else:
             self.initialize_data()
 
-    def set_next_page(self, prev_button, next_button):
-
+    def set_next_page(self):
         if self.current_page_number + 1 <= self.max_pages:
             self.current_page_number += 1
             self.layoutChanged.emit()
 
-        if self.current_page_number == self.max_pages:
-
-            next_button.setEnabled(False)
-
-        else:
-            prev_button.setEnabled(True)
-
-
-    def set_previous_page(self, prev_button, next_button):
-
+    def set_previous_page(self):
         if self.current_page_number - 1 >= 1:
             self.current_page_number -= 1
             self.layoutChanged.emit()
-
-        if self.current_page_number == 1:
-
-            prev_button.setDisabled(True)
-        else:
-            next_button.setEnabled(True)
 
     # Override
     def data(self, index, role):

@@ -42,7 +42,7 @@ class EntityPageSignals:
         self.open_dialogs = OpenDialogs()
 
     def add(self, entity_type):
-        self.remove()
+        # self.remove()
 
         if entity_type == "student":
 
@@ -115,15 +115,11 @@ class EntityPageSignals:
 
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.students_table_model,
-                                                                  self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.current_page_lineedit))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.students_table_model,
-                                                              self.current_page_lineedit,
-                                                              self.previous_page_button,
-                                                              self.next_page_button))
+                                                              self.current_page_lineedit))
 
         elif entity_type == "program":
 
@@ -197,15 +193,11 @@ class EntityPageSignals:
 
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.programs_table_model,
-                                                                  self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.current_page_lineedit))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.programs_table_model,
-                                                              self.current_page_lineedit,
-                                                              self.previous_page_button,
-                                                              self.next_page_button))
+                                                              self.current_page_lineedit))
 
         elif entity_type == "college":
             (self.add_entity_button.clicked.connect
@@ -300,6 +292,9 @@ class EntityPageSignals:
         self.delete_entity_button.disconnect()
         self.save_changes_button.disconnect()
         self.view_demographics_button.disconnect()
+
+        self.sort_type_combobox.disconnect()
+        self.sort_order_combobox.disconnect()
 
         self.previous_page_button.disconnect()
         self.next_page_button.disconnect()

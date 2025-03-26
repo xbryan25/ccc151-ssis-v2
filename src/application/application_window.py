@@ -78,7 +78,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def setup_table_views(self):
         # Students table view
-        self.students_table_view.setModel(self.students_table_model)
+        self.students_table_view.setModel(self.students_sort_filter_proxy_model)
         self.students_table_view.setAlternatingRowColors(True)
 
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
@@ -133,13 +133,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
 
-        self.students_table_model.update_page_view(self.students_table_view,
-                                                   self.previous_page_button,
-                                                   self.next_page_button)
+        self.students_table_model.update_page_view(self.students_table_view)
 
         self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
 
-        self.previous_page_button.setEnabled(False)
+        self.previous_page_button.setEnabled(True)
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -151,8 +149,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
+        self.entity_page_signals.remove()
+
         SearchAndSortHeader.change_contents("student", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("student", self.sort_type_combobox, "sort")
+
+        self.search_type_combobox.setCurrentIndex(0)
+        self.sort_type_combobox.setCurrentIndex(0)
+        self.sort_order_combobox.setCurrentIndex(0)
 
         self.search_input_lineedit.clear()
 
@@ -178,13 +182,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
 
-        self.programs_table_model.update_page_view(self.programs_table_view,
-                                                   self.previous_page_button,
-                                                   self.next_page_button)
+        self.programs_table_model.update_page_view(self.programs_table_view)
 
         self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
-        self.previous_page_button.setEnabled(False)
+        self.previous_page_button.setEnabled(True)
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -196,8 +198,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
+        self.entity_page_signals.remove()
+
         SearchAndSortHeader.change_contents("program", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("program", self.sort_type_combobox, "sort")
+
+        self.search_type_combobox.setCurrentIndex(0)
+        self.sort_type_combobox.setCurrentIndex(0)
+        self.sort_order_combobox.setCurrentIndex(0)
 
         self.search_input_lineedit.clear()
 
@@ -221,13 +229,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
 
-        self.colleges_table_model.update_page_view(self.colleges_table_view,
-                                                   self.previous_page_button,
-                                                   self.next_page_button)
+        self.colleges_table_model.update_page_view(self.colleges_table_view)
 
         self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
 
-        self.previous_page_button.setEnabled(False)
+        self.previous_page_button.setEnabled(True)
 
         SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
                                                self.edit_entity_button,
@@ -239,8 +245,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                   self.programs_table_model,
                                                   self.colleges_table_model)
 
+        self.entity_page_signals.remove()
+
         SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("college", self.sort_type_combobox, "sort")
+
+        self.search_type_combobox.setCurrentIndex(0)
+        self.sort_type_combobox.setCurrentIndex(0)
+        self.sort_order_combobox.setCurrentIndex(0)
 
         self.search_input_lineedit.clear()
 
@@ -333,18 +345,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         if (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
 
-            self.students_table_model.update_page_view(self.students_table_view,
-                                                       self.previous_page_button,
-                                                       self.next_page_button)
+            self.students_table_model.update_page_view(self.students_table_view)
 
             self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
 
         if (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
 
-            self.programs_table_model.update_page_view(self.programs_table_view,
-                                                       self.previous_page_button,
-                                                       self.next_page_button)
+            self.programs_table_model.update_page_view(self.programs_table_view)
 
             self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
