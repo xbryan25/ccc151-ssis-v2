@@ -166,6 +166,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.setWindowTitle("Sequence | Students")
 
+        self.students_table_model.initialize_data()
+        self.reset_tracked_attributes_of_models("student")
+
     def change_to_entity_page_program(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
 
@@ -215,6 +218,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.setWindowTitle("Sequence | Programs")
 
+        self.programs_table_model.initialize_data()
+        self.reset_tracked_attributes_of_models("program")
+
     def change_to_entity_page_college(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
         self.entity_type_label.setText("Colleges")
@@ -259,6 +265,23 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_page_signals.add("college")
 
         self.setWindowTitle("Sequence | Colleges")
+
+        self.colleges_table_model.initialize_data()
+        self.reset_tracked_attributes_of_models("college")
+
+    def reset_tracked_attributes_of_models(self, entity_type):
+
+        if entity_type == "student":
+            self.students_table_model.set_is_data_currently_filtered(False)
+            self.students_table_model.reset_all_prev_search_and_sort_conditions()
+
+        elif entity_type == "program":
+            self.programs_table_model.set_is_data_currently_filtered(False)
+            self.programs_table_model.reset_all_prev_search_and_sort_conditions()
+
+        elif entity_type == "student":
+            self.colleges_table_model.set_is_data_currently_filtered(False)
+            self.colleges_table_model.reset_all_prev_search_and_sort_conditions()
 
     def change_to_about_this_app_page(self):
         self.stackedWidget.setCurrentWidget(self.about_this_app_page)

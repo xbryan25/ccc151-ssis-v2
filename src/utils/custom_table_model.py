@@ -23,7 +23,11 @@ class CustomTableModel(QAbstractTableModel):
         self.has_changes = False
 
         # Use when sorting filtered data
-        self.data_is_currently_filtered = True
+        self.is_data_currently_filtered = False
+        self.prev_search_type = None
+        self.prev_search_text = None
+        self.prev_sort_column = None
+        self.prev_sort_order = None
 
         self.data_from_db = []
         self.information_type = information_type
@@ -57,8 +61,6 @@ class CustomTableModel(QAbstractTableModel):
 
         self.model_data_is_empty()
 
-        self.is_loading = False
-
         self.save_button = None
 
     def model_data_is_empty(self):
@@ -88,6 +90,18 @@ class CustomTableModel(QAbstractTableModel):
     def set_programs_data(self, programs_data):
         self.programs_data = programs_data
 
+    def get_is_data_currently_filtered(self):
+        return self.is_data_currently_filtered
+
+    def set_is_data_currently_filtered(self, is_data_currently_filtered):
+        self.is_data_currently_filtered = is_data_currently_filtered
+
+    def reset_all_prev_search_and_sort_conditions(self):
+        self.prev_search_type = None
+        self.prev_search_text = None
+        self.prev_sort_column = None
+        self.prev_sort_order = None
+
     def initialize_data(self):
         self.data_from_db = self.db_handler.get_all_entities(self.information_type)
         self.total_num = len(self.data_from_db)
@@ -97,20 +111,7 @@ class CustomTableModel(QAbstractTableModel):
         self.max_row_per_page = TableViewPageControls.get_max_visible_rows(table_view)
         self.max_pages = (self.total_num // self.max_row_per_page) + 1
 
-        # if self.current_page_number == 1:
-        #     prev_button.setEnabled(False)
-        # else:
-        #     prev_button.setEnabled(True)
-        #
-        # if self.current_page_number == self.max_pages:
-        #     next_button.setEnabled(False)
-        # else:
-        #     next_button.setEnabled(True)
-
         self.layoutChanged.emit()
-
-    def update_after_search(self, row_count):
-        print(row_count)
 
     def connect_to_save_button(self, save_button):
         self.save_button = save_button
@@ -166,11 +167,45 @@ class CustomTableModel(QAbstractTableModel):
         self.db_handler.delete_entity(identifier, entity_type)
 
     def search_entities(self, search_type, search_text):
-        self.data_from_db = self.db_handler.search_entities(self.information_type, search_type, search_text)
+
+        self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
+                                                                         self.prev_sort_column,
+                                                                         self.prev_sort_order,
+                                                                         search_type,
+                                                                         search_text)
+
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
 
+        self.model_data_is_empty()
+
+        if search_text.strip() != "":
+            self.is_data_currently_filtered = True
+        else:
+            self.is_data_currently_filtered = False
+
+        self.prev_search_type = search_type
+        self.prev_search_text = search_text
+
         self.layoutChanged.emit()
+
+    def sort_filtered_entities(self, sort_column, sort_order):
+        if sort_order != "-":
+            self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
+                                                                             sort_column,
+                                                                             sort_order,
+                                                                             self.prev_search_type,
+                                                                             self.prev_search_text)
+
+            self.total_num = len(self.data_from_db)
+            self.current_page_number = 1
+
+            self.layoutChanged.emit()
+        else:
+            self.initialize_data()
+
+        self.prev_sort_column = sort_column
+        self.prev_sort_order = sort_order
 
     def sort_entities(self, sort_column, sort_order):
         if sort_order != "-":
@@ -181,6 +216,9 @@ class CustomTableModel(QAbstractTableModel):
             self.layoutChanged.emit()
         else:
             self.initialize_data()
+
+        self.prev_sort_column = sort_column
+        self.prev_sort_order = sort_order
 
     def set_next_page(self):
         if self.current_page_number + 1 <= self.max_pages:

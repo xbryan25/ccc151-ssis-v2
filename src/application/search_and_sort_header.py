@@ -44,7 +44,7 @@ class SearchAndSortHeader:
 
         model.search_entities(search_type, search_text)
 
-        model.update_page_view(table_view, prev_button, next_button)
+        model.update_page_view(table_view)
 
         max_pages_label.setText(f"/ {model.max_pages}")
 
@@ -78,7 +78,10 @@ class SearchAndSortHeader:
 
         model.layoutAboutToBeChanged.emit()
 
-        model.sort_entities(sort_column, sort_order)
+        if model.get_is_data_currently_filtered():
+            model.sort_filtered_entities(sort_column, sort_order)
+        else:
+            model.sort_entities(sort_column, sort_order)
 
         model.update_page_view(table_view)
 
