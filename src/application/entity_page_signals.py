@@ -1,3 +1,5 @@
+from PyQt6.QtCore import QTimer, QObject
+
 from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
 from utils.table_view_page_controls import TableViewPageControls
@@ -41,6 +43,9 @@ class EntityPageSignals:
 
         self.open_dialogs = OpenDialogs()
 
+        self.search_timer = QTimer()
+        self.search_timer.setSingleShot(True)
+
     def add(self, entity_type):
         # self.remove()
 
@@ -83,18 +88,19 @@ class EntityPageSignals:
                                                                            self.programs_table_model,
                                                                            self.colleges_table_model))
 
-            self.search_input_lineedit.textChanged.connect(
-                lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
-                                                                  self.search_type_combobox,
-                                                                  self.search_input_lineedit,
-                                                                  self.students_table_model,
-                                                                  self.reset_item_delegates.reset,
-                                                                  self.students_table_view,
-                                                                  self.current_page_lineedit,
-                                                                  self.max_pages_label,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button
-                                                                  ))
+            self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
+
+            self.search_timer.timeout.connect(lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
+                                                                                                self.search_type_combobox,
+                                                                                                self.search_input_lineedit,
+                                                                                                self.students_table_model,
+                                                                                                self.reset_item_delegates.reset,
+                                                                                                self.students_table_view,
+                                                                                                self.current_page_lineedit,
+                                                                                                self.max_pages_label,
+                                                                                                self.previous_page_button,
+                                                                                                self.next_page_button
+                                                                                                ))
 
             self.sort_type_combobox.currentTextChanged.connect(
                 lambda: SearchAndSortHeader.change_sort_type(entity_type,
@@ -161,7 +167,9 @@ class EntityPageSignals:
                                                                            self.programs_table_model,
                                                                            self.colleges_table_model))
 
-            self.search_input_lineedit.textChanged.connect(
+            self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
+
+            self.search_timer.timeout.connect(
                 lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
                                                                   self.search_type_combobox,
                                                                   self.search_input_lineedit,
@@ -233,7 +241,9 @@ class EntityPageSignals:
                                                                            self.programs_table_model,
                                                                            self.colleges_table_model))
 
-            self.search_input_lineedit.textChanged.connect(
+            self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
+
+            self.search_timer.timeout.connect(
                 lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
                                                                   self.search_type_combobox,
                                                                   self.search_input_lineedit,
@@ -286,6 +296,15 @@ class EntityPageSignals:
             lambda: SearchAndSortHeader.change_search_lineedit_placeholder(self.search_type_combobox,
                                                                            self.search_input_lineedit))
 
+    def on_text_changed_search_lineedit(self):
+        # So everytime a key gets entered in self.search_input_lineedit,
+        #   the timer resets
+
+        self.search_timer.stop()
+        self.search_timer.start(500)
+
+        # Once the timer reaches 500 milliseconds, the function connected to this timer will execute
+
     def remove(self):
         self.add_entity_button.disconnect()
         self.edit_entity_button.disconnect()
@@ -295,6 +314,13 @@ class EntityPageSignals:
 
         self.sort_type_combobox.disconnect()
         self.sort_order_combobox.disconnect()
+
+        try:
+            self.search_timer.timeout.disconnect()
+            self.search_input_lineedit.textChanged.disconnect()
+
+        except TypeError:
+            pass
 
         self.previous_page_button.disconnect()
         self.next_page_button.disconnect()
