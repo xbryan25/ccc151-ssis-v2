@@ -237,10 +237,13 @@ class CustomTableModel(QAbstractTableModel):
             if index.row() < self.max_row_per_page and index.row() + ((self.current_page_number - 1) * self.max_row_per_page) < len(self.data_from_db):
                 return self.data_from_db[index.row() + ((self.current_page_number - 1) * self.max_row_per_page)][
                     index.column()]
+            else:
+                return None
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if index.row() < self.max_row_per_page:
                 return Qt.AlignmentFlag.AlignCenter
+
 
     # Override
     def setData(self, index, value, role):
@@ -371,8 +374,15 @@ class CustomTableModel(QAbstractTableModel):
 
     # Override
     def rowCount(self, index=None):
-        # The length of the outer list.
-        return self.max_row_per_page
+
+        if (self.current_page_number == 1 or self.current_page_number < self.max_pages) and len(self.get_data()) > self.max_row_per_page:
+            return self.max_row_per_page
+
+        else:
+
+            current_page_row_count = len(self.data_from_db) % self.max_row_per_page
+
+            return current_page_row_count
 
     # Override
     def columnCount(self, index=None):

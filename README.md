@@ -21,9 +21,6 @@ The name 'Sequence' comes from the fact that the data in this application is sto
 - Undo changes, step by step restoration of the state of the data
 - Undo all changes, reset from last save point
 - A way to enable/disable table view manipulation
-- Delete multiple entries using a checkbox using the delete button 
-- Context menu popup upon right click while multiple entities are selected in the table, 
-the context menu would show a delete option to edit/delete multiple students
 - Search feature in view demographics
 - Filter feature in view demographics
 - Add admin and viewer mode; the admin can manipulate the data, while the viewer, can only view the data

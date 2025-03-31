@@ -2,6 +2,8 @@ from PyQt6.QtCore import QTimer, QObject
 
 from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
+from application.context_menu_setup import ContextMenuSetup
+
 from utils.table_view_page_controls import TableViewPageControls
 
 
@@ -43,6 +45,28 @@ class EntityPageSignals:
 
         self.open_dialogs = OpenDialogs()
 
+        self.students_table_view_context_menu = ContextMenuSetup(self.students_table_view,
+                                                                 self.students_table_model,
+                                                                 self.programs_table_model,
+                                                                 self.colleges_table_model,
+                                                                 self.save_changes_button,
+                                                                 self.reset_item_delegates.reset)
+
+        self.programs_table_view_context_menu = ContextMenuSetup(self.programs_table_view,
+                                                                 self.students_table_model,
+                                                                 self.programs_table_model,
+                                                                 self.colleges_table_model,
+                                                                 self.save_changes_button,
+                                                                 self.reset_item_delegates.reset)
+
+        self.colleges_table_view_context_menu = ContextMenuSetup(self.colleges_table_view,
+                                                                 self.students_table_model,
+                                                                 self.programs_table_model,
+                                                                 self.colleges_table_model,
+                                                                 self.save_changes_button,
+                                                                 self.reset_item_delegates.reset)
+
+
         self.search_timer = QTimer()
         self.search_timer.setSingleShot(True)
 
@@ -53,6 +77,8 @@ class EntityPageSignals:
 
             self.students_table_view.doubleClicked.connect(self.reset_item_delegates.
                                                            show_combobox_delegate_students_table_view)
+
+            self.students_table_view.customContextMenuRequested.connect(self.students_table_view_context_menu.show_context_menu)
 
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_students(self.students_table_view,
@@ -132,6 +158,9 @@ class EntityPageSignals:
             self.programs_table_view.doubleClicked.connect(self.reset_item_delegates.
                                                            show_combobox_delegate_programs_table_view)
 
+            self.programs_table_view.customContextMenuRequested.connect(
+                self.programs_table_view_context_menu.show_context_menu)
+
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_programs(self.programs_table_view,
                                                                             self.programs_table_model,
@@ -208,6 +237,10 @@ class EntityPageSignals:
                                                               self.current_page_lineedit))
 
         elif entity_type == "college":
+
+            self.colleges_table_view.customContextMenuRequested.connect(
+                self.colleges_table_view_context_menu.show_context_menu)
+
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_colleges(self.colleges_table_view,
                                                                             self.colleges_table_model,
@@ -275,15 +308,11 @@ class EntityPageSignals:
 
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.colleges_table_model,
-                                                                  self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.current_page_lineedit))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.colleges_table_model,
-                                                              self.current_page_lineedit,
-                                                              self.previous_page_button,
-                                                              self.next_page_button))
+                                                              self.current_page_lineedit))
 
 
         self.save_changes_button.clicked.connect(

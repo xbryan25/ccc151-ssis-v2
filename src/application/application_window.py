@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView
+from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView, QMenu
 from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon
 from PyQt6.QtCore import Qt
 
@@ -81,6 +81,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_view.setModel(self.students_sort_filter_proxy_model)
         self.students_table_view.setAlternatingRowColors(True)
 
+        self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
 
         self.students_table_horizontal_header.resizeSection(0, 110)
@@ -98,6 +100,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
         self.programs_table_view.setAlternatingRowColors(True)
 
+        self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
         self.programs_table_horizontal_header = self.programs_table_view.horizontalHeader()
 
         self.programs_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
@@ -106,8 +110,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Colleges table view
         self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
-
         self.colleges_table_view.setAlternatingRowColors(True)
+
+        self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
         self.colleges_table_horizontal_header = self.colleges_table_view.horizontalHeader()
 
         self.colleges_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
@@ -223,6 +229,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_entity_page_college(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
+
         self.entity_type_label.setText("Colleges")
 
         self.entity_type_icon.setPixmap(QPixmap("../assets/images/building_icon.svg"))
@@ -462,3 +469,4 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                         font-weight: {QFont.Weight.DemiBold};
                                                     }}
                                                 """)
+
