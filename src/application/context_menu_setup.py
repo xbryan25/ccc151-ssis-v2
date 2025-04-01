@@ -3,6 +3,8 @@ from PyQt6.QtWidgets import QMenu
 from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
+from operation_dialogs.students.edit_student import EditStudentDialog
+
 
 class ContextMenuSetup:
     def __init__(self, table_view, students_table_model, programs_table_model, colleges_table_model, save_changes_button,
@@ -45,8 +47,17 @@ class ContextMenuSetup:
     def edit_entity(self):
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
-        print("Edit:", end=" ")
-        print(list(set(index.row() for index in selected_indexes)))
+        selected_rows = list(set(index.row() for index in selected_indexes))
+        selected_rows.sort()
+
+        identifiers = self.current_model.get_identifiers_of_selected_rows(selected_rows)
+
+        edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model, self.programs_table_model,
+                                                self.colleges_table_model, self.reset_item_delegates_func, identifiers,
+                                                selected_rows)
+        edit_student_dialog.exec()
+
+
 
     def delete_entity(self):
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
@@ -55,6 +66,8 @@ class ContextMenuSetup:
         selected_rows.sort()
 
         identifiers = self.current_model.get_identifiers_of_selected_rows(selected_rows)
+
+        # Probably put in another file for better organization
 
         self.confirm_to_delete_dialog = ConfirmDeleteDialog(self.entity_type, identifiers)
         self.confirm_to_delete_dialog.exec()

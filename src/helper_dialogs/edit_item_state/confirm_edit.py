@@ -5,7 +5,7 @@ from helper_dialogs.edit_item_state.confirm_edit_design import Ui_Dialog as Conf
 
 
 class ConfirmEditDialog(QDialog, ConfirmEditUI):
-    def __init__(self, information_type, information_to_edit, num_of_affected=0, information_code_affected=False):
+    def __init__(self, entity_type, entities_to_edit, num_of_affected=0, entity_code_affected=False):
         super().__init__()
 
         self.setupUi(self)
@@ -15,28 +15,32 @@ class ConfirmEditDialog(QDialog, ConfirmEditUI):
 
         self.confirm_edit_decision = False
 
-        self.information_type = information_type
-        self.information_to_edit = information_to_edit
+        self.entity_type = entity_type
+        self.entities_to_edit = entities_to_edit
         self.num_of_affected = num_of_affected
-        self.information_code_affected = information_code_affected
+        self.entity_code_affected = entity_code_affected
 
         self.add_signals()
 
         self.edit_label_texts()
 
     def edit_label_texts(self):
-        self.setWindowTitle(f"Proceed in editing {self.information_to_edit}?")
-        self.header_label.setText(f"Are you sure you want to edit this {self.information_type}?")
+        if len(self.entities_to_edit) == 1:
+            self.setWindowTitle(f"Proceed in editing {self.entities_to_edit[0]}?")
+            self.header_label.setText(f"Are you sure you want to edit this {self.entity_type}?")
+        else:
+            self.setWindowTitle(f"Proceed in editing {len(self.entities_to_edit)} {self.entity_type}s?")
+            self.header_label.setText(f"Are you sure you want to edit these {self.entity_type}s?")
 
-        if self.information_code_affected:
-            if self.information_type == "program":
+        if self.entity_code_affected:
+            if self.entity_type == "program":
                 if self.num_of_affected == 1:
                     self.affected_num_label.setText(f"{self.num_of_affected} student "
                                                     f"under this program will be affected")
                 else:
                     self.affected_num_label.setText(f"{self.num_of_affected} students "
                                                     f"under this program will be affected")
-            elif self.information_type == "college":
+            elif self.entity_type == "college":
                 if self.num_of_affected == 1:
                     self.affected_num_label.setText(f"{self.num_of_affected} program "
                                                     f"under this college will be affected")

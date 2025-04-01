@@ -154,14 +154,38 @@ class CustomTableModel(QAbstractTableModel):
         self.data_from_db.append(entity_to_add)
         self.db_handler.add_entity(entity_to_add, entity_type)
 
-    def update_entity(self, identifier, entity_to_edit, entity_type, row_to_edit=None, edit_type="from_dialog"):
+    def update_entity(self, entity_replacement, entity_type, actual_row_to_edit=None, edit_type="from_dialog",
+                      edit_mode="single"):
 
-        if edit_type == "from_dialog":
-            self.data_from_db[row_to_edit] = entity_to_edit
+        entity_to_edit = self.get_data()[actual_row_to_edit]
+
+        identifier = entity_to_edit[0]
+
+        # list() ensures that only a copy of entity_replacement gets assigned
+        #   to self.data_from_db
+
+        if edit_type == "from_dialog" and edit_mode == "single":
+            self.data_from_db[actual_row_to_edit] = entity_replacement
+        elif edit_type == "from_dialog" and edit_mode == "multiple":
+            # Copy old values before replacing value in internal list
+            entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
+            entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
+            entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
+
+            if entity_replacement[3] == "--Select year level--":
+                entity_replacement[3] = self.data_from_db[actual_row_to_edit][3]
+
+            if entity_replacement[4] == "--Select gender--":
+                entity_replacement[4] = self.data_from_db[actual_row_to_edit][4]
+
+            if entity_replacement[5] == "--Select a program--":
+                entity_replacement[5] = self.data_from_db[actual_row_to_edit][5]
+
+            self.data_from_db[actual_row_to_edit] = entity_replacement
 
         # If edited 'from_model', no need to update the internal list
 
-        self.db_handler.update_entity(identifier, entity_to_edit, entity_type)
+        self.db_handler.update_entity(identifier, self.data_from_db[actual_row_to_edit], entity_type)
 
     def delete_entity_from_db(self, entity_relative_row, entity_type):
 
