@@ -8,8 +8,7 @@ from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteIt
 
 
 class DeleteStudentDialog(QDialog, DeleteStudentUI):
-    def __init__(self, students_table_view, students_table_model, reset_item_delegates_func,
-                 horizontal_header):
+    def __init__(self, students_table_view, students_table_model, reset_item_delegates_func):
 
         super().__init__()
 
@@ -19,7 +18,6 @@ class DeleteStudentDialog(QDialog, DeleteStudentUI):
         self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
-        self.horizontal_header = horizontal_header
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model

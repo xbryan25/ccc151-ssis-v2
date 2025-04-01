@@ -1,11 +1,12 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
+from PyQt6.QtCore import QSize
 
 from helper_dialogs.delete_item_state.confirm_delete_design import Ui_Dialog as ConfirmDeleteUI
 
 
 class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
-    def __init__(self, information_type, information_to_delete):
+    def __init__(self, entity_type, entities_to_delete):
         super().__init__()
 
         self.setupUi(self)
@@ -15,21 +16,30 @@ class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
 
         self.confirm_delete_decision = False
 
-        self.information_type = information_type
-        self.information_to_delete = information_to_delete
+        self.entity_type = entity_type
+        self.entities_to_delete = entities_to_delete
 
         self.add_signals()
 
         self.edit_label_texts()
 
     def edit_label_texts(self):
-        self.setWindowTitle(f"Proceed in deleting {self.information_to_delete}?")
-        self.header_label.setText(f"Are you sure you want to remove this {self.information_type}?")
 
-        self.affected_num_label.close()
-        self.verticalLayout.removeItem(self.spacerItem2)
-        self.setMinimumHeight(105)
-        self.resize(495, 105)
+        if len(self.entities_to_delete) == 1:
+            self.setWindowTitle(f"Proceed in deleting {self.entities_to_delete[0]}?")
+            self.header_label.setText(f"Are you sure you want to remove this {self.entity_type}?")
+
+            self.setMinimumSize(QSize(495, 105))
+            self.setMaximumSize(QSize(495, 105))
+            self.resize(495, 105)
+        else:
+            self.setWindowTitle(f"Proceed in deleting {len(self.entities_to_delete)} {self.entity_type}s?")
+            self.header_label.setText(f"Are you sure you want to remove these {self.entity_type}s?")
+
+            self.setMinimumSize(QSize(515, 105))
+            self.setMaximumSize(QSize(515, 105))
+            self.resize(515, 105)
+
 
     def proceed_delete(self):
         self.confirm_delete_decision = True
@@ -53,7 +63,6 @@ class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):
         self.cg_font_family = QFontDatabase.applicationFontFamilies(0)[0]
 
         self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.affected_num_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
 
         self.no_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.Medium))
         self.yes_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.Medium))

@@ -123,12 +123,12 @@ class OpenDialogs:
     @staticmethod
     def open_delete_entity_dialog_for_students(students_table_view, students_table_model, delete_entity_button,
                                                edit_entity_button, save_changes_button, view_demographics_button,
-                                               reset_item_delegates_func, horizontal_header):
+                                               reset_item_delegates_func):
 
         # Pass tableview here, and just import adjust horizontal header
 
         delete_student_dialog = DeleteStudentDialog(students_table_view, students_table_model,
-                                                    reset_item_delegates_func, horizontal_header)
+                                                    reset_item_delegates_func)
         delete_student_dialog.exec()
 
         SpecificButtonsEnabler.enable_buttons([delete_entity_button,

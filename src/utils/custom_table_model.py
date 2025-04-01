@@ -1,4 +1,4 @@
-from PyQt6.QtCore import QAbstractTableModel, Qt, QTimer, QMetaObject
+from PyQt6.QtCore import QAbstractTableModel, Qt, QTimer, QMetaObject, QModelIndex
 
 from utils.is_valid_edit_value_for_cell import IsValidEditValueForCell
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
@@ -96,6 +96,12 @@ class CustomTableModel(QAbstractTableModel):
     def set_is_data_currently_filtered(self, is_data_currently_filtered):
         self.is_data_currently_filtered = is_data_currently_filtered
 
+    def get_identifiers_of_selected_rows(self, selected_rows):
+        actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
+                                for selected_row in selected_rows]
+
+        return [row[0] for i, row in enumerate(self.get_data()) if i in actual_selected_rows]
+
     def reset_all_prev_search_and_sort_conditions(self):
         self.prev_search_type = None
         self.prev_search_text = None
@@ -157,14 +163,35 @@ class CustomTableModel(QAbstractTableModel):
 
         self.db_handler.update_entity(identifier, entity_to_edit, entity_type)
 
-    def delete_entity(self, entity_to_delete, entity_type):
+    def delete_entity_from_db(self, entity_relative_row, entity_type):
+
+        actual_row = (self.max_row_per_page * (self.current_page_number - 1)) + entity_relative_row
+        entity_to_delete = self.get_data()[actual_row]
+
         identifier = entity_to_delete[0]
 
-        self.data_from_db.remove(entity_to_delete)
+        # Delete from DB
+        self.db_handler.delete_entity(identifier, entity_type)
+
+        # # Delete from internal data structure of model
+        # self.removeRow(actual_row)
+
+    def update_data_from_db_after_deleting(self, selected_rows):
+
+        actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
+                                for selected_row in selected_rows]
+
+        self.beginResetModel()
+
+        # Instead of deleting values one by one in self.data_from_db,
+        # make another list that doesn't contain the affected rows and overwrite
+        # self.data_from_db instead
+        self.data_from_db = [row for i, row in enumerate(self.get_data()) if i not in actual_selected_rows]
+        self.total_num = len(self.data_from_db)
+
+        self.endResetModel()
 
         self.model_data_is_empty()
-
-        self.db_handler.delete_entity(identifier, entity_type)
 
     def search_entities(self, search_type, search_text):
 
@@ -229,6 +256,7 @@ class CustomTableModel(QAbstractTableModel):
         if self.current_page_number - 1 >= 1:
             self.current_page_number -= 1
             self.layoutChanged.emit()
+
 
     # Override
     def data(self, index, role):

@@ -50,21 +50,24 @@ class EntityPageSignals:
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
                                                                  self.save_changes_button,
-                                                                 self.reset_item_delegates.reset)
+                                                                 self.reset_item_delegates.reset,
+                                                                 'student')
 
         self.programs_table_view_context_menu = ContextMenuSetup(self.programs_table_view,
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
                                                                  self.save_changes_button,
-                                                                 self.reset_item_delegates.reset)
+                                                                 self.reset_item_delegates.reset,
+                                                                 'program')
 
         self.colleges_table_view_context_menu = ContextMenuSetup(self.colleges_table_view,
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
                                                                  self.save_changes_button,
-                                                                 self.reset_item_delegates.reset)
+                                                                 self.reset_item_delegates.reset,
+                                                                 'college')
 
 
         self.search_timer = QTimer()
@@ -106,8 +109,7 @@ class EntityPageSignals:
                                                                                  self.edit_entity_button,
                                                                                  self.save_changes_button,
                                                                                  self.view_demographics_button,
-                                                                                 self.reset_item_delegates.reset,
-                                                                                 self.students_table_horizontal_header))
+                                                                                 self.reset_item_delegates.reset))
 
             self.view_demographics_button.clicked.connect(
                 lambda: self.open_dialogs.open_students_demographic_dialog(self.students_table_model,
