@@ -154,16 +154,14 @@ class CustomTableModel(QAbstractTableModel):
         self.data_from_db.append(entity_to_add)
         self.db_handler.add_entity(entity_to_add, entity_type)
 
-    def update_entity(self, entity_replacement, entity_type, actual_row_to_edit=None, edit_type="from_dialog",
+    def update_entity(self, entity_replacement, entity_type, actual_row_to_edit, edit_type="from_dialog",
                       edit_mode="single"):
 
         entity_to_edit = self.get_data()[actual_row_to_edit]
 
         identifier = entity_to_edit[0]
 
-        if edit_type == "from_dialog" and edit_mode == "single":
-            self.data_from_db[actual_row_to_edit] = entity_replacement
-        elif edit_type == "from_dialog" and edit_mode == "multiple" and entity_type == "student":
+        if edit_mode == "multiple" and entity_type == "student":
             # Copy old values before replacing value in internal list
             entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
             entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
@@ -178,16 +176,15 @@ class CustomTableModel(QAbstractTableModel):
             if entity_replacement[5] == "--Select a program--":
                 entity_replacement[5] = self.data_from_db[actual_row_to_edit][5]
 
-            self.data_from_db[actual_row_to_edit] = entity_replacement
-
-        elif edit_type == "from_dialog" and edit_mode == "multiple" and entity_type == "program":
+        elif edit_mode == "multiple" and entity_type == "program":
             # Copy old values before replacing value in internal list
             entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
             entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
 
-            if entity_replacement[2] == "--Select a college--":
-                entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
+        if entity_replacement[2] == "--Select a college--":
+            entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
 
+        else:
             self.data_from_db[actual_row_to_edit] = entity_replacement
 
         # If edited 'from_model', no need to update the internal list
@@ -288,7 +285,6 @@ class CustomTableModel(QAbstractTableModel):
             self.current_page_number -= 1
             self.layoutChanged.emit()
 
-
     # Override
     def data(self, index, role):
 
@@ -302,7 +298,6 @@ class CustomTableModel(QAbstractTableModel):
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if index.row() < self.max_row_per_page:
                 return Qt.AlignmentFlag.AlignCenter
-
 
     # Override
     def setData(self, index, value, role):
@@ -373,50 +368,33 @@ class CustomTableModel(QAbstractTableModel):
                 confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
 
                 if confirm_edit_decision:
+
+                    temp_list = list(self.data_from_db[index.row()])
+
                     # If program code is edited
                     if self.information_type == "program" and index.column() == 0:
-
-                        old_program_code = self.get_data()[index.row()][0]
-
                         # Edit the list of lists from the model
-                        self.data_from_db[index.row()][index.column()] = value.upper()
+                        temp_list[index.column()] = value.upper()
 
-                        self.update_entity(old_program_code,
-                                           self.data_from_db[index.row()],
-                                           self.information_type,
-                                           edit_type='from_model')
-
-                        self.edit_program_code_of_students(old_program_code, self.get_data()[index.row()][0])
+                        # self.edit_program_code_of_students(old_program_code, self.get_data()[index.row()][0])
 
                     # If college code is edited
                     elif self.information_type == "college" and index.column() == 0:
-                        old_college_code = self.get_data()[index.row()][0]
-
                         # Edit the list of lists from the model
-                        self.data_from_db[index.row()][index.column()] = value.upper()
+                        temp_list[index.column()] = value.upper()
 
-                        self.update_entity(old_college_code,
-                                           self.data_from_db[index.row()],
-                                           self.information_type,
-                                           edit_type='from_model')
-
-                        self.edit_college_code_of_programs(old_college_code, self.get_data()[index.row()][0])
+                        # self.edit_college_code_of_programs(old_college_code, self.get_data()[index.row()][0])
 
                     # If everything else is edited
                     else:
-                        identifier = self.data_from_db[index.row()][0]
-                        self.data_from_db[index.row()][index.column()] = value
+                        temp_list[index.column()] = value
 
-                        self.update_entity(identifier,
-                                           self.data_from_db[index.row()],
-                                           self.information_type,
-                                           edit_type='from_model')
+                    self.update_entity(temp_list,
+                                       self.information_type,
+                                       actual_row_to_edit=index.row(),
+                                       edit_type='from_model')
 
-                    self.has_changes = True
-
-                    SpecificButtonsEnabler.enable_save_button(self.save_button, self)
-
-                    self.success_edit_item = SuccessEditItemDialog(self.information_type)
+                    self.success_edit_item = SuccessEditItemDialog(self.information_type, [self.data_from_db[index.row()][0]])
                     self.success_edit_item.exec()
 
                 else:
