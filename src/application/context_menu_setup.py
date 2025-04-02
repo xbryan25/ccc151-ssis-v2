@@ -4,6 +4,8 @@ from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
 from operation_dialogs.students.edit_student import EditStudentDialog
+from operation_dialogs.programs.edit_program import EditProgramDialog
+from operation_dialogs.colleges.edit_college import EditCollegeDialog
 
 
 class ContextMenuSetup:
@@ -34,12 +36,19 @@ class ContextMenuSetup:
             # Do nothing if no cell is clicked
             return
 
-        menu = QMenu(self.table_view)
-        action1 = menu.addAction("Edit")
-        action2 = menu.addAction("Delete")
+        selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
-        action1.triggered.connect(self.edit_entity)
-        action2.triggered.connect(self.delete_entity)
+        selected_rows = list(set(index.row() for index in selected_indexes))
+        selected_rows.sort()
+
+        menu = QMenu(self.table_view)
+
+        if self.entity_type != "college" or (self.entity_type == "college" and len(selected_rows) == 1):
+            edit_action = menu.addAction("Edit")
+            edit_action.triggered.connect(self.edit_entity)
+
+        delete_action = menu.addAction("Delete")
+        delete_action.triggered.connect(self.delete_entity)
 
         # Execute menu and get selected action
         menu.exec(self.table_view.viewport().mapToGlobal(pos))
@@ -52,10 +61,22 @@ class ContextMenuSetup:
 
         identifiers = self.current_model.get_identifiers_of_selected_rows(selected_rows)
 
-        edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model, self.programs_table_model,
-                                                self.colleges_table_model, self.reset_item_delegates_func, identifiers,
-                                                selected_rows)
-        edit_student_dialog.exec()
+        if self.entity_type == "student":
+
+            edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model,
+                                                    self.programs_table_model,
+                                                    self.colleges_table_model, self.reset_item_delegates_func,
+                                                    identifiers,
+                                                    selected_rows)
+            edit_student_dialog.exec()
+
+        elif self.entity_type == "program":
+            edit_program_dialog = EditProgramDialog(self.table_view, self.programs_table_model,
+                                                    self.students_table_model,
+                                                    self.colleges_table_model, self.reset_item_delegates_func,
+                                                    identifiers,
+                                                    selected_rows)
+            edit_program_dialog.exec()
 
 
 

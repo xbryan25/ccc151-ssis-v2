@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView, QMenu
-from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon
-from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon, QGuiApplication
+from PyQt6.QtCore import Qt, QEvent
 
 from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
 from application.open_dialogs import OpenDialogs
@@ -386,7 +386,34 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
             self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
-        # self.students_table_model.update_page_view(self.students_table_view)
+    # def changeEvent(self, event):
+    #     # Checks if window state has been changed
+    #     if event.type() == QEvent.Type.WindowStateChange:
+    #
+    #         if (self.stackedWidget.currentWidget() == self.entity_page and
+    #                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
+    #
+    #             self.students_table_view.clearSelection()
+    #             print("1")
+    #
+    #         elif (self.stackedWidget.currentWidget() == self.entity_page and
+    #                 self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
+    #
+    #             self.programs_table_view.clearSelection()
+    #             print("2")
+    #
+    #         elif (self.stackedWidget.currentWidget() == self.entity_page and
+    #               self.table_view_widgets.currentWidget() == self.colleges_table_view_widget):
+    #
+    #             self.colleges_table_view.clearSelection()
+    #             print("3")
+    #
+    #
+    #     super().changeEvent(event)
+
+    def is_window_fullscreen(self):
+        screen_geometry = QGuiApplication.primaryScreen().geometry()
+        return self.geometry() == screen_geometry
 
     def load_fonts(self):
         # Load fonts, they can be used in any part of the application

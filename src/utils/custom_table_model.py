@@ -161,12 +161,9 @@ class CustomTableModel(QAbstractTableModel):
 
         identifier = entity_to_edit[0]
 
-        # list() ensures that only a copy of entity_replacement gets assigned
-        #   to self.data_from_db
-
         if edit_type == "from_dialog" and edit_mode == "single":
             self.data_from_db[actual_row_to_edit] = entity_replacement
-        elif edit_type == "from_dialog" and edit_mode == "multiple":
+        elif edit_type == "from_dialog" and edit_mode == "multiple" and entity_type == "student":
             # Copy old values before replacing value in internal list
             entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
             entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
@@ -180,6 +177,16 @@ class CustomTableModel(QAbstractTableModel):
 
             if entity_replacement[5] == "--Select a program--":
                 entity_replacement[5] = self.data_from_db[actual_row_to_edit][5]
+
+            self.data_from_db[actual_row_to_edit] = entity_replacement
+
+        elif edit_type == "from_dialog" and edit_mode == "multiple" and entity_type == "program":
+            # Copy old values before replacing value in internal list
+            entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
+            entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
+
+            if entity_replacement[2] == "--Select a college--":
+                entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
 
             self.data_from_db[actual_row_to_edit] = entity_replacement
 

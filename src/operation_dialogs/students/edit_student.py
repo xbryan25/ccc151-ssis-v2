@@ -21,8 +21,6 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.student_to_edit_index = 0
-
         self.reset_item_delegates_func = reset_item_delegates_func
 
         self.programs_table_model = programs_table_model
@@ -218,9 +216,9 @@ class EditStudentDialog(QDialog, EditStudentUI):
             self.edit_student_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
+        # TODO: index is unused
         for index, student in enumerate(self.students_table_model.get_data()):
             if student[0] == self.id_numbers_to_edit[0]:
-                self.student_to_edit_index = index
 
                 self.new_id_number_lineedit.setPlaceholderText(student[0])
                 self.new_first_name_lineedit.setPlaceholderText(student[1])
