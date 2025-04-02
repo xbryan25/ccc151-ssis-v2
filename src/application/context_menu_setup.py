@@ -9,7 +9,7 @@ from operation_dialogs.colleges.edit_college import EditCollegeDialog
 
 
 class ContextMenuSetup:
-    def __init__(self, table_view, students_table_model, programs_table_model, colleges_table_model, save_changes_button,
+    def __init__(self, table_view, students_table_model, programs_table_model, colleges_table_model,
                  reset_item_delegates_func, entity_type):
 
         self.table_view = table_view
@@ -17,7 +17,6 @@ class ContextMenuSetup:
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
-        self.save_changes_button = save_changes_button
         self.reset_item_delegates_func = reset_item_delegates_func
         self.entity_type = entity_type
 

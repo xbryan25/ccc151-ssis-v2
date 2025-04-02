@@ -10,12 +10,8 @@ class SpecificButtonsEnabler:
 
         if model.get_data()[0][0]:
             buttons[0].setEnabled(True)
-            buttons[1].setEnabled(True)
-            buttons[2].setEnabled(True)
         else:
             buttons[0].setEnabled(False)
-            buttons[1].setEnabled(False)
-            buttons[2].setEnabled(False)
 
     @staticmethod
     def enable_save_button(save_button, students_table_model=None, programs_table_model=None, colleges_table_model=None):

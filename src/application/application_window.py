@@ -29,16 +29,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Generate table models in landing page so that it can be accessed in different pages
         self.students_table_model = CustomTableModel("student", self.database_handler)
-        self.students_table_model.connect_to_save_button(self.save_changes_button)
 
         self.programs_table_model = CustomTableModel("program", self.database_handler)
-        self.programs_table_model.set_students_data(self.students_table_model.get_data())
-        self.programs_table_model.connect_to_save_button(self.save_changes_button)
 
         self.colleges_table_model = CustomTableModel("college", self.database_handler)
-        self.colleges_table_model.set_students_data(self.students_table_model.get_data())
-        self.colleges_table_model.set_programs_data(self.programs_table_model.get_data())
-        self.colleges_table_model.connect_to_save_button(self.save_changes_button)
 
         self.students_sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
         self.programs_sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
@@ -133,8 +127,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.entity_type_label.setText("Students")
         self.add_entity_button.setText(" Add student")
-        self.delete_entity_button.setText(" Delete student")
-        self.edit_entity_button.setText(" Edit student")
 
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
@@ -145,15 +137,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-        SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
-                                               self.edit_entity_button,
-                                               self.view_demographics_button],
+        SpecificButtonsEnabler.enable_buttons([self.view_demographics_button],
                                               self.students_table_model)
 
-        SpecificButtonsEnabler.enable_save_button(self.save_changes_button,
-                                                  self.students_table_model,
-                                                  self.programs_table_model,
-                                                  self.colleges_table_model)
 
         self.entity_page_signals.remove()
 
@@ -184,9 +170,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_type_icon.setScaledContents(True)
 
         self.entity_type_label.setText("Programs")
-        self.add_entity_button.setText(" Add program")
-        self.delete_entity_button.setText(" Delete program")
-        self.edit_entity_button.setText(" Edit program")
 
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
@@ -197,15 +180,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-        SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
-                                               self.edit_entity_button,
-                                               self.view_demographics_button],
+        SpecificButtonsEnabler.enable_buttons([self.view_demographics_button],
                                               self.programs_table_model)
-
-        SpecificButtonsEnabler.enable_save_button(self.save_changes_button,
-                                                  self.students_table_model,
-                                                  self.programs_table_model,
-                                                  self.colleges_table_model)
 
         self.entity_page_signals.remove()
 
@@ -236,8 +212,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_type_icon.setScaledContents(True)
 
         self.add_entity_button.setText(" Add college")
-        self.delete_entity_button.setText(" Delete college")
-        self.edit_entity_button.setText(" Edit college")
 
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
@@ -248,16 +222,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-        SpecificButtonsEnabler.enable_buttons([self.delete_entity_button,
-                                               self.edit_entity_button,
-                                               self.view_demographics_button],
+        SpecificButtonsEnabler.enable_buttons([self.view_demographics_button],
                                               self.colleges_table_model)
-
-        SpecificButtonsEnabler.enable_save_button(self.save_changes_button,
-                                                  self.students_table_model,
-                                                  self.programs_table_model,
-                                                  self.colleges_table_model)
-
         self.entity_page_signals.remove()
 
         SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
@@ -316,9 +282,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.programs_sort_filter_proxy_model,
                 self.colleges_sort_filter_proxy_model,
                 self.add_entity_button,
-                self.delete_entity_button,
-                self.edit_entity_button,
-                self.save_changes_button,
                 self.view_demographics_button,
                 self.sort_type_combobox,
                 self.sort_order_combobox,
@@ -367,9 +330,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.about_this_app_back_to_main_button.setFont(font)
         self.add_entity_button.setFont(font)
-        self.delete_entity_button.setFont(font)
-        self.edit_entity_button.setFont(font)
-        self.save_changes_button.setFont(font)
         self.view_demographics_button.setFont(font)
 
         if (self.stackedWidget.currentWidget() == self.entity_page and
@@ -470,6 +430,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                         font-weight: {QFont.Weight.Medium};
                                     }}
                                 """)
+
+        self.search_method_combobox.setStyleSheet(f"""
+                                            QComboBox {{
+                                                font-family: {self.cg_font_family};
+                                                font-size: 16px;
+                                                font-weight: {QFont.Weight.Medium};
+                                            }}
+                                        """)
 
         self.search_input_lineedit.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
 

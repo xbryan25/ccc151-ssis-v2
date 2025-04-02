@@ -50,18 +50,15 @@ class CustomTableModel(QAbstractTableModel):
 
         if self.information_type == "program":
             self.columns = ["Program Code", "Program Name", "College Code"]
-            self.students_data = []
 
         if self.information_type == "college":
             self.columns = ["College Code", "College Name"]
-            self.students_data = []
-            self.programs_data = []
 
         self.initialize_data()
 
         self.model_data_is_empty()
 
-        self.save_button = None
+        # self.save_button = None
 
     def model_data_is_empty(self):
         if not self.get_data():
@@ -84,11 +81,6 @@ class CustomTableModel(QAbstractTableModel):
     def get_has_changes(self):
         return self.has_changes
 
-    def set_students_data(self, students_data):
-        self.students_data = students_data
-
-    def set_programs_data(self, programs_data):
-        self.programs_data = programs_data
 
     def get_is_data_currently_filtered(self):
         return self.is_data_currently_filtered
@@ -118,37 +110,6 @@ class CustomTableModel(QAbstractTableModel):
         self.max_pages = (self.total_num // self.max_row_per_page) + 1
 
         self.layoutChanged.emit()
-
-    def connect_to_save_button(self, save_button):
-        self.save_button = save_button
-
-    def len_of_students_under_program_code(self, old_program_code):
-        length = 0
-
-        for student in self.students_data:
-            if student[5] == old_program_code:
-                length += 1
-
-        return length
-
-    def edit_program_code_of_students(self, old_program_code, new_program_code):
-        for student in self.students_data:
-            if student[5] == old_program_code:
-                student[5] = new_program_code
-
-    def len_of_programs_under_college_code(self, old_college_code):
-        length = 0
-
-        for program in self.programs_data:
-            if program[2] == old_college_code:
-                length += 1
-
-        return length
-
-    def edit_college_code_of_programs(self, old_college_code, new_college_code):
-        for program in self.programs_data:
-            if program[2] == old_college_code:
-                program[2] = new_college_code
 
     def add_entity(self, entity_to_add, entity_type):
         self.data_from_db.append(entity_to_add)
@@ -344,8 +305,10 @@ class CustomTableModel(QAbstractTableModel):
                                                                     self.get_data()[index.row()][0])
 
                 elif self.information_type == "program" and index.column() == 0  and old_value != value:
-                    len_of_students_under_program_code = self.len_of_students_under_program_code(self.get_data()
-                                                                                                 [index.row()][0])
+                    len_of_students_under_program_code = len(
+                        self.db_handler.get_programs_and_students_connections()[self.get_data()][index.row()][0])
+
+
 
                     self.confirm_to_edit_dialog = ConfirmEditDialog("program",
                                                                     old_value,
@@ -353,8 +316,9 @@ class CustomTableModel(QAbstractTableModel):
                                                                     information_code_affected=True)
 
                 elif self.information_type == "college" and index.column() == 0 and old_value != value:
-                    len_of_programs_under_college_code = self.len_of_programs_under_college_code(self.get_data()
-                                                                                                 [index.row()][0])
+
+                    len_of_programs_under_college_code = len(
+                        self.db_handler.get_colleges_and_programs_connections()[self.get_data()][index.row()][0])
 
                     self.confirm_to_edit_dialog = ConfirmEditDialog("college",
                                                                     old_value,

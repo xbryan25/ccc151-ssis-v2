@@ -159,7 +159,7 @@ QComboBox::down-arrow{
     border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
 }
 
-#search_type_combobox, #sort_type_combobox, #sort_order_combobox{
+#search_type_combobox, #search_method_combobox, #sort_type_combobox, #sort_order_combobox{
     border: 1px solid black;
     border-radius: 5px;
 }

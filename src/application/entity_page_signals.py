@@ -23,25 +23,22 @@ class EntityPageSignals:
         self.colleges_sort_filter_proxy_model = entity_page_elements[8]
 
         self.add_entity_button = entity_page_elements[9]
-        self.delete_entity_button = entity_page_elements[10]
-        self.edit_entity_button = entity_page_elements[11]
-        self.save_changes_button = entity_page_elements[12]
-        self.view_demographics_button = entity_page_elements[13]
-        self.sort_type_combobox = entity_page_elements[14]
-        self.sort_order_combobox = entity_page_elements[15]
-        self.search_input_lineedit = entity_page_elements[16]
-        self.search_type_combobox = entity_page_elements[17]
+        self.view_demographics_button = entity_page_elements[10]
+        self.sort_type_combobox = entity_page_elements[11]
+        self.sort_order_combobox = entity_page_elements[12]
+        self.search_input_lineedit = entity_page_elements[13]
+        self.search_type_combobox = entity_page_elements[14]
 
-        self.students_table_horizontal_header = entity_page_elements[18]
-        self.programs_table_horizontal_header = entity_page_elements[19]
-        self.colleges_table_horizontal_header = entity_page_elements[20]
+        self.students_table_horizontal_header = entity_page_elements[15]
+        self.programs_table_horizontal_header = entity_page_elements[16]
+        self.colleges_table_horizontal_header = entity_page_elements[17]
 
-        self.reset_item_delegates = entity_page_elements[21]
+        self.reset_item_delegates = entity_page_elements[18]
 
-        self.previous_page_button = entity_page_elements[22]
-        self.next_page_button = entity_page_elements[23]
-        self.current_page_lineedit = entity_page_elements[24]
-        self.max_pages_label = entity_page_elements[25]
+        self.previous_page_button = entity_page_elements[19]
+        self.next_page_button = entity_page_elements[20]
+        self.current_page_lineedit = entity_page_elements[21]
+        self.max_pages_label = entity_page_elements[22]
 
         self.open_dialogs = OpenDialogs()
 
@@ -49,7 +46,6 @@ class EntityPageSignals:
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
-                                                                 self.save_changes_button,
                                                                  self.reset_item_delegates.reset,
                                                                  'student')
 
@@ -57,7 +53,6 @@ class EntityPageSignals:
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
-                                                                 self.save_changes_button,
                                                                  self.reset_item_delegates.reset,
                                                                  'program')
 
@@ -65,7 +60,6 @@ class EntityPageSignals:
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
-                                                                 self.save_changes_button,
                                                                  self.reset_item_delegates.reset,
                                                                  'college')
 

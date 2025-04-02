@@ -27,7 +27,7 @@ class OpenDialogs:
     def open_add_entity_dialog_for_students(students_table_view, students_table_model, view_demographics_button,
                                             reset_item_delegates_func):
 
-        if programs_table_model.get_data()[0][0] != "":
+        if len(students_table_model.db_handler.get_all_entities('program')) > 0:
 
             add_student_dialog = AddStudentDialog(students_table_view, students_table_model, reset_item_delegates_func)
             add_student_dialog.exec()
@@ -35,8 +35,8 @@ class OpenDialogs:
             SpecificButtonsEnabler.enable_buttons([view_demographics_button],
                                                   students_table_model)
 
-            SpecificButtonsEnabler.enable_save_button(save_changes_button,
-                                                      students_table_model=students_table_model)
+            # SpecificButtonsEnabler.enable_save_button(save_changes_button,
+            #                                           students_table_model=students_table_model)
 
         else:
             input_programs_dialog = InputPrerequisiteDialog("programs")
@@ -46,7 +46,7 @@ class OpenDialogs:
     def open_add_entity_dialog_for_programs(programs_table_view, programs_table_model, view_demographics_button,
                                             reset_item_delegates_func):
 
-        if colleges_table_model.get_data()[0][0] != "":
+        if len(programs_table_model.db_handler.get_all_entities('colleges')) > 0:
             # Note: reset_item_delegates is a function
 
             add_program_dialog = AddProgramDialog(programs_table_view, programs_table_model, reset_item_delegates_func)
@@ -55,8 +55,8 @@ class OpenDialogs:
             SpecificButtonsEnabler.enable_buttons([view_demographics_button],
                                                   programs_table_model)
 
-            SpecificButtonsEnabler.enable_save_button(save_changes_button,
-                                                      programs_table_model=programs_table_model)
+            # SpecificButtonsEnabler.enable_save_button(save_changes_button,
+            #                                           programs_table_model=programs_table_model)
 
         else:
             input_college_dialog = InputPrerequisiteDialog("college")
@@ -72,8 +72,8 @@ class OpenDialogs:
         SpecificButtonsEnabler.enable_buttons([view_demographics_button],
                                               colleges_table_model)
 
-        SpecificButtonsEnabler.enable_save_button(save_changes_button,
-                                                  colleges_table_model=colleges_table_model)
+        # SpecificButtonsEnabler.enable_save_button(save_changes_button,
+        #                                           colleges_table_model=colleges_table_model)
 
     @staticmethod
     def open_students_demographic_dialog(students_table_model):
