@@ -9,7 +9,7 @@ from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 
 class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
-    def __init__(self, students_table_model, programs_table_model, colleges_table_model):
+    def __init__(self, programs_table_model):
         super().__init__()
 
         self.setupUi(self)
@@ -17,55 +17,54 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
-        self.colleges_table_model = colleges_table_model
+
+        self.all_students = self.programs_table_model.db_handler.get_all_entities('student')
+        self.num_of_students = len(self.all_students)
 
         self.get_programs_demographic()
 
     def get_year_level_demographic_in_programs(self, program_code):
-        total_students = len(self.students_table_model.get_data())
         year_level_demographic = {"1st": 0, "2nd": 0, "3rd": 0, "4th": 0, "5th": 0}
 
         program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
 
-        for student in self.students_table_model.get_data():
+        for student in self.all_students:
             if student[0] in program_to_student_connections[program_code]:
                 year_level_demographic[student[3]] += 1
 
         return (f"1st Year: {year_level_demographic['1st']} "
-                f"({(year_level_demographic['1st'] / total_students) * 100:.2f}%)"
+                f"({(year_level_demographic['1st'] / self.num_of_students) * 100:.2f}%)"
                 f"\n2nd Year: {year_level_demographic['2nd']} "
-                f"({(year_level_demographic['2nd'] / total_students) * 100:.2f}%)"
+                f"({(year_level_demographic['2nd'] / self.num_of_students) * 100:.2f}%)"
                 f"\n3rd Year: {year_level_demographic['3rd']} "
-                f"({(year_level_demographic['3rd'] / total_students) * 100:.2f}%)"
+                f"({(year_level_demographic['3rd'] / self.num_of_students) * 100:.2f}%)"
                 f"\n4th Year: {year_level_demographic['4th']} "
-                f"({(year_level_demographic['4th'] / total_students) * 100:.2f}%)"
+                f"({(year_level_demographic['4th'] / self.num_of_students) * 100:.2f}%)"
                 f"\n5th Year: {year_level_demographic['5th']} "
-                f"({(year_level_demographic['5th'] / total_students) * 100:.2f}%)")
+                f"({(year_level_demographic['5th'] / self.num_of_students) * 100:.2f}%)")
 
     def get_gender_demographic_in_programs(self, program_code):
-        total_students = len(self.students_table_model.get_data())
         gender_demographic = {"Male": 0, "Female": 0, "Others": 0, "Prefer not to say": 0}
 
         program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
 
-        for student in self.students_table_model.get_data():
+        for student in self.all_students:
             if student[0] in program_to_student_connections[program_code]:
                 gender_demographic[student[4]] += 1
 
         return (f"Male: {gender_demographic['Male']} "
-                f"({(gender_demographic['Male'] / total_students) * 100:.2f}%)"
+                f"({(gender_demographic['Male'] / self.num_of_students) * 100:.2f}%)"
                 f"\nFemale: {gender_demographic['Female']} "
-                f"({(gender_demographic['Female'] / total_students) * 100:.2f}%)"
+                f"({(gender_demographic['Female'] / self.num_of_students) * 100:.2f}%)"
                 f"\nOthers: {gender_demographic['Others']} "
-                f"({(gender_demographic['Others'] / total_students) * 100:.2f}%)"
+                f"({(gender_demographic['Others'] / self.num_of_students) * 100:.2f}%)"
                 f"\nPrefer not to say: {gender_demographic['Prefer not to say']} "
-                f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
+                f"({(gender_demographic['Prefer not to say'] / self.num_of_students) * 100:.2f}%)")
 
     def get_programs_demographic(self):
 
-        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
+        college_to_program_connections = self.programs_table_model.db_handler.get_colleges_and_programs_connections()
 
         program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
 
@@ -135,13 +134,13 @@ class ProgramsDemographicDialog(QDialog, ProgramsDemographicUI):
                 current_row += 1
 
     def get_existing_students(self):
-        return self.students_table_model.db_handler.get_all_existing_students()
+        return self.programs_table_model.db_handler.get_all_existing_students()
 
     def get_program_codes(self):
         return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

@@ -11,7 +11,7 @@ from utils.is_valid_verifiers import IsValidVerifiers
 
 
 class AddProgramDialog(QDialog, AddProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, colleges_table_model, reset_item_delegates_func):
+    def __init__(self, programs_table_view, programs_table_model, reset_item_delegates_func):
         super().__init__()
 
         self.setupUi(self)
@@ -20,8 +20,6 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
-
-        self.colleges_table_model = colleges_table_model
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
@@ -113,7 +111,7 @@ class AddProgramDialog(QDialog, AddProgramUI):
         return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

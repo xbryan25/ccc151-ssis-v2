@@ -86,35 +86,11 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_students(self.students_table_view,
                                                                             self.students_table_model,
-                                                                            self.programs_table_model,
-                                                                            self.colleges_table_model,
-                                                                            self.delete_entity_button,
-                                                                            self.edit_entity_button,
-                                                                            self.save_changes_button,
                                                                             self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
-            self.edit_entity_button.clicked.connect(
-                lambda: self.open_dialogs.open_edit_entity_dialog_for_students(self.students_table_view,
-                                                                               self.students_table_model,
-                                                                               self.programs_table_model,
-                                                                               self.colleges_table_model,
-                                                                               self.save_changes_button,
-                                                                               self.reset_item_delegates.reset))
-
-            self.delete_entity_button.clicked.connect(
-                lambda: self.open_dialogs.open_delete_entity_dialog_for_students(self.students_table_view,
-                                                                                 self.students_table_model,
-                                                                                 self.delete_entity_button,
-                                                                                 self.edit_entity_button,
-                                                                                 self.save_changes_button,
-                                                                                 self.view_demographics_button,
-                                                                                 self.reset_item_delegates.reset))
-
             self.view_demographics_button.clicked.connect(
-                lambda: self.open_dialogs.open_students_demographic_dialog(self.students_table_model,
-                                                                           self.programs_table_model,
-                                                                           self.colleges_table_model))
+                lambda: self.open_dialogs.open_students_demographic_dialog(self.students_table_model))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -166,37 +142,12 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_programs(self.programs_table_view,
                                                                             self.programs_table_model,
-                                                                            self.colleges_table_model,
-                                                                            self.delete_entity_button,
-                                                                            self.edit_entity_button,
-                                                                            self.save_changes_button,
                                                                             self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
-            self.edit_entity_button.clicked.connect(
-                lambda: self.open_dialogs.open_edit_entity_dialog_for_programs(self.programs_table_view,
-                                                                               self.programs_table_model,
-                                                                               self.students_table_model,
-                                                                               self.colleges_table_model,
-                                                                               self.save_changes_button,
-                                                                               self.reset_item_delegates.reset))
-
-            self.delete_entity_button.clicked.connect(
-                lambda: self.open_dialogs.open_delete_entity_dialog_for_programs(self.programs_table_view,
-                                                                                 self.programs_table_model,
-                                                                                 self.students_table_model,
-                                                                                 self.colleges_table_model,
-                                                                                 self.delete_entity_button,
-                                                                                 self.edit_entity_button,
-                                                                                 self.save_changes_button,
-                                                                                 self.view_demographics_button,
-                                                                                 self.reset_item_delegates.reset,
-                                                                                 self.programs_table_horizontal_header))
 
             self.view_demographics_button.clicked.connect(
-                lambda: self.open_dialogs.open_programs_demographic_dialog(self.students_table_model,
-                                                                           self.programs_table_model,
-                                                                           self.colleges_table_model))
+                lambda: self.open_dialogs.open_programs_demographic_dialog(self.programs_table_model))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -246,35 +197,11 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_colleges(self.colleges_table_view,
                                                                             self.colleges_table_model,
-                                                                            self.delete_entity_button,
-                                                                            self.edit_entity_button,
-                                                                            self.save_changes_button,
                                                                             self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
-            self.edit_entity_button.clicked.connect(
-                lambda: self.open_dialogs.open_edit_entity_dialog_for_colleges(self.colleges_table_view,
-                                                                               self.programs_table_model,
-                                                                               self.colleges_table_model,
-                                                                               self.save_changes_button,
-                                                                               self.reset_item_delegates.reset))
-
-            self.delete_entity_button.clicked.connect(
-                lambda: self.open_dialogs.open_delete_entity_dialog_for_colleges(self.colleges_table_view,
-                                                                                 self.colleges_table_model,
-                                                                                 self.students_table_model,
-                                                                                 self.programs_table_model,
-                                                                                 self.delete_entity_button,
-                                                                                 self.edit_entity_button,
-                                                                                 self.save_changes_button,
-                                                                                 self.view_demographics_button,
-                                                                                 self.reset_item_delegates.reset,
-                                                                                 self.colleges_table_horizontal_header))
-
             self.view_demographics_button.clicked.connect(
-                lambda: self.open_dialogs.open_colleges_demographic_dialog(self.students_table_model,
-                                                                           self.programs_table_model,
-                                                                           self.colleges_table_model))
+                lambda: self.open_dialogs.open_colleges_demographic_dialog(self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -316,13 +243,6 @@ class EntityPageSignals:
                 lambda: TableViewPageControls.go_to_next_page(self.colleges_table_model,
                                                               self.current_page_lineedit))
 
-
-        self.save_changes_button.clicked.connect(
-            lambda: self.open_dialogs.open_confirm_save_dialog(self.students_table_model,
-                                                               self.programs_table_model,
-                                                               self.colleges_table_model,
-                                                               self.save_changes_button))
-
         self.search_type_combobox.currentIndexChanged.connect(
             lambda: SearchAndSortHeader.change_search_lineedit_placeholder(self.search_type_combobox,
                                                                            self.search_input_lineedit))
@@ -338,9 +258,6 @@ class EntityPageSignals:
 
     def remove(self):
         self.add_entity_button.disconnect()
-        self.edit_entity_button.disconnect()
-        self.delete_entity_button.disconnect()
-        self.save_changes_button.disconnect()
         self.view_demographics_button.disconnect()
 
         self.sort_type_combobox.disconnect()

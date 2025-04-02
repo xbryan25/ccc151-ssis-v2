@@ -9,7 +9,7 @@ from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 
 class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
-    def __init__(self, students_table_model, programs_table_model, colleges_table_model):
+    def __init__(self, students_table_model):
         super().__init__()
 
         self.setupUi(self)
@@ -18,8 +18,6 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         self.load_fonts()
 
         self.students_table_model = students_table_model
-        self.programs_table_model = programs_table_model
-        self.colleges_table_model = colleges_table_model
 
         self.get_year_level_demographic()
         self.get_gender_demographic()
@@ -62,9 +60,9 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
     def get_students_in_programs_demographic(self):
         total_students = len(self.students_table_model.get_data())
 
-        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
+        college_to_program_connections = self.students_table_model.db_handler.get_colleges_and_programs_connections()
 
-        program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
+        program_to_student_connections = self.students_table_model.db_handler.get_programs_and_students_connections()
 
         for index, college_code in enumerate(self.get_college_codes()):
             if college_to_program_connections[college_code]:
@@ -106,10 +104,10 @@ class StudentsDemographicDialog(QDialog, StudentsDemographicUI):
         return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_program_codes(self):
-        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
+        return self.students_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
+        return self.students_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

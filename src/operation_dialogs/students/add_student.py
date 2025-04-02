@@ -11,8 +11,7 @@ from utils.is_valid_verifiers import IsValidVerifiers
 
 
 class AddStudentDialog(QDialog, AddStudentUI):
-    def __init__(self, students_table_view, students_table_model, programs_table_model, colleges_table_model,
-                 reset_item_delegates_func):
+    def __init__(self, students_table_view, students_table_model, reset_item_delegates_func):
         super().__init__()
 
         self.setupUi(self)
@@ -21,9 +20,6 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
-
-        self.programs_table_model = programs_table_model
-        self.colleges_table_model = colleges_table_model
 
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
@@ -74,7 +70,7 @@ class AddStudentDialog(QDialog, AddStudentUI):
     def add_program_codes_from_a_college_to_combobox(self, college_code):
         num_of_programs = 0
 
-        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
+        college_to_program_connections = self.students_table_model.db_handler.get_colleges_and_programs_connections()
 
         for program_code in self.get_program_codes():
             if program_code in college_to_program_connections[college_code]:
@@ -164,10 +160,10 @@ class AddStudentDialog(QDialog, AddStudentUI):
         return self.students_table_model.db_handler.get_all_existing_students()
 
     def get_program_codes(self):
-        return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
+        return self.students_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
+        return self.students_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:
