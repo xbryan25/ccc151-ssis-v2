@@ -44,8 +44,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.reset_item_delegates = None
         self.entity_page_signals = None
 
+        self.view_demographics_button.clicked.connect(self.change_to_demographics_page)
+
         self.back_to_main_button.clicked.connect(self.change_to_landing_page)
         self.about_this_app_back_to_main_button.clicked.connect(self.change_to_landing_page)
+        self.demographics_back_to_main_button.clicked.connect(self.change_to_landing_page)
 
         self.setup_table_views()
 
@@ -69,6 +72,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
     def change_to_landing_page(self):
         self.stackedWidget.setCurrentWidget(self.landing_page)
         self.setWindowTitle("Sequence")
+
+    def change_to_demographics_page(self):
+        self.stackedWidget.setCurrentWidget(self.demographics_page)
 
     def setup_table_views(self):
         # Students table view
@@ -310,7 +316,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.about_this_app_back_to_main_button.setFont(font)
         self.add_entity_button.setFont(font)
-        self.view_demographics_button.setFont(font)
+        # self.view_demographics_button.setFont(font)
 
         if (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
@@ -372,7 +378,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.programs_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.colleges_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
+        self.view_demographics_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.about_this_app_button.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
 
         # About This App Page
         self.about_this_app_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
