@@ -12,8 +12,8 @@ from utils.is_valid_verifiers import IsValidVerifiers
 
 
 class EditProgramDialog(QDialog, EditProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, students_table_model, colleges_table_model,
-                 reset_item_delegates_func, program_codes_to_edit, selected_rows):
+    def __init__(self, programs_table_view, programs_table_model, reset_item_delegates_func,
+                 program_codes_to_edit, selected_rows):
         super().__init__()
 
         self.setupUi(self)
@@ -22,9 +22,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.load_fonts()
 
         self.reset_item_delegates_func = reset_item_delegates_func
-
-        self.students_table_model = students_table_model
-        self.colleges_table_model = colleges_table_model
 
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
@@ -195,29 +192,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
     def set_college_code_combobox_scrollbar(self):
         self.new_college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-    def enable_edit_fields(self, program_code):
-
-        if program_code != "--Select Program Code--" and program_code in self.get_program_codes():
-            self.edit_program_button.setEnabled(True)
-            self.new_program_code_lineedit.setEnabled(True)
-            self.new_program_name_lineedit.setEnabled(True)
-            self.new_college_code_combobox.setEnabled(True)
-
-            if self.new_college_code_combobox.currentText() == "":
-                self.new_college_code_combobox.setItemText(0, "--Select a college--")
-
-        else:
-            self.new_college_code_combobox.setItemText(0, "")
-            self.new_college_code_combobox.setCurrentIndex(0)
-
-            self.new_program_code_lineedit.setPlaceholderText("")
-            self.new_program_name_lineedit.setPlaceholderText("")
-
-            self.edit_program_button.setEnabled(False)
-            self.new_program_code_lineedit.setEnabled(False)
-            self.new_program_name_lineedit.setEnabled(False)
-            self.new_college_code_combobox.setEnabled(False)
-
     def enable_edit_button(self, college_code):
         if college_code != "--Select a college--" and college_code != "" and college_code in self.get_college_codes():
             self.edit_program_button.setEnabled(True)
@@ -236,26 +210,15 @@ class EditProgramDialog(QDialog, EditProgramUI):
 
                 break
 
-    def row_to_edit(self):
-        program_codes = self.get_program_codes()
-
-        for program_code in program_codes:
-            if program_code == self.program_to_edit_combobox.currentText():
-                return program_codes.index(program_code)
-
     def len_of_students_under_program_code(self, old_program_code):
         length = 0
 
-        for student in self.students_table_model.get_data():
+        for student in self.programs_table_model.db_handler.get_all_entities('student'):
             if student[5] == old_program_code:
                 length += 1
 
         return length
 
-    def edit_program_code_of_students(self, old_program_code, new_program_code):
-        for student in self.students_table_model.get_data():
-            if student[5] == old_program_code:
-                student[5] = new_program_code
 
     def has_issues(self):
         issues = []
@@ -290,13 +253,13 @@ class EditProgramDialog(QDialog, EditProgramUI):
         return self.programs_table_model.db_handler.get_all_existing_programs()
 
     def get_student_codes(self):
-        return self.students_table_model.db_handler.get_all_entity_information_codes('student')
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('student')
 
     def get_program_codes(self):
         return self.programs_table_model.db_handler.get_all_entity_information_codes('program')
 
     def get_college_codes(self):
-        return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
+        return self.programs_table_model.db_handler.get_all_entity_information_codes('college')
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/dialog_style.qss", "r") as file:

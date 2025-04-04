@@ -7,17 +7,14 @@ from helper_dialogs.save_item_state.success_save_changes import SuccessSaveChang
 
 from operation_dialogs.students.add_student import AddStudentDialog
 from operation_dialogs.students.edit_student import EditStudentDialog
-from operation_dialogs.students.delete_student import DeleteStudentDialog
 from operation_dialogs.students.students_demographic import StudentsDemographicDialog
 
 from operation_dialogs.programs.add_program import AddProgramDialog
 from operation_dialogs.programs.edit_program import EditProgramDialog
-from operation_dialogs.programs.delete_program import DeleteProgramDialog
 from operation_dialogs.programs.programs_demographic import ProgramsDemographicDialog
 
 from operation_dialogs.colleges.add_college import AddCollegeDialog
 from operation_dialogs.colleges.edit_college import EditCollegeDialog
-from operation_dialogs.colleges.delete_college import DeleteCollegeDialog
 from operation_dialogs.colleges.colleges_demographic import CollegesDemographicDialog
 
 

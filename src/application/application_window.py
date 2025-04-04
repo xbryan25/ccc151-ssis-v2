@@ -297,26 +297,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.max_pages_label
                 ]
 
-    def closeEvent(self, event):
-
-        entity_type = ""
-
-        if self.colleges_table_model.get_has_changes():
-            entity_type = "college"
-
-        elif self.programs_table_model.get_has_changes():
-            entity_type = "program"
-
-        elif self.students_table_model.get_has_changes():
-            entity_type = "student"
-
-        if entity_type != "":
-            OpenDialogs.open_confirm_save_dialog(self.students_table_model,
-                                                 self.programs_table_model,
-                                                 self.colleges_table_model)
-
-        event.accept()
-
     def resizeEvent(self, event):
         font = QFont()
         font.setFamily(self.cg_font_family)

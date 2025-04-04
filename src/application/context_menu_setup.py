@@ -63,20 +63,25 @@ class ContextMenuSetup:
         if self.entity_type == "student":
 
             edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model,
-                                                    self.programs_table_model,
-                                                    self.colleges_table_model, self.reset_item_delegates_func,
+                                                    self.reset_item_delegates_func,
                                                     identifiers,
                                                     selected_rows)
             edit_student_dialog.exec()
 
         elif self.entity_type == "program":
-            edit_program_dialog = EditProgramDialog(self.table_view, self.programs_table_model,
-                                                    self.students_table_model,
-                                                    self.colleges_table_model, self.reset_item_delegates_func,
+            edit_program_dialog = EditProgramDialog(self.table_view,
+                                                    self.programs_table_model,
+                                                    self.reset_item_delegates_func,
                                                     identifiers,
                                                     selected_rows)
             edit_program_dialog.exec()
 
+        elif self.entity_type == "college":
+            edit_college_dialog = EditCollegeDialog(self.table_view, self.colleges_table_model,
+                                                    self.reset_item_delegates_func,
+                                                    identifiers,
+                                                    selected_rows)
+            edit_college_dialog.exec()
 
 
     def delete_entity(self):

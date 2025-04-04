@@ -81,7 +81,6 @@ class CustomTableModel(QAbstractTableModel):
     def get_has_changes(self):
         return self.has_changes
 
-
     def get_is_data_currently_filtered(self):
         return self.is_data_currently_filtered
 
@@ -142,8 +141,8 @@ class CustomTableModel(QAbstractTableModel):
             entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
             entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
 
-        if entity_replacement[2] == "--Select a college--":
-            entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
+            if entity_replacement[2] == "--Select a college--":
+                entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
 
         else:
             self.data_from_db[actual_row_to_edit] = entity_replacement

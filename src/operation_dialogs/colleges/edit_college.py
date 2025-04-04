@@ -12,7 +12,8 @@ from utils.is_valid_verifiers import IsValidVerifiers
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
-    def __init__(self, colleges_table_view, college_table_model, programs_table_model, reset_item_delegates_func):
+    def __init__(self, colleges_table_view, college_table_model, reset_item_delegates_func,
+                 college_codes_to_edit, selected_rows):
         super().__init__()
 
         self.setupUi(self)
@@ -22,21 +23,20 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
         self.reset_item_delegates_func = reset_item_delegates_func
 
-        self.programs_table_model = programs_table_model
-
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = college_table_model
+
+        self.college_codes_to_edit = college_codes_to_edit
+        self.selected_rows = selected_rows
+
+        self.set_old_data_as_placeholders()
 
         self.is_valid = IsValidVerifiers()
         self.existing_colleges_information = self.colleges_table_model.db_handler.get_all_existing_colleges()
 
-        self.add_college_codes_to_combobox()
-
         self.add_signals()
 
-        self.set_college_code_combobox_scrollbar()
-
-    def edit_college_information(self):
+    def edit_single_college_information(self):
         issues = self.has_issues()
 
         if issues:
@@ -54,23 +54,24 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                                if self.new_college_name_lineedit.text().strip()
                                else self.new_college_name_lineedit.placeholderText()]
 
-            row_to_edit = self.row_to_edit()
+            actual_row_to_edit = ((self.colleges_table_model.max_row_per_page *
+                                   (self.colleges_table_model.current_page_number - 1))
+                                  + self.selected_rows[0])
 
             # Check if there are any changes made from the old data of the college
-            if self.colleges_table_model.get_data()[row_to_edit] != college_to_edit:
-                old_college_code = self.college_to_edit_combobox.currentText()
-                len_of_programs_under_college_code = self.len_of_programs_under_college_code(old_college_code)
+            if self.colleges_table_model.get_data()[actual_row_to_edit] != college_to_edit:
+                len_of_programs_under_college_code = self.len_of_programs_under_college_code(self.college_codes_to_edit[0])
 
                 # If college code is not changed, a different confirm edit dialog will show
-                if old_college_code == college_to_edit[0]:
+                if self.college_codes_to_edit[0] == college_to_edit[0]:
                     self.confirm_to_edit_dialog = ConfirmEditDialog("college",
-                                                                    old_college_code)
+                                                                    self.college_codes_to_edit[0])
                 else:
 
                     self.confirm_to_edit_dialog = ConfirmEditDialog("college",
-                                                                    old_college_code,
+                                                                    self.college_codes_to_edit[0],
                                                                     num_of_affected=len_of_programs_under_college_code,
-                                                                    information_code_affected=True)
+                                                                    entity_code_affected=True)
 
                 # Halts the program where as this starts another loop
                 self.confirm_to_edit_dialog.exec()
@@ -78,78 +79,43 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                 confirm_edit_decision = self.confirm_to_edit_dialog.get_confirm_edit_decision()
 
                 if confirm_edit_decision:
-                    self.edit_college_code_of_programs(old_college_code, college_to_edit[0])
 
-                    # By doing this, the data in the model also gets updated, same reference
-                    # self.colleges_table_model.get_data()[row_to_edit] = college_to_edit
-                    self.colleges_table_model.update_entity(old_college_code,
-                                                            college_to_edit,
+                    self.colleges_table_model.update_entity(college_to_edit,
                                                             'college',
-                                                            row_to_edit=row_to_edit)
-
-                    if len_of_programs_under_college_code > 0:
-                        self.programs_table_model.set_has_changes(True)
-
-                    self.colleges_table_model.set_has_changes(True)
+                                                            actual_row_to_edit=actual_row_to_edit)
 
                     self.reset_item_delegates_func("edit_college")
 
-                    self.success_edit_item_dialog = SuccessEditItemDialog("college", self)
-
+                    self.success_edit_item_dialog = SuccessEditItemDialog("college", self.college_codes_to_edit, self)
                     self.success_edit_item_dialog.exec()
 
             else:
                 self.fail_to_edit_item_dialog = FailToEditItemDialog(["No changes made to the college"], "college")
                 self.fail_to_edit_item_dialog.exec()
 
-    def add_college_codes_to_combobox(self):
-        for college_code in self.colleges_table_model.db_handler.get_all_entity_information_codes('college'):
-            self.college_to_edit_combobox.addItem(college_code)
+    def enable_edit_button(self):
 
-    def set_college_code_combobox_scrollbar(self):
-        self.college_to_edit_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-
-    def enable_edit_fields(self, college_code):
-
-        if college_code != "--Select College Code--" and college_code in self.colleges_information["College Code"]:
+        if self.new_college_code_lineedit.text().strip() != "" or self.new_college_name_lineedit.text().strip() != "":
             self.edit_college_button.setEnabled(True)
-            self.new_college_code_lineedit.setEnabled(True)
-            self.new_college_name_lineedit.setEnabled(True)
-
         else:
-            self.new_college_code_lineedit.setPlaceholderText("")
-            self.new_college_name_lineedit.setPlaceholderText("")
-
             self.edit_college_button.setEnabled(False)
-            self.new_college_code_lineedit.setEnabled(False)
-            self.new_college_name_lineedit.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
         for college in self.colleges_table_model.get_data():
-            if college[0] == self.college_to_edit_combobox.currentText():
+            if college[0] == self.college_codes_to_edit[0]:
+                self.college_to_edit_list.setText(self.college_codes_to_edit[0])
+
                 self.new_college_code_lineedit.setPlaceholderText(college[0])
                 self.new_college_name_lineedit.setPlaceholderText(college[1])
-
-    def row_to_edit(self):
-        college_codes = self.get_college_codes()
-
-        for college_code in college_codes:
-            if college_code == self.college_to_edit_combobox.currentText():
-                return college_codes.index(college_code)
 
     def len_of_programs_under_college_code(self, old_college_code):
         length = 0
 
-        for program in self.programs_table_model.get_data():
+        for program in self.colleges_table_model.db_handler.get_all_entities('program'):
             if program[2] == old_college_code:
                 length += 1
 
         return length
-
-    def edit_college_code_of_programs(self, old_college_code, new_college_code):
-        for program in self.programs_table_model.get_data():
-            if program[2] == old_college_code:
-                program[2] = new_college_code
 
     def has_issues(self):
         issues = []
@@ -158,7 +124,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             issues.append("College code is not in the correct format")
 
         # Checks if the college code already exists and if it is not the same as the placeholder text
-        elif (self.new_college_code_lineedit.text().strip() in self.colleges_information["College Code"] and
+        elif (self.new_college_code_lineedit.text().strip() in self.get_existing_colleges()["College Code"] and
               self.new_college_code_lineedit.text().strip() != self.new_college_code_lineedit.placeholderText()):
             issues.append("College code already exists")
 
@@ -166,17 +132,20 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
             issues.append("College name is not in the correct format")
 
         # Checks if the college name already exists and if it is not the same as the placeholder text
-        elif (self.new_college_name_lineedit.text().strip() in self.colleges_information["College Name"] and
+        elif (self.new_college_name_lineedit.text().strip() in self.get_existing_colleges()["College Name"] and
               self.new_college_name_lineedit.text().strip() != self.new_college_name_lineedit.placeholderText()):
             issues.append("College name already exists")
 
         return issues
 
     def add_signals(self):
-        self.edit_college_button.clicked.connect(self.edit_college_information)
+        self.edit_college_button.clicked.connect(self.edit_single_college_information)
 
-        self.college_to_edit_combobox.currentTextChanged.connect(self.enable_edit_fields)
-        self.college_to_edit_combobox.currentTextChanged.connect(self.set_old_data_as_placeholders)
+        self.new_college_code_lineedit.textChanged.connect(self.enable_edit_button)
+        self.new_college_name_lineedit.textChanged.connect(self.enable_edit_button)
+
+    def get_existing_colleges(self):
+        return self.colleges_table_model.db_handler.get_all_existing_colleges()
 
     def get_college_codes(self):
         return self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
@@ -191,18 +160,11 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
         self.header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
 
         self.college_to_edit_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
+        self.college_to_edit_list.setFont(QFont(self.cg_font_family, 10, QFont.Weight.Medium))
         self.new_college_code_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
         self.new_college_name_label.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Medium))
 
         self.new_college_code_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
         self.new_college_name_lineedit.setFont(QFont(self.cg_font_family, 12, QFont.Weight.Normal))
-
-        self.college_to_edit_combobox.setStyleSheet(f"""
-                                                                QComboBox {{
-                                                                    font-family: {self.cg_font_family};
-                                                                    font-size: 15px;
-                                                                    font-weight: {QFont.Weight.Normal};
-                                                                }}
-                                                            """)
 
         self.edit_college_button.setFont(QFont(self.cg_font_family, 20, QFont.Weight.DemiBold))
