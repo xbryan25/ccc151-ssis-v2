@@ -7,6 +7,7 @@ from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
 from application.reset_item_delegates import ResetItemDelegates
 from application.entity_page_signals import EntityPageSignals
+from application.view_demographics_page_controls import ViewDemographicsPageControls
 
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
@@ -29,9 +30,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Generate table models in landing page so that it can be accessed in different pages
         self.students_table_model = CustomTableModel("student", self.database_handler)
-
         self.programs_table_model = CustomTableModel("program", self.database_handler)
-
         self.colleges_table_model = CustomTableModel("college", self.database_handler)
 
         self.students_sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
@@ -75,6 +74,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_demographics_page(self):
         self.stackedWidget.setCurrentWidget(self.demographics_page)
+
+        self.view_demographics_page_controls = ViewDemographicsPageControls(self.for_view_demographics_page_controls())
 
     def setup_table_views(self):
         # Students table view
@@ -303,6 +304,30 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.max_pages_label
                 ]
 
+    def for_view_demographics_page_controls(self):
+        return [self.demographics_stacked_widget,
+                self.students_demographics_widget,
+                self.programs_demographics_widget,
+                self.colleges_demographics_widget,
+                self.students_table_model,
+                self.programs_table_model,
+                self.colleges_table_model,
+                self.sd_total_students_count_label,
+                self.sd_gender_count_label,
+                self.sd_year_level_count_label,
+                self.pd_select_college_combobox,
+                self.pd_select_program_combobox,
+                self.pd_total_students_count_label,
+                self.pd_year_level_count_label,
+                self.pd_gender_count_label,
+                self.cd_select_college_combobox,
+                self.cd_total_programs_count_label,
+                self.cd_total_students_count_label,
+                self.cd_gender_count_label,
+                self.cd_year_level_count_label,
+                self.demographics_type_combobox,
+                self]
+
     def resizeEvent(self, event):
         font = QFont()
         font.setFamily(self.cg_font_family)
@@ -381,12 +406,71 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.view_demographics_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.about_this_app_button.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
 
-
         # About This App Page
         self.about_this_app_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
         self.about_this_app_title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
         self.scroll_area_title_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
         self.scroll_area_contents.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
+
+        # View Demographics Page
+
+        self.demographics_center_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
+
+        self.sd_total_students_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
+        self.sd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
+        self.sd_gender_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
+        self.sd_gender_count_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
+        self.sd_year_level_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
+        self.sd_year_level_count_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
+
+        self.pd_total_students_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.pd_total_students_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.pd_year_level_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.pd_year_level_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.pd_gender_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.pd_gender_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.cd_total_programs_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_total_programs_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_total_students_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_total_students_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_gender_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_gender_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_year_level_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_year_level_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+
+        self.demographics_type_combobox.setStyleSheet(f"""
+                    QComboBox {{
+                        font-family: {self.cg_font_family};
+                        font-size: 32px;
+                        font-weight: {QFont.Weight.DemiBold};
+                    }}
+                """)
+
+        self.pd_select_college_combobox.setStyleSheet(f"""
+                    QComboBox {{
+                        font-family: {self.cg_font_family};
+                        font-size: 16px;
+                        font-weight: {QFont.Weight.Medium};
+                    }}
+                """)
+
+        self.pd_select_program_combobox.setStyleSheet(f"""
+                    QComboBox {{
+                        font-family: {self.cg_font_family};
+                        font-size: 16px;
+                        font-weight: {QFont.Weight.Medium};
+                    }}
+                """)
+
+        self.cd_select_college_combobox.setStyleSheet(f"""
+                    QComboBox {{
+                        font-family: {self.cg_font_family};
+                        font-size: 16px;
+                        font-weight: {QFont.Weight.Medium};
+                    }}
+                """)
+
 
         # Entity Page
         self.entity_type_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))

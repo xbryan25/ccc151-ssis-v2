@@ -83,9 +83,6 @@ class EntityPageSignals:
                                                                             self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
-            self.view_demographics_button.clicked.connect(
-                lambda: self.open_dialogs.open_students_demographic_dialog(self.students_table_model))
-
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
             self.search_timer.timeout.connect(lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
@@ -139,10 +136,6 @@ class EntityPageSignals:
                                                                             self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
 
-
-            self.view_demographics_button.clicked.connect(
-                lambda: self.open_dialogs.open_programs_demographic_dialog(self.programs_table_model))
-
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
             self.search_timer.timeout.connect(
@@ -193,9 +186,6 @@ class EntityPageSignals:
                                                                             self.colleges_table_model,
                                                                             self.view_demographics_button,
                                                                             self.reset_item_delegates.reset)))
-
-            self.view_demographics_button.clicked.connect(
-                lambda: self.open_dialogs.open_colleges_demographic_dialog(self.colleges_table_model))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -252,7 +242,6 @@ class EntityPageSignals:
 
     def remove(self):
         self.add_entity_button.disconnect()
-        self.view_demographics_button.disconnect()
 
         self.sort_type_combobox.disconnect()
         self.sort_order_combobox.disconnect()
