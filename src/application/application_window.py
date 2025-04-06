@@ -10,9 +10,7 @@ from application.entity_page_signals import EntityPageSignals
 from application.view_demographics_page_controls import ViewDemographicsPageControls
 
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
-from utils.specific_buttons_enabler import SpecificButtonsEnabler
 from utils.custom_table_model import CustomTableModel
-# from utils.custom_table_view import CustomTableView
 
 from database_handler.database_handler import DatabaseHandler
 
@@ -67,6 +65,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         with open("../assets/qss_files/about_this_app_page_style.qss", "r") as file:
             self.about_this_app_page.setStyleSheet(file.read())
+
+        with open("../assets/qss_files/view_demographics_page_style.qss", "r") as file:
+            self.demographics_page.setStyleSheet(file.read())
 
     def change_to_landing_page(self):
         self.stackedWidget.setCurrentWidget(self.landing_page)
@@ -144,9 +145,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-        SpecificButtonsEnabler.enable_buttons([self.view_demographics_button],
-                                              self.students_table_model)
-
 
         self.entity_page_signals.remove()
 
@@ -187,9 +185,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-        SpecificButtonsEnabler.enable_buttons([self.view_demographics_button],
-                                              self.programs_table_model)
-
         self.entity_page_signals.remove()
 
         SearchAndSortHeader.change_contents("program", self.search_type_combobox, "search")
@@ -229,8 +224,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-        SpecificButtonsEnabler.enable_buttons([self.view_demographics_button],
-                                              self.colleges_table_model)
         self.entity_page_signals.remove()
 
         SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
@@ -338,8 +331,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         font.setWeight(QFont.Weight.DemiBold)
 
         self.back_to_main_button.setFont(font)
-
         self.about_this_app_back_to_main_button.setFont(font)
+        self.demographics_back_to_main_button.setFont(font)
+
         self.add_entity_button.setFont(font)
         # self.view_demographics_button.setFont(font)
 
@@ -414,6 +408,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # View Demographics Page
 
+        self.demographics_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
+        self.demographics_title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
+
         self.demographics_center_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
 
         self.sd_total_students_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
@@ -424,16 +421,16 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.sd_year_level_count_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
 
         self.pd_total_students_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.pd_total_students_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.pd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
         self.pd_year_level_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
         self.pd_year_level_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
         self.pd_gender_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
         self.pd_gender_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
 
         self.cd_total_programs_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_total_programs_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_total_programs_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
         self.cd_total_students_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_total_students_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.cd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
         self.cd_gender_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
         self.cd_gender_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
         self.cd_year_level_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
@@ -450,7 +447,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.pd_select_college_combobox.setStyleSheet(f"""
                     QComboBox {{
                         font-family: {self.cg_font_family};
-                        font-size: 16px;
+                        font-size: 18px;
                         font-weight: {QFont.Weight.Medium};
                     }}
                 """)
@@ -458,7 +455,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.pd_select_program_combobox.setStyleSheet(f"""
                     QComboBox {{
                         font-family: {self.cg_font_family};
-                        font-size: 16px;
+                        font-size: 18px;
                         font-weight: {QFont.Weight.Medium};
                     }}
                 """)
@@ -466,7 +463,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.cd_select_college_combobox.setStyleSheet(f"""
                     QComboBox {{
                         font-family: {self.cg_font_family};
-                        font-size: 16px;
+                        font-size: 18px;
                         font-weight: {QFont.Weight.Medium};
                     }}
                 """)

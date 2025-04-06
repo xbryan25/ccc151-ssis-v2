@@ -1,0 +1,80 @@
+QWidget{
+    background-color:rgb(230, 204, 178);
+}
+
+QPushButton{
+    background-color: rgb(176, 137, 104);
+    color: rgb(237, 224, 212);
+
+    border-radius: 10%;
+
+    border-color: rgb(156, 102, 68);
+    border-width: 2px;
+    border-style: solid;
+}
+
+QPushButton::hover{
+    background-color: rgb(127, 85, 57);
+}
+
+QComboBox{
+    border: 1px solid black;
+    border-radius: 5px;
+    border-style: solid;
+
+    background-color: rgb(221, 184, 146);
+    selection-background-color: rgb(180, 180, 170);
+    selection-color: black;
+}
+
+QComboBox::drop-down {
+    width: 20px;
+    height: 20px;
+
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
+
+    margin-right: 2px;
+
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+
+    border-radius: 5px;
+    background-color: rgb(221, 184, 146);
+}
+
+QComboBox::drop-down:hover, QComboBox::drop-down:pressed{
+    background-color: rgb(176, 137, 104);
+}
+
+QComboBox::down-arrow{
+    border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
+}
+
+#demographics_header_frame, #demographics_frame, #demographics_title_frame,
+#demographics_title_icon, #demographics_icon, #demographics_title_label, #demographics_label{
+    background-color: rgb(127, 85, 57);
+}
+
+#demographics_title_label, #demographics_label, #h_line_5, #v_line_9, #v_line_10{
+    color: rgb(237, 224, 212);
+}
+
+#sd_total_students_header_label, #sd_gender_header_label, #sd_year_level_header_label,
+#pd_total_students_header_label, #pd_gender_header_label, #pd_year_level_header_label,
+#cd_total_programs_header_label, #cd_total_students_header_label, #cd_gender_header_label, #cd_year_level_header_label{
+    background-color: rgb(127, 85, 57);
+    color: rgb(237, 224, 212);
+
+    border-radius: 5px;
+}
+
+#sd_total_students_count_label, #sd_gender_count_label, #sd_year_level_count_label,
+#pd_total_students_count_label, #pd_gender_count_label, #pd_year_level_count_label,
+#cd_total_programs_count_label, #cd_total_students_count_label, #cd_gender_count_label, #cd_year_level_count_label{
+    background-color: rgb(176, 137, 104);
+    color: rgb(237, 224, 212);
+
+    border-radius: 5px;
+}
