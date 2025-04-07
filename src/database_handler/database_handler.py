@@ -168,47 +168,67 @@ class DatabaseHandler:
 
         return entities_data
 
-    def get_sorted_filtered_entities(self, entity_type, sort_column, sort_order, search_type, search_text):
+    def get_sorted_filtered_entities(self, entity_type, sort_column, sort_order, search_type, search_method,
+                                     search_text):
+
+        like_or_equals = "LIKE"
+        left_percent_sign = ""
+        right_percent_sign = ""
+
+        if search_method == "contains":
+            left_percent_sign = "%"
+            right_percent_sign = "%"
+        elif search_method == "starts_with":
+            left_percent_sign = ""
+            right_percent_sign = "%"
+        elif search_method == "ends_with":
+            left_percent_sign = "%"
+            right_percent_sign = ""
+        elif search_method == "exactly_match":
+            like_or_equals = "="
+            left_percent_sign = ""
+            right_percent_sign = ""
+
         if search_type != "all":
-            sql = f"SELECT * FROM {entity_type + "s"} WHERE {search_type} LIKE %s"
-            values = (f"{search_text}%",)
+            sql = f"SELECT * FROM {entity_type + "s"} WHERE {search_type} {like_or_equals} %s"
+            values = (f"{left_percent_sign}{search_text}{right_percent_sign}",)
         else:
             sql = ""
             values = ()
 
             if entity_type == "student":
                 sql = ("SELECT * FROM students "
-                       "WHERE id_number LIKE %s OR "
-                       "first_name LIKE %s OR "
-                       "last_name LIKE %s OR "
-                       "year_level LIKE %s OR "
-                       "gender LIKE %s OR "
-                       "program_code LIKE %s")
+                       f"WHERE id_number {like_or_equals} %s OR "
+                       f"first_name {like_or_equals} %s OR "
+                       f"last_name {like_or_equals} %s OR "
+                       f"year_level {like_or_equals} %s OR "
+                       f"gender {like_or_equals} %s OR "
+                       f"program_code {like_or_equals} %s")
 
-                values = (f"{search_text}%",
-                          f"{search_text}%",
-                          f"{search_text}%",
-                          f"{search_text}%",
-                          f"{search_text}%",
-                          f"{search_text}%")
+                values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}")
 
             elif entity_type == "program":
                 sql = ("SELECT * FROM programs "
-                       "WHERE program_code LIKE %s OR "
-                       "program_name LIKE %s OR "
-                       "college_code LIKE %s")
+                       f"WHERE program_code {like_or_equals} %s OR "
+                       f"program_name {like_or_equals} %s OR "
+                       f"college_code {like_or_equals} %s")
 
-                values = (f"{search_text}%",
-                          f"{search_text}%",
-                          f"{search_text}%")
+                values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}")
 
             elif entity_type == "college":
                 sql = ("SELECT * FROM colleges "
-                       "WHERE college_code LIKE %s OR "
-                       "college_name LIKE %s")
+                       f"WHERE college_code {like_or_equals} %s OR "
+                       f"college_name {like_or_equals} %s")
 
-                values = (f"{search_text}%",
-                          f"{search_text}%")
+                values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}")
 
         if sort_column and sort_order:
             if sort_order == "ascending":

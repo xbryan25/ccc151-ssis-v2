@@ -287,6 +287,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.sort_order_combobox,
                 self.search_input_lineedit,
                 self.search_type_combobox,
+                self.search_method_combobox,
                 self.students_table_horizontal_header,
                 self.programs_table_horizontal_header,
                 self.colleges_table_horizontal_header,

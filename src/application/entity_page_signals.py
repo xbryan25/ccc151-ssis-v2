@@ -28,17 +28,18 @@ class EntityPageSignals:
         self.sort_order_combobox = entity_page_elements[12]
         self.search_input_lineedit = entity_page_elements[13]
         self.search_type_combobox = entity_page_elements[14]
+        self.search_method_combobox = entity_page_elements[15]
 
-        self.students_table_horizontal_header = entity_page_elements[15]
-        self.programs_table_horizontal_header = entity_page_elements[16]
-        self.colleges_table_horizontal_header = entity_page_elements[17]
+        self.students_table_horizontal_header = entity_page_elements[16]
+        self.programs_table_horizontal_header = entity_page_elements[17]
+        self.colleges_table_horizontal_header = entity_page_elements[18]
 
-        self.reset_item_delegates = entity_page_elements[18]
+        self.reset_item_delegates = entity_page_elements[19]
 
-        self.previous_page_button = entity_page_elements[19]
-        self.next_page_button = entity_page_elements[20]
-        self.current_page_lineedit = entity_page_elements[21]
-        self.max_pages_label = entity_page_elements[22]
+        self.previous_page_button = entity_page_elements[20]
+        self.next_page_button = entity_page_elements[21]
+        self.current_page_lineedit = entity_page_elements[22]
+        self.max_pages_label = entity_page_elements[23]
 
         self.open_dialogs = OpenDialogs()
 
@@ -87,6 +88,7 @@ class EntityPageSignals:
 
             self.search_timer.timeout.connect(lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
                                                                                                 self.search_type_combobox,
+                                                                                                self.search_method_combobox,
                                                                                                 self.search_input_lineedit,
                                                                                                 self.students_table_model,
                                                                                                 self.reset_item_delegates.reset,
@@ -141,6 +143,7 @@ class EntityPageSignals:
             self.search_timer.timeout.connect(
                 lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
                                                                   self.search_type_combobox,
+                                                                  self.search_method_combobox,
                                                                   self.search_input_lineedit,
                                                                   self.programs_table_model,
                                                                   self.reset_item_delegates.reset,
@@ -192,6 +195,7 @@ class EntityPageSignals:
             self.search_timer.timeout.connect(
                 lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
                                                                   self.search_type_combobox,
+                                                                  self.search_method_combobox,
                                                                   self.search_input_lineedit,
                                                                   self.colleges_table_model,
                                                                   self.reset_item_delegates.reset,

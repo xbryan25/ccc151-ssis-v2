@@ -32,17 +32,19 @@ class SearchAndSortHeader:
         search_input_lineedit.setPlaceholderText(f"Input {search_type_combobox.currentText()}")
 
     @staticmethod
-    def search_using_lineedit(entity_type, search_type_combobox, search_input_lineedit, model,
+    def search_using_lineedit(entity_type, search_type_combobox, search_method_combobox, search_input_lineedit, model,
                               reset_item_delegates_func, table_view, current_page_lineedit,
                               max_pages_label, prev_button, next_button):
 
         search_type = search_type_combobox.currentText().lower().replace(" ", "_")
 
+        search_method = search_method_combobox.currentText().lower().replace(" ", "_")
+
         search_text = search_input_lineedit.text()
 
         model.layoutAboutToBeChanged.emit()
 
-        model.search_entities(search_type, search_text)
+        model.search_entities(search_type, search_method, search_text)
 
         model.update_page_view(table_view)
 

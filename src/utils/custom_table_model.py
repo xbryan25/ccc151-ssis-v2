@@ -24,6 +24,7 @@ class CustomTableModel(QAbstractTableModel):
         # Use when sorting filtered data
         self.is_data_currently_filtered = False
         self.prev_search_type = None
+        self.prev_search_method = None
         self.prev_search_text = None
         self.prev_sort_column = None
         self.prev_sort_order = None
@@ -94,6 +95,7 @@ class CustomTableModel(QAbstractTableModel):
 
     def reset_all_prev_search_and_sort_conditions(self):
         self.prev_search_type = None
+        self.prev_search_method = None
         self.prev_search_text = None
         self.prev_sort_column = None
         self.prev_sort_order = None
@@ -180,43 +182,46 @@ class CustomTableModel(QAbstractTableModel):
 
         self.model_data_is_empty()
 
-    def search_entities(self, search_type, search_text):
-
-        self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
-                                                                         self.prev_sort_column,
-                                                                         self.prev_sort_order,
-                                                                         search_type,
-                                                                         search_text)
-
-        self.total_num = len(self.data_from_db)
-        self.current_page_number = 1
-
-        self.model_data_is_empty()
+    def search_entities(self, search_type, search_method, search_text):
 
         if search_text.strip() != "":
             self.is_data_currently_filtered = True
+
+            self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
+                                                                             self.prev_sort_column,
+                                                                             self.prev_sort_order,
+                                                                             search_type,
+                                                                             search_method,
+                                                                             search_text)
+
+            self.total_num = len(self.data_from_db)
+            self.current_page_number = 1
+
+            self.model_data_is_empty()
+
         else:
             self.is_data_currently_filtered = False
 
+            self.initialize_data()
+
         self.prev_search_type = search_type
+        self.prev_search_method = search_method
         self.prev_search_text = search_text
 
         self.layoutChanged.emit()
 
     def sort_filtered_entities(self, sort_column, sort_order):
-        if sort_order != "-":
-            self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
-                                                                             sort_column,
-                                                                             sort_order,
-                                                                             self.prev_search_type,
-                                                                             self.prev_search_text)
+        self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
+                                                                         sort_column,
+                                                                         sort_order,
+                                                                         self.prev_search_type,
+                                                                         self.prev_search_method,
+                                                                         self.prev_search_text)
 
-            self.total_num = len(self.data_from_db)
-            self.current_page_number = 1
+        self.total_num = len(self.data_from_db)
+        self.current_page_number = 1
 
-            self.layoutChanged.emit()
-        else:
-            self.initialize_data()
+        self.layoutChanged.emit()
 
         self.prev_sort_column = sort_column
         self.prev_sort_order = sort_order
