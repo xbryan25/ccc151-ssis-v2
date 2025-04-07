@@ -10,7 +10,7 @@ from operation_dialogs.colleges.edit_college import EditCollegeDialog
 
 class ContextMenuSetup:
     def __init__(self, table_view, students_table_model, programs_table_model, colleges_table_model,
-                 reset_item_delegates_func, entity_type):
+                 reset_item_delegates_func, save_changes_button, undo_all_changes_button, entity_type):
 
         self.table_view = table_view
 
@@ -18,6 +18,9 @@ class ContextMenuSetup:
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
         self.reset_item_delegates_func = reset_item_delegates_func
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
         self.entity_type = entity_type
 
         if self.entity_type == "student":
@@ -63,26 +66,21 @@ class ContextMenuSetup:
         if self.entity_type == "student":
 
             edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model,
-                                                    self.reset_item_delegates_func,
-                                                    identifiers,
-                                                    selected_rows)
+                                                    self.reset_item_delegates_func, self.save_changes_button,
+                                                    self.undo_all_changes_button, identifiers, selected_rows)
             edit_student_dialog.exec()
 
         elif self.entity_type == "program":
-            edit_program_dialog = EditProgramDialog(self.table_view,
-                                                    self.programs_table_model,
-                                                    self.reset_item_delegates_func,
-                                                    identifiers,
-                                                    selected_rows)
+            edit_program_dialog = EditProgramDialog(self.table_view, self.programs_table_model,
+                                                    self.reset_item_delegates_func, self.save_changes_button,
+                                                    self.undo_all_changes_button, identifiers, selected_rows)
             edit_program_dialog.exec()
 
         elif self.entity_type == "college":
             edit_college_dialog = EditCollegeDialog(self.table_view, self.colleges_table_model,
-                                                    self.reset_item_delegates_func,
-                                                    identifiers,
-                                                    selected_rows)
+                                                    self.reset_item_delegates_func, self.save_changes_button,
+                                                    self.undo_all_changes_button, identifiers, selected_rows)
             edit_college_dialog.exec()
-
 
     def delete_entity(self):
         selected_indexes = self.table_view.selectionModel().selectedIndexes()

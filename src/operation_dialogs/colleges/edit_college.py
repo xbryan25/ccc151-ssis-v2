@@ -9,11 +9,13 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 
 class EditCollegeDialog(QDialog, EditCollegeUI):
-    def __init__(self, colleges_table_view, college_table_model, reset_item_delegates_func,
-                 college_codes_to_edit, selected_rows):
+    def __init__(self, colleges_table_view, college_table_model, save_changes_button, undo_all_changes_button,
+                 reset_item_delegates_func, college_codes_to_edit, selected_rows):
+
         super().__init__()
 
         self.setupUi(self)
@@ -21,10 +23,13 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.reset_item_delegates_func = reset_item_delegates_func
-
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = college_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.college_codes_to_edit = college_codes_to_edit
         self.selected_rows = selected_rows
@@ -83,6 +88,12 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                     self.colleges_table_model.update_entity(college_to_edit,
                                                             'college',
                                                             actual_row_to_edit=actual_row_to_edit)
+
+                    self.colleges_table_model.set_has_changes(True)
+
+                    SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                        self.undo_all_changes_button,
+                                                                        colleges_table_model=self.colleges_table_model)
 
                     self.reset_item_delegates_func("edit_college")
 

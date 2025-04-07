@@ -23,23 +23,24 @@ class EntityPageSignals:
         self.colleges_sort_filter_proxy_model = entity_page_elements[8]
 
         self.add_entity_button = entity_page_elements[9]
-        self.view_demographics_button = entity_page_elements[10]
-        self.sort_type_combobox = entity_page_elements[11]
-        self.sort_order_combobox = entity_page_elements[12]
-        self.search_input_lineedit = entity_page_elements[13]
-        self.search_type_combobox = entity_page_elements[14]
-        self.search_method_combobox = entity_page_elements[15]
+        self.save_changes_button = entity_page_elements[10]
+        self.undo_all_changes_button = entity_page_elements[11]
+        self.sort_type_combobox = entity_page_elements[12]
+        self.sort_order_combobox = entity_page_elements[13]
+        self.search_input_lineedit = entity_page_elements[14]
+        self.search_type_combobox = entity_page_elements[15]
+        self.search_method_combobox = entity_page_elements[16]
 
-        self.students_table_horizontal_header = entity_page_elements[16]
-        self.programs_table_horizontal_header = entity_page_elements[17]
-        self.colleges_table_horizontal_header = entity_page_elements[18]
+        self.students_table_horizontal_header = entity_page_elements[17]
+        self.programs_table_horizontal_header = entity_page_elements[18]
+        self.colleges_table_horizontal_header = entity_page_elements[19]
 
-        self.reset_item_delegates = entity_page_elements[19]
+        self.reset_item_delegates = entity_page_elements[20]
 
-        self.previous_page_button = entity_page_elements[20]
-        self.next_page_button = entity_page_elements[21]
-        self.current_page_lineedit = entity_page_elements[22]
-        self.max_pages_label = entity_page_elements[23]
+        self.previous_page_button = entity_page_elements[21]
+        self.next_page_button = entity_page_elements[22]
+        self.current_page_lineedit = entity_page_elements[23]
+        self.max_pages_label = entity_page_elements[24]
 
         self.open_dialogs = OpenDialogs()
 
@@ -47,6 +48,8 @@ class EntityPageSignals:
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
+                                                                 self.save_changes_button,
+                                                                 self.undo_all_changes_button,
                                                                  self.reset_item_delegates.reset,
                                                                  'student')
 
@@ -54,6 +57,8 @@ class EntityPageSignals:
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
+                                                                 self.save_changes_button,
+                                                                 self.undo_all_changes_button,
                                                                  self.reset_item_delegates.reset,
                                                                  'program')
 
@@ -61,6 +66,8 @@ class EntityPageSignals:
                                                                  self.students_table_model,
                                                                  self.programs_table_model,
                                                                  self.colleges_table_model,
+                                                                 self.save_changes_button,
+                                                                 self.undo_all_changes_button,
                                                                  self.reset_item_delegates.reset,
                                                                  'college')
 
@@ -81,7 +88,8 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_students(self.students_table_view,
                                                                             self.students_table_model,
-                                                                            self.view_demographics_button,
+                                                                            self.save_changes_button,
+                                                                            self.undo_all_changes_button,
                                                                             self.reset_item_delegates.reset)))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
@@ -135,7 +143,8 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_programs(self.programs_table_view,
                                                                             self.programs_table_model,
-                                                                            self.view_demographics_button,
+                                                                            self.save_changes_button,
+                                                                            self.undo_all_changes_button,
                                                                             self.reset_item_delegates.reset)))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
@@ -187,7 +196,8 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_colleges(self.colleges_table_view,
                                                                             self.colleges_table_model,
-                                                                            self.view_demographics_button,
+                                                                            self.save_changes_button,
+                                                                            self.undo_all_changes_button,
                                                                             self.reset_item_delegates.reset)))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)

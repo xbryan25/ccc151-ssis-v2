@@ -9,11 +9,13 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 
 class EditProgramDialog(QDialog, EditProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, reset_item_delegates_func,
-                 program_codes_to_edit, selected_rows):
+    def __init__(self, programs_table_view, programs_table_model, save_changes_button, undo_all_changes_button,
+                 reset_item_delegates_func, program_codes_to_edit, selected_rows):
+
         super().__init__()
 
         self.setupUi(self)
@@ -21,10 +23,13 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.reset_item_delegates_func = reset_item_delegates_func
-
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.program_codes_to_edit = program_codes_to_edit
         self.selected_rows = selected_rows
@@ -132,6 +137,11 @@ class EditProgramDialog(QDialog, EditProgramUI):
                                                             'program',
                                                             actual_row_to_edit=actual_row_to_edit)
 
+                    self.programs_table_model.set_has_changes(True)
+
+                    SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                        self.undo_all_changes_button,
+                                                                        programs_table_model=self.programs_table_model)
 
                     self.reset_item_delegates_func("edit_program")
 
@@ -172,6 +182,12 @@ class EditProgramDialog(QDialog, EditProgramUI):
                                                         'program',
                                                         actual_row_to_edit=actual_row_to_edit,
                                                         edit_mode=self.edit_mode)
+
+            self.programs_table_model.set_has_changes(True)
+
+            SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                self.undo_all_changes_button,
+                                                                programs_table_model=self.programs_table_model)
 
             self.reset_item_delegates_func("edit_program")
 

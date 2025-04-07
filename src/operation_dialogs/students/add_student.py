@@ -8,10 +8,13 @@ from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 
 class AddStudentDialog(QDialog, AddStudentUI):
-    def __init__(self, students_table_view, students_table_model, reset_item_delegates_func):
+    def __init__(self, students_table_view, students_table_model, save_changes_button, undo_all_changes_button,
+                 reset_item_delegates_func):
+
         super().__init__()
 
         self.setupUi(self)
@@ -19,10 +22,13 @@ class AddStudentDialog(QDialog, AddStudentUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.reset_item_delegates_func = reset_item_delegates_func
-
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         # Load utils
         self.is_valid = IsValidVerifiers()
@@ -52,6 +58,10 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.add_student_to_model(student_to_add)
 
             self.students_table_model.set_has_changes(True)
+
+            SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                self.undo_all_changes_button,
+                                                                students_table_model=self.students_table_model)
 
             self.reset_item_delegates_func("add_student")
 

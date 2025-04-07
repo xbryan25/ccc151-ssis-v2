@@ -9,11 +9,13 @@ from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDial
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 
 class EditStudentDialog(QDialog, EditStudentUI):
-    def __init__(self, students_table_view, students_table_model, reset_item_delegates_func,
-                 id_numbers_to_edit, selected_rows):
+    def __init__(self, students_table_view, students_table_model, save_changes_button, undo_all_changes_button,
+                 reset_item_delegates_func, id_numbers_to_edit, selected_rows):
+
         super().__init__()
 
         self.setupUi(self)
@@ -21,10 +23,13 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.reset_item_delegates_func = reset_item_delegates_func
-
         self.students_table_view = students_table_view
         self.students_table_model = students_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.id_numbers_to_edit = id_numbers_to_edit
         self.selected_rows = selected_rows
@@ -137,9 +142,13 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
                     self.students_table_model.set_has_changes(True)
 
+                    SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                        self.undo_all_changes_button,
+                                                                        students_table_model=self.students_table_model)
+
                     self.reset_item_delegates_func("edit_student")
 
-                    self.success_edit_item_dialog = SuccessEditItemDialog("student", self)
+                    self.success_edit_item_dialog = SuccessEditItemDialog("student", self.id_numbers_to_edit, self)
                     self.success_edit_item_dialog.exec()
             else:
                 self.fail_to_edit_item_dialog = FailToEditItemDialog(["No changes made to the student"], "student")
@@ -180,6 +189,10 @@ class EditStudentDialog(QDialog, EditStudentUI):
                                                         edit_mode=self.edit_mode)
 
             self.students_table_model.set_has_changes(True)
+
+            SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                self.undo_all_changes_button,
+                                                                students_table_model=self.students_table_model)
 
             self.reset_item_delegates_func("edit_student")
 

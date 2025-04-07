@@ -8,10 +8,13 @@ from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 
 class AddProgramDialog(QDialog, AddProgramUI):
-    def __init__(self, programs_table_view, programs_table_model, reset_item_delegates_func):
+    def __init__(self, programs_table_view, programs_table_model, save_changes_button,
+                 undo_all_changes_button, reset_item_delegates_func):
+
         super().__init__()
 
         self.setupUi(self)
@@ -19,10 +22,13 @@ class AddProgramDialog(QDialog, AddProgramUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.reset_item_delegates_func = reset_item_delegates_func
-
         self.programs_table_view = programs_table_view
         self.programs_table_model = programs_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         # Load utils
         self.is_valid = IsValidVerifiers()
@@ -49,6 +55,10 @@ class AddProgramDialog(QDialog, AddProgramUI):
             self.add_program_to_model(program_to_add)
 
             self.programs_table_model.set_has_changes(True)
+
+            SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                self.undo_all_changes_button,
+                                                                programs_table_model=self.programs_table_model)
 
             self.reset_item_delegates_func("add_program")
 

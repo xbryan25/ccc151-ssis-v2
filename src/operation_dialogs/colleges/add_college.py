@@ -7,13 +7,13 @@ from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog
 
 from utils.is_valid_verifiers import IsValidVerifiers
-
-import re
-import csv
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 
 class AddCollegeDialog(QDialog, AddCollegeUI):
-    def __init__(self, colleges_table_view, colleges_table_model, reset_items_delegates_func):
+    def __init__(self, colleges_table_view, colleges_table_model, save_changes_button, undo_all_changes_button,
+                 reset_items_delegates_func):
+
         super().__init__()
 
         self.setupUi(self)
@@ -21,10 +21,13 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.reset_item_delegates_func = reset_items_delegates_func
-
         self.colleges_table_view = colleges_table_view
         self.colleges_table_model = colleges_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_items_delegates_func
 
         # Load utils
         self.is_valid = IsValidVerifiers()
@@ -49,6 +52,10 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
             # Notifies the CustomTableModel instance that something had changed
             self.colleges_table_model.set_has_changes(True)
+
+            SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                self.undo_all_changes_button,
+                                                                colleges_table_model=self.colleges_table_model)
 
             self.success_add_item_dialog = SuccessAddItemDialog("college", self)
             self.success_add_item_dialog.exec()

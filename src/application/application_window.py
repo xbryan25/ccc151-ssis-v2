@@ -11,6 +11,7 @@ from application.view_demographics_page_controls import ViewDemographicsPageCont
 
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.custom_table_model import CustomTableModel
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 from database_handler.database_handler import DatabaseHandler
 
@@ -145,11 +146,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.previous_page_button.setEnabled(True)
 
-
         self.entity_page_signals.remove()
 
         SearchAndSortHeader.change_contents("student", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("student", self.sort_type_combobox, "sort")
+
+
+
 
         self.search_type_combobox.setCurrentIndex(0)
         self.sort_type_combobox.setCurrentIndex(0)
@@ -190,6 +193,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         SearchAndSortHeader.change_contents("program", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("program", self.sort_type_combobox, "sort")
 
+        SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                            self.undo_all_changes_button,
+                                                            self.students_table_model,
+                                                            self.programs_table_model,
+                                                            self.colleges_table_model)
+
         self.search_type_combobox.setCurrentIndex(0)
         self.sort_type_combobox.setCurrentIndex(0)
         self.sort_order_combobox.setCurrentIndex(0)
@@ -228,6 +237,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("college", self.sort_type_combobox, "sort")
+
+        SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                            self.undo_all_changes_button,
+                                                            self.students_table_model,
+                                                            self.programs_table_model,
+                                                            self.colleges_table_model)
 
         self.search_type_combobox.setCurrentIndex(0)
         self.sort_type_combobox.setCurrentIndex(0)
@@ -282,7 +297,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.programs_sort_filter_proxy_model,
                 self.colleges_sort_filter_proxy_model,
                 self.add_entity_button,
-                self.view_demographics_button,
+                self.save_changes_button,
+                self.undo_all_changes_button,
                 self.sort_type_combobox,
                 self.sort_order_combobox,
                 self.search_input_lineedit,
@@ -336,6 +352,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.demographics_back_to_main_button.setFont(font)
 
         self.add_entity_button.setFont(font)
+        self.save_changes_button.setFont(font)
+        self.undo_all_changes_button.setFont(font)
         # self.view_demographics_button.setFont(font)
 
         if (self.stackedWidget.currentWidget() == self.entity_page and
