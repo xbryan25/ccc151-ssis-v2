@@ -333,7 +333,7 @@ class DatabaseHandler:
 
         self.cursor.execute(sql, values)
 
-        self.db.commit()
+        # self.db.commit()
 
     def update_entity(self, identifier, entity_to_edit, entity_type):
         # Identifier is the primary key of each table
@@ -372,7 +372,7 @@ class DatabaseHandler:
 
         self.cursor.execute(sql, values)
 
-        self.db.commit()
+        # self.db.commit()
 
     def delete_entity(self, identifier, entity_type):
         # Identifier is the primary key of each table
@@ -398,4 +398,10 @@ class DatabaseHandler:
 
         self.cursor.execute(sql, values)
 
+        # self.db.commit()
+
+    def commit_changes(self):
         self.db.commit()
+
+    def rollback_changes(self):
+        self.db.rollback()

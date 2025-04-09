@@ -153,6 +153,7 @@ class CustomTableModel(QAbstractTableModel):
         self.db_handler.update_entity(identifier, self.data_from_db[actual_row_to_edit], entity_type)
 
     def delete_entity_from_db(self, entity_relative_row, entity_type):
+        # This method deletes entities from the database
 
         actual_row = (self.max_row_per_page * (self.current_page_number - 1)) + entity_relative_row
         entity_to_delete = self.get_data()[actual_row]
@@ -166,6 +167,7 @@ class CustomTableModel(QAbstractTableModel):
         # self.removeRow(actual_row)
 
     def update_data_from_db_after_deleting(self, selected_rows):
+        # This method updates the internal data structure of table model after deleting from database
 
         actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
                                 for selected_row in selected_rows]

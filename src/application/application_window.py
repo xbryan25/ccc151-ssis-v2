@@ -151,9 +151,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         SearchAndSortHeader.change_contents("student", self.search_type_combobox, "search")
         SearchAndSortHeader.change_contents("student", self.sort_type_combobox, "sort")
 
-
-
-
         self.search_type_combobox.setCurrentIndex(0)
         self.sort_type_combobox.setCurrentIndex(0)
         self.sort_order_combobox.setCurrentIndex(0)

@@ -71,7 +71,6 @@ class EntityPageSignals:
                                                                  self.reset_item_delegates.reset,
                                                                  'college')
 
-
         self.search_timer = QTimer()
         self.search_timer.setSingleShot(True)
 
@@ -91,6 +90,7 @@ class EntityPageSignals:
                                                                             self.save_changes_button,
                                                                             self.undo_all_changes_button,
                                                                             self.reset_item_delegates.reset)))
+
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -245,6 +245,22 @@ class EntityPageSignals:
             lambda: SearchAndSortHeader.change_search_lineedit_placeholder(self.search_type_combobox,
                                                                            self.search_input_lineedit))
 
+        (self.save_changes_button.clicked.connect
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.save_changes_button,
+                                                                     self.undo_all_changes_button,
+                                                                     self.students_table_model,
+                                                                     self.programs_table_model,
+                                                                     self.colleges_table_model,
+                                                                     "save")))
+
+        (self.undo_all_changes_button.clicked.connect
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.save_changes_button,
+                                                                     self.undo_all_changes_button,
+                                                                     self.students_table_model,
+                                                                     self.programs_table_model,
+                                                                     self.colleges_table_model,
+                                                                     "undo")))
+
     def on_text_changed_search_lineedit(self):
         # So everytime a key gets entered in self.search_input_lineedit,
         #   the timer resets
@@ -256,6 +272,8 @@ class EntityPageSignals:
 
     def remove(self):
         self.add_entity_button.disconnect()
+        self.save_changes_button.disconnect()
+        self.undo_all_changes_button.disconnect()
 
         self.sort_type_combobox.disconnect()
         self.sort_order_combobox.disconnect()

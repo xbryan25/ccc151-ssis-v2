@@ -1,11 +1,11 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.save_item_state.confirm_save_design import Ui_Dialog as ConfirmSaveUI
+from helper_dialogs.save_or_undo_state.confirm_save_or_undo_design import Ui_Dialog as ConfirmSaveUI
 
 
-class ConfirmSaveDialog(QDialog, ConfirmSaveUI):
-    def __init__(self):
+class ConfirmSaveOrUndoDialog(QDialog, ConfirmSaveUI):
+    def __init__(self, save_or_undo):
         super().__init__()
 
         self.setupUi(self)
@@ -13,13 +13,25 @@ class ConfirmSaveDialog(QDialog, ConfirmSaveUI):
         self.set_external_stylesheet()
         self.load_fonts()
 
+        self.save_or_undo = save_or_undo
+
         self.confirm_edit_decision = False
+
+        self.set_text()
 
         self.add_signals()
 
     def proceed_edit(self):
         self.confirm_edit_decision = True
         self.close_dialog()
+
+    def set_text(self):
+        if self.save_or_undo == "save":
+            self.setWindowTitle("Proceed in saving recent changes made?")
+            self.header_label.setText("Save all recent changes?")
+        else:
+            self.setWindowTitle("Proceed in undoing all recent changes made?")
+            self.header_label.setText("Undo all recent changes?")
 
     def close_dialog(self):
         self.close()

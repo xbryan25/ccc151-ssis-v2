@@ -71,7 +71,7 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Proceed in saving recent changes made?"))
-        self.header_label.setText(_translate("Dialog", "Save all recent changes?"))
+        Dialog.setWindowTitle(_translate("Dialog", ""))
+        self.header_label.setText(_translate("Dialog", ""))
         self.yes_button.setText(_translate("Dialog", "Yes"))
         self.no_button.setText(_translate("Dialog", "No"))

@@ -7,10 +7,12 @@ from operation_dialogs.students.edit_student import EditStudentDialog
 from operation_dialogs.programs.edit_program import EditProgramDialog
 from operation_dialogs.colleges.edit_college import EditCollegeDialog
 
+from utils.specific_buttons_enabler import SpecificButtonsEnabler
+
 
 class ContextMenuSetup:
     def __init__(self, table_view, students_table_model, programs_table_model, colleges_table_model,
-                 reset_item_delegates_func, save_changes_button, undo_all_changes_button, entity_type):
+                 save_changes_button, undo_all_changes_button, reset_item_delegates_func, entity_type):
 
         self.table_view = table_view
 
@@ -66,20 +68,20 @@ class ContextMenuSetup:
         if self.entity_type == "student":
 
             edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model,
-                                                    self.reset_item_delegates_func, self.save_changes_button,
-                                                    self.undo_all_changes_button, identifiers, selected_rows)
+                                                    self.save_changes_button, self.undo_all_changes_button,
+                                                    self.reset_item_delegates_func, identifiers, selected_rows)
             edit_student_dialog.exec()
 
         elif self.entity_type == "program":
             edit_program_dialog = EditProgramDialog(self.table_view, self.programs_table_model,
-                                                    self.reset_item_delegates_func, self.save_changes_button,
-                                                    self.undo_all_changes_button, identifiers, selected_rows)
+                                                    self.save_changes_button, self.undo_all_changes_button,
+                                                    self.reset_item_delegates_func, identifiers, selected_rows)
             edit_program_dialog.exec()
 
         elif self.entity_type == "college":
             edit_college_dialog = EditCollegeDialog(self.table_view, self.colleges_table_model,
-                                                    self.reset_item_delegates_func, self.save_changes_button,
-                                                    self.undo_all_changes_button, identifiers, selected_rows)
+                                                    self.save_changes_button, self.undo_all_changes_button,
+                                                    self.reset_item_delegates_func, identifiers, selected_rows)
             edit_college_dialog.exec()
 
     def delete_entity(self):
@@ -100,12 +102,31 @@ class ContextMenuSetup:
         if confirm_delete_decision:
 
             for selected_row in selected_rows:
-                self.current_model.delete_entity_from_db(selected_row, 'student')
+                self.current_model.delete_entity_from_db(selected_row, self.entity_type)
 
             self.current_model.update_data_from_db_after_deleting(selected_rows)
 
             self.table_view.clearSelection()
             self.current_model.update_page_view(self.table_view)
 
-            self.success_delete_item_dialog = SuccessDeleteItemDialog("student")
+            if self.entity_type == "student":
+
+                self.students_table_model.set_has_changes(True)
+                SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                    self.undo_all_changes_button,
+                                                                    students_table_model=self.students_table_model)
+            elif self.entity_type == "program":
+
+                self.programs_table_model.set_has_changes(True)
+                SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                    self.undo_all_changes_button,
+                                                                    programs_table_model=self.programs_table_model)
+            elif self.entity_type == "college":
+
+                self.colleges_table_model.set_has_changes(True)
+                SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                    self.undo_all_changes_button,
+                                                                    colleges_table_model=self.colleges_table_model)
+
+            self.success_delete_item_dialog = SuccessDeleteItemDialog(self.entity_type)
             self.success_delete_item_dialog.exec()

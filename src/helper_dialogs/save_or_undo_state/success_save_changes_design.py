@@ -54,4 +54,4 @@ class Ui_Dialog(object):
         _translate = QtCore.QCoreApplication.translate
         Dialog.setWindowTitle(_translate("Dialog", "Success!"))
         self.proceed_button.setText(_translate("Dialog", "Click here to proceed"))
-        self.message_label.setText(_translate("Dialog", "No issues found when saving the changes"))
+        self.message_label.setText(_translate("Dialog", ""))
