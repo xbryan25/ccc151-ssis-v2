@@ -34,6 +34,8 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
         self.college_codes_to_edit = college_codes_to_edit
         self.selected_rows = selected_rows
 
+        self.current_college_data = None
+
         self.set_old_data_as_placeholders()
 
         self.is_valid = IsValidVerifiers()
@@ -106,14 +108,26 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
     def enable_edit_button(self):
 
-        if self.new_college_code_lineedit.text().strip() != "" or self.new_college_name_lineedit.text().strip() != "":
+        current_college_code = self.current_college_data[0]
+        current_college_name = self.current_college_data[1]
+
+        new_college_code = self.new_college_code_lineedit.text().strip()
+        new_college_name = self.new_college_name_lineedit.text().strip()
+
+        if ((new_college_code != "" and new_college_code != current_college_code) or
+                (new_college_name != "" and new_college_name != current_college_name)):
+
             self.edit_college_button.setEnabled(True)
-        else:
-            self.edit_college_button.setEnabled(False)
+            return
+
+        self.edit_college_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
         for college in self.colleges_table_model.get_data():
             if college[0] == self.college_codes_to_edit[0]:
+
+                self.current_college_data = college
+
                 self.college_to_edit_list.setText(self.college_codes_to_edit[0])
 
                 self.new_college_code_lineedit.setPlaceholderText(college[0])

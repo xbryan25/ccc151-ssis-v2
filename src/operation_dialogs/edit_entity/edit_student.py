@@ -34,10 +34,16 @@ class EditStudentDialog(QDialog, EditStudentUI):
         self.id_numbers_to_edit = id_numbers_to_edit
         self.selected_rows = selected_rows
 
+        # Only for single edit
+        self.current_student_data = None
+
         if len(self.id_numbers_to_edit) == 1:
+
+
             self.set_old_data_as_placeholders()
 
             self.edit_mode = "single"
+
         else:
             self.populate_student_to_edit_list()
             self.disable_fields()
@@ -215,20 +221,56 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
     def enable_edit_button(self):
 
-        if (self.new_year_level_combobox.currentText() != "--Select year level--" or
-                self.new_gender_combobox.currentText() != "--Select gender--" or
-                (self.new_program_code_combobox.currentText() != "--Select a program--" and
-                self.new_program_code_combobox.currentText() != "" and
-                self.new_program_code_combobox.currentText() in self.get_program_codes())):
+        if self.edit_mode == "single":
+            current_id = self.current_student_data[0]
+            current_first_name =  self.current_student_data[1]
+            current_last_name = self.current_student_data[2]
+            current_year_level = self.current_student_data[3]
+            current_gender = self.current_student_data[4]
+            current_program_code = self.current_student_data[5]
 
-            self.edit_student_button.setEnabled(True)
-        else:
-            self.edit_student_button.setEnabled(False)
+            new_id = self.new_id_number_lineedit.text().strip()
+            new_first_name = self.new_first_name_lineedit.text().strip()
+            new_last_name = self.new_last_name_lineedit.text().strip()
+            new_year_level = self.new_year_level_combobox.currentText()
+            new_gender = self.new_gender_combobox.currentText()
+            new_program_code = self.new_program_code_combobox.currentText()
+
+            if ((new_id != "" and new_id != current_id) or
+                    (new_first_name != "" and new_first_name != current_first_name) or
+                    (new_last_name != "" and new_last_name != current_last_name) or
+                    (new_year_level != "--Select year level--" and new_year_level != current_year_level) or
+                    (new_gender != "--Select gender--" and new_gender != current_gender) or
+                    (new_program_code != "--Select a program--" and new_program_code != "" and
+                     new_program_code in self.get_program_codes() and
+                     new_program_code != current_program_code)):
+
+                self.edit_student_button.setEnabled(True)
+
+                return
+
+        elif self.edit_mode == "multiple":
+            new_year_level = self.new_year_level_combobox.currentText()
+            new_gender = self.new_gender_combobox.currentText()
+            new_program_code = self.new_program_code_combobox.currentText()
+
+            if (new_year_level != "--Select year level--" or
+                    new_gender != "--Select gender--" or
+                    (new_program_code != "--Select a program--" and new_program_code != "" and
+                     new_program_code in self.get_program_codes())):
+
+                self.edit_student_button.setEnabled(True)
+                return
+
+        self.edit_student_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
-        # TODO: index is unused
-        for index, student in enumerate(self.students_table_model.get_data()):
+        for student in self.students_table_model.get_data():
             if student[0] == self.id_numbers_to_edit[0]:
+
+                self.current_student_data = student
+
+                self.student_to_edit_list.setText(student[0])
 
                 self.new_id_number_lineedit.setPlaceholderText(student[0])
                 self.new_first_name_lineedit.setPlaceholderText(student[1])
@@ -320,6 +362,9 @@ class EditStudentDialog(QDialog, EditStudentUI):
         elif self.edit_mode == "multiple":
             self.edit_student_button.clicked.connect(self.edit_multiple_student_information)
 
+        self.new_id_number_lineedit.textChanged.connect(self.enable_edit_button)
+        self.new_first_name_lineedit.textChanged.connect(self.enable_edit_button)
+        self.new_last_name_lineedit.textChanged.connect(self.enable_edit_button)
         self.new_year_level_combobox.currentTextChanged.connect(self.enable_edit_button)
         self.new_gender_combobox.currentTextChanged.connect(self.enable_edit_button)
         self.new_program_code_combobox.currentTextChanged.connect(self.enable_edit_button)

@@ -35,6 +35,8 @@ class EditProgramDialog(QDialog, EditProgramUI):
         self.selected_rows = selected_rows
 
         if len(self.program_codes_to_edit) == 1:
+            self.current_program_data = None
+
             self.set_old_data_as_placeholders()
 
             self.edit_mode = "single"
@@ -208,15 +210,42 @@ class EditProgramDialog(QDialog, EditProgramUI):
     def set_college_code_combobox_scrollbar(self):
         self.new_college_code_combobox.view().setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
-    def enable_edit_button(self, college_code):
-        if college_code != "--Select a college--" and college_code != "" and college_code in self.get_college_codes():
-            self.edit_program_button.setEnabled(True)
-        else:
-            self.edit_program_button.setEnabled(False)
+    def enable_edit_button(self):
+
+        if self.edit_mode == "single":
+            current_program_code = self.current_program_data[0]
+            current_program_name = self.current_program_data[1]
+            current_college_code = self.current_program_data[2]
+
+            new_program_code = self.new_program_code_lineedit.text().strip()
+            new_program_name = self.new_program_name_lineedit.text().strip()
+            new_college_code = self.new_college_code_combobox.currentText()
+
+            if ((new_program_code != "" and new_program_code != current_program_code) or
+                    (new_program_name != "" and new_program_name != current_program_name) or
+                    (new_college_code != "--Select a college--" and new_college_code != "" and
+                     new_college_code in self.get_college_codes() and new_college_code != current_college_code)):
+
+                self.edit_program_button.setEnabled(True)
+                return
+
+        elif self.edit_mode == "multiple":
+
+            new_college_code = self.new_college_code_combobox.currentText()
+
+            if (new_college_code != "--Select a college--" and new_college_code != "" and
+                    new_college_code in self.get_college_codes()):
+
+                self.edit_program_button.setEnabled(True)
+                return
+
+        self.edit_program_button.setEnabled(False)
 
     def set_old_data_as_placeholders(self):
         for program in self.programs_table_model.get_data():
             if program[0] == self.program_codes_to_edit[0]:
+
+                self.current_program_data = program
 
                 self.program_to_edit_list.setText(self.program_codes_to_edit[0])
 
@@ -234,7 +263,6 @@ class EditProgramDialog(QDialog, EditProgramUI):
                 length += 1
 
         return length
-
 
     def has_issues(self):
         issues = []
@@ -263,6 +291,8 @@ class EditProgramDialog(QDialog, EditProgramUI):
         elif self.edit_mode == "multiple":
             self.edit_program_button.clicked.connect(self.edit_multiple_program_information)
 
+        self.new_program_code_lineedit.textChanged.connect(self.enable_edit_button)
+        self.new_program_name_lineedit.textChanged.connect(self.enable_edit_button)
         self.new_college_code_combobox.currentTextChanged.connect(self.enable_edit_button)
 
     def get_existing_programs(self):
