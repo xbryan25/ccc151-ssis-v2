@@ -155,10 +155,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
 
-        self.students_table_model.update_page_view(self.students_table_view)
-
-        self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
-
         self.previous_page_button.setEnabled(True)
 
         self.entity_page_signals.remove()
@@ -179,6 +175,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.setWindowTitle("Sequence | Students")
 
         self.students_table_model.initialize_data()
+
+        self.students_table_model.update_page_view(self.students_table_view)
+
+        self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+
         self.reset_tracked_attributes_of_models("student")
 
     def change_to_entity_page_program(self):
@@ -204,10 +205,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
-
-        self.programs_table_model.update_page_view(self.programs_table_view)
-
-        self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
         self.previous_page_button.setEnabled(True)
 
@@ -235,6 +232,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.setWindowTitle("Sequence | Programs")
 
         self.programs_table_model.initialize_data()
+
+        self.programs_table_model.update_page_view(self.programs_table_view)
+
+        self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
+
         self.reset_tracked_attributes_of_models("program")
 
     def change_to_entity_page_college(self):
@@ -262,10 +264,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
         self.current_page_lineedit.setPlaceholderText("1")
 
-        self.colleges_table_model.update_page_view(self.colleges_table_view)
-
-        self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
-
         self.previous_page_button.setEnabled(True)
 
         self.entity_page_signals.remove()
@@ -290,6 +288,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.setWindowTitle("Sequence | Colleges")
 
         self.colleges_table_model.initialize_data()
+
+        self.colleges_table_model.update_page_view(self.colleges_table_view)
+
+        self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
+
         self.reset_tracked_attributes_of_models("college")
 
     def change_mode(self):

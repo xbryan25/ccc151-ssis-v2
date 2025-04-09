@@ -58,7 +58,7 @@ class CustomTableModel(QAbstractTableModel):
         if self.information_type == "college":
             self.columns = ["College Code", "College Name"]
 
-        self.initialize_data()
+        # self.initialize_data()
 
         self.model_data_is_empty()
 
@@ -120,6 +120,8 @@ class CustomTableModel(QAbstractTableModel):
         self.data_from_db = self.db_handler.get_all_entities(self.information_type)
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
+
+        self.layoutChanged.emit()
 
     def update_page_view(self, table_view):
 
