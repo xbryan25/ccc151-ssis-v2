@@ -42,7 +42,10 @@ class EntityPageSignals:
         self.current_page_lineedit = entity_page_elements[23]
         self.max_pages_label = entity_page_elements[24]
 
-        self.open_dialogs = OpenDialogs()
+        self.open_dialogs = OpenDialogs(self.students_table_view, self.students_table_model, self.programs_table_view,
+                                        self.programs_table_model, self.colleges_table_view, self.colleges_table_model,
+                                        self.save_changes_button, self.undo_all_changes_button,
+                                        self.reset_item_delegates.reset)
 
         self.students_table_view_context_menu = ContextMenuSetup(self.students_table_view,
                                                                  self.students_table_model,
@@ -85,11 +88,7 @@ class EntityPageSignals:
             self.students_table_view.customContextMenuRequested.connect(self.students_table_view_context_menu.show_context_menu)
 
             (self.add_entity_button.clicked.connect
-             (lambda: self.open_dialogs.open_add_entity_dialog_for_students(self.students_table_view,
-                                                                            self.students_table_model,
-                                                                            self.save_changes_button,
-                                                                            self.undo_all_changes_button,
-                                                                            self.reset_item_delegates.reset)))
+             (lambda: self.open_dialogs.open_add_entity_dialog_for_students()))
 
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
@@ -141,11 +140,7 @@ class EntityPageSignals:
                 self.programs_table_view_context_menu.show_context_menu)
 
             (self.add_entity_button.clicked.connect
-             (lambda: self.open_dialogs.open_add_entity_dialog_for_programs(self.programs_table_view,
-                                                                            self.programs_table_model,
-                                                                            self.save_changes_button,
-                                                                            self.undo_all_changes_button,
-                                                                            self.reset_item_delegates.reset)))
+             (lambda: self.open_dialogs.open_add_entity_dialog_for_programs()))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -194,11 +189,7 @@ class EntityPageSignals:
                 self.colleges_table_view_context_menu.show_context_menu)
 
             (self.add_entity_button.clicked.connect
-             (lambda: self.open_dialogs.open_add_entity_dialog_for_colleges(self.colleges_table_view,
-                                                                            self.colleges_table_model,
-                                                                            self.save_changes_button,
-                                                                            self.undo_all_changes_button,
-                                                                            self.reset_item_delegates.reset)))
+             (lambda: self.open_dialogs.open_add_entity_dialog_for_colleges()))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
 
@@ -246,20 +237,10 @@ class EntityPageSignals:
                                                                            self.search_input_lineedit))
 
         (self.save_changes_button.clicked.connect
-         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.save_changes_button,
-                                                                     self.undo_all_changes_button,
-                                                                     self.students_table_model,
-                                                                     self.programs_table_model,
-                                                                     self.colleges_table_model,
-                                                                     "save")))
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog("save")))
 
         (self.undo_all_changes_button.clicked.connect
-         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.save_changes_button,
-                                                                     self.undo_all_changes_button,
-                                                                     self.students_table_model,
-                                                                     self.programs_table_model,
-                                                                     self.colleges_table_model,
-                                                                     "undo")))
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog("undo")))
 
     def on_text_changed_search_lineedit(self):
         # So everytime a key gets entered in self.search_input_lineedit,

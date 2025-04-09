@@ -22,6 +22,9 @@ class CustomTableModel(QAbstractTableModel):
         self.has_changes = False
         self.mode = "viewer"
 
+        self.sort_type_combobox = None
+        self.search_input_lineedit = None
+
         # Use when sorting filtered data
         self.is_data_currently_filtered = False
         self.prev_search_type = None
@@ -97,6 +100,15 @@ class CustomTableModel(QAbstractTableModel):
 
         return [row[0] for i, row in enumerate(self.get_data()) if i in actual_selected_rows]
 
+    def set_search_and_sort_fields(self, sort_order_combobox, search_input_lineedit):
+        self.sort_order_combobox = sort_order_combobox
+        self.search_input_lineedit = search_input_lineedit
+
+    def reset_search_and_sort_fields(self):
+        if self.sort_order_combobox and self.search_input_lineedit:
+            self.sort_order_combobox.setCurrentIndex(0)
+            self.search_input_lineedit.setText("")
+
     def reset_all_prev_search_and_sort_conditions(self):
         self.prev_search_type = None
         self.prev_search_method = None
@@ -117,8 +129,14 @@ class CustomTableModel(QAbstractTableModel):
         self.layoutChanged.emit()
 
     def add_entity(self, entity_to_add, entity_type):
-        self.data_from_db.append(entity_to_add)
+        # Add data to database (although it is only staged)
         self.db_handler.add_entity(entity_to_add, entity_type)
+
+        # Then select all students from database
+        # This ensures that the added student will be sorted
+        self.initialize_data()
+
+        self.reset_search_and_sort_fields()
 
     def update_entity(self, entity_replacement, entity_type, actual_row_to_edit, edit_type="from_dialog",
                       edit_mode="single"):
@@ -155,6 +173,12 @@ class CustomTableModel(QAbstractTableModel):
         # If edited 'from_model', no need to update the internal list
 
         self.db_handler.update_entity(identifier, self.data_from_db[actual_row_to_edit], entity_type)
+
+        # Then select all students from database
+        # This ensures that the edit student will be sorted
+        self.initialize_data()
+
+        self.reset_search_and_sort_fields()
 
     def delete_entity_from_db(self, entity_relative_row, entity_type):
         # This method deletes entities from the database

@@ -95,3 +95,9 @@ class SearchAndSortHeader:
         model.layoutChanged.emit()
 
         reset_item_delegates_func(entity_type)
+
+    @staticmethod
+    def reset_sort_and_search(sort_order_combobox, search_input_lineedit):
+
+        sort_order_combobox.setCurrentIndex(0)
+        search_input_lineedit.setCurrentText("")

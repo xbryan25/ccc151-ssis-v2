@@ -11,29 +11,45 @@ from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 class OpenDialogs:
 
-    @staticmethod
-    def open_add_entity_dialog_for_students(students_table_view, students_table_model, save_changes_button,
-                                            undo_all_changes_button, reset_item_delegates_func):
+    def __init__(self, students_table_view, students_table_model, programs_table_view, programs_table_model,
+                 colleges_table_view, colleges_table_model, save_changes_button,  undo_all_changes_button,
+                 reset_item_delegates_func):
 
-        if len(students_table_model.db_handler.get_all_entities('program')) > 0:
+        self.students_table_view = students_table_view
+        self.students_table_model = students_table_model
 
-            add_student_dialog = AddStudentDialog(students_table_view, students_table_model, save_changes_button,
-                                                  undo_all_changes_button, reset_item_delegates_func)
+        self.programs_table_view = programs_table_view
+        self.programs_table_model = programs_table_model
+
+        self.colleges_table_view = colleges_table_view
+        self.colleges_table_model = colleges_table_model
+
+        self.save_changes_button = save_changes_button
+        self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
+
+    def open_add_entity_dialog_for_students(self):
+
+        if len(self.students_table_model.db_handler.get_all_entities('program')) > 0:
+
+            add_student_dialog = AddStudentDialog(self.students_table_view, self.students_table_model,
+                                                  self.save_changes_button, self.undo_all_changes_button,
+                                                  self.reset_item_delegates_func)
             add_student_dialog.exec()
 
         else:
             input_programs_dialog = InputPrerequisiteDialog("programs")
             input_programs_dialog.exec()
 
-    @staticmethod
-    def open_add_entity_dialog_for_programs(programs_table_view, programs_table_model, save_changes_button,
-                                            undo_all_changes_button, reset_item_delegates_func):
+    def open_add_entity_dialog_for_programs(self):
 
-        if len(programs_table_model.db_handler.get_all_entities('college')) > 0:
+        if len(self.programs_table_model.db_handler.get_all_entities('college')) > 0:
             # Note: reset_item_delegates is a function
 
-            add_program_dialog = AddProgramDialog(programs_table_view, programs_table_model, save_changes_button,
-                                                  undo_all_changes_button, reset_item_delegates_func)
+            add_program_dialog = AddProgramDialog(self.programs_table_view, self.programs_table_model,
+                                                  self.save_changes_button, self.undo_all_changes_button,
+                                                  self.reset_item_delegates_func)
             add_program_dialog.exec()
 
 
@@ -41,17 +57,14 @@ class OpenDialogs:
             input_college_dialog = InputPrerequisiteDialog("college")
             input_college_dialog.exec()
 
-    @staticmethod
-    def open_add_entity_dialog_for_colleges(colleges_table_view, colleges_table_model, save_changes_button,
-                                            undo_all_changes_button, reset_item_delegates_func):
+    def open_add_entity_dialog_for_colleges(self):
 
-        add_college_dialog = AddCollegeDialog(colleges_table_view, colleges_table_model, save_changes_button,
-                                              undo_all_changes_button, reset_item_delegates_func)
+        add_college_dialog = AddCollegeDialog(self.colleges_table_view, self.colleges_table_model,
+                                              self.save_changes_button, self.undo_all_changes_button,
+                                              self.reset_item_delegates_func)
         add_college_dialog.exec()
 
-    @staticmethod
-    def open_confirm_save_or_undo_dialog(save_changes_button, undo_button, students_table_model, programs_table_model,
-                                         colleges_table_model, button_type):
+    def open_confirm_save_or_undo_dialog(self, button_type):
 
         confirm_save_or_undo_dialog = ConfirmSaveOrUndoDialog(button_type)
         confirm_save_or_undo_dialog.exec()
@@ -63,25 +76,25 @@ class OpenDialogs:
             if button_type == "save":
                 db_handler.commit_changes()
 
-                students_table_model.set_has_changes(False)
-                programs_table_model.set_has_changes(False)
-                colleges_table_model.set_has_changes(False)
+                self.students_table_model.set_has_changes(False)
+                self.programs_table_model.set_has_changes(False)
+                self.colleges_table_model.set_has_changes(False)
             elif button_type == "undo":
                 db_handler.rollback_changes()
 
-                students_table_model.set_has_changes(False)
-                programs_table_model.set_has_changes(False)
-                colleges_table_model.set_has_changes(False)
+                self.students_table_model.set_has_changes(False)
+                self.programs_table_model.set_has_changes(False)
+                self.colleges_table_model.set_has_changes(False)
 
-                students_table_model.initialize_data()
-                programs_table_model.initialize_data()
-                colleges_table_model.initialize_data()
+                self.students_table_model.initialize_data()
+                self.programs_table_model.initialize_data()
+                self.colleges_table_model.initialize_data()
 
-            SpecificButtonsEnabler.enable_save_and_undo_buttons(save_changes_button,
-                                                                undo_button,
-                                                                students_table_model,
-                                                                programs_table_model,
-                                                                colleges_table_model)
+            SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
+                                                                self.undo_button,
+                                                                self.students_table_model,
+                                                                self.programs_table_model,
+                                                                self.colleges_table_model)
 
             success_save_changes = SuccessSaveChangesDialog(button_type)
             success_save_changes.exec()

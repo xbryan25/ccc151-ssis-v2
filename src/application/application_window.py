@@ -34,11 +34,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_table_model = CustomTableModel("program", self.database_handler)
         self.colleges_table_model = CustomTableModel("college", self.database_handler)
 
+        self.students_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
+        self.programs_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
+        self.colleges_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
+
         self.students_sort_filter_proxy_model = CustomSortFilterProxyModel(self.students_table_model)
         self.programs_sort_filter_proxy_model = CustomSortFilterProxyModel(self.programs_table_model)
         self.colleges_sort_filter_proxy_model = CustomSortFilterProxyModel(self.colleges_table_model)
-
-        self.open_dialogs = OpenDialogs()
 
         # Declared in setup_table_views
         self.reset_item_delegates = None
