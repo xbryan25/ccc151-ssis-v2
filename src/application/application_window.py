@@ -25,6 +25,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.set_external_stylesheet()
         self.load_fonts()
 
+        self.mode = "viewer"
+
         self.database_handler = DatabaseHandler()
 
         # Generate table models in landing page so that it can be accessed in different pages
@@ -54,6 +56,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_button.clicked.connect(self.change_to_entity_page_program)
         self.colleges_button.clicked.connect(self.change_to_entity_page_college)
         self.about_this_app_button.clicked.connect(self.change_to_about_this_app_page)
+        self.mode_button.clicked.connect(self.change_mode)
 
         self.setWindowIcon(QIcon("../assets/images/sequence_icon.ico"))
 
@@ -83,8 +86,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         # Students table view
         self.students_table_view.setModel(self.students_sort_filter_proxy_model)
         self.students_table_view.setAlternatingRowColors(True)
-
-        self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
 
@@ -127,7 +128,19 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_page_signals = EntityPageSignals(self.for_entity_page_signals())
 
     def change_to_entity_page_student(self):
+
         self.stackedWidget.setCurrentWidget(self.entity_page)
+
+        if self.mode == "viewer":
+            self.students_table_model.set_mode("viewer")
+            self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+            self.buttons_frame.hide()
+        else:
+            self.students_table_model.set_mode("admin")
+            self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            self.buttons_frame.show()
+
+        self.entity_page_layout.activate()
 
         self.reset_item_delegates.load_item_delegates_for_students_table_view()
 
@@ -168,6 +181,17 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def change_to_entity_page_program(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
+
+        if self.mode == "viewer":
+            self.programs_table_model.set_mode("viewer")
+            self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+            self.buttons_frame.hide()
+        else:
+            self.programs_table_model.set_mode("admin")
+            self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            self.buttons_frame.show()
+
+        self.entity_page_layout.activate()
 
         self.reset_item_delegates.load_item_delegates_for_programs_table_view()
 
@@ -214,6 +238,18 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
     def change_to_entity_page_college(self):
         self.stackedWidget.setCurrentWidget(self.entity_page)
 
+        if self.mode == "viewer":
+            self.colleges_table_model.set_mode("viewer")
+            self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+            self.buttons_frame.hide()
+
+        else:
+            self.colleges_table_model.set_mode("admin")
+            self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            self.buttons_frame.show()
+
+        self.entity_page_layout.activate()
+
         self.entity_type_label.setText("Colleges")
 
         self.entity_type_icon.setPixmap(QPixmap("../assets/images/building_icon.svg"))
@@ -253,6 +289,17 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.colleges_table_model.initialize_data()
         self.reset_tracked_attributes_of_models("college")
+
+    def change_mode(self):
+        if self.mode == "admin":
+            self.mode = "viewer"
+
+            self.mode_button.setText("Viewer")
+
+        elif self.mode == "viewer":
+            self.mode = "admin"
+
+            self.mode_button.setText("Admin")
 
     def reset_tracked_attributes_of_models(self, entity_type):
 
@@ -335,6 +382,26 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.demographics_type_combobox,
                 self]
 
+    def update_table_views(self):
+
+        if (self.stackedWidget.currentWidget() == self.entity_page and
+                self.table_view_widgets.currentWidget() == self.students_table_view_widget):
+            self.students_table_model.update_page_view(self.students_table_view)
+
+            self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+
+        elif (self.stackedWidget.currentWidget() == self.entity_page and
+                self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
+            self.programs_table_model.update_page_view(self.programs_table_view)
+
+            self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
+
+        elif (self.stackedWidget.currentWidget() == self.entity_page and
+                self.table_view_widgets.currentWidget() == self.colleges_table_view_widget):
+            self.colleges_table_model.update_page_view(self.colleges_table_view)
+
+            self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
+
     def resizeEvent(self, event):
         font = QFont()
         font.setFamily(self.cg_font_family)
@@ -344,28 +411,11 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         font.setWeight(QFont.Weight.DemiBold)
 
-        self.back_to_main_button.setFont(font)
-        self.about_this_app_back_to_main_button.setFont(font)
-        self.demographics_back_to_main_button.setFont(font)
-
         self.add_entity_button.setFont(font)
         self.save_changes_button.setFont(font)
         self.undo_all_changes_button.setFont(font)
-        # self.view_demographics_button.setFont(font)
 
-        if (self.stackedWidget.currentWidget() == self.entity_page and
-                self.table_view_widgets.currentWidget() == self.students_table_view_widget):
-
-            self.students_table_model.update_page_view(self.students_table_view)
-
-            self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
-
-        if (self.stackedWidget.currentWidget() == self.entity_page and
-                self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
-
-            self.programs_table_model.update_page_view(self.programs_table_view)
-
-            self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
+        self.update_table_views()
 
     # def changeEvent(self, event):
     #     # Checks if window state has been changed
@@ -410,17 +460,21 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         # Landing Page
         self.landing_subtitle_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
         self.landing_title_label.setFont(QFont(self.cg_font_family, 48, QFont.Weight.DemiBold))
+        self.mode_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
         self.students_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.programs_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.colleges_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.view_demographics_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
         self.about_this_app_button.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.mode_button.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
 
         # About This App Page
         self.about_this_app_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
         self.about_this_app_title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
         self.scroll_area_title_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
         self.scroll_area_contents.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
+
+        self.about_this_app_back_to_main_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
 
         # View Demographics Page
 
@@ -484,6 +538,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                     }}
                 """)
 
+        self.demographics_back_to_main_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
 
         # Entity Page
         self.entity_type_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
@@ -550,3 +605,4 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                     }}
                                                 """)
 
+        self.back_to_main_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))

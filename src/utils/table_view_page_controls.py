@@ -14,7 +14,6 @@ class TableViewPageControls:
 
         current_page_lineedit.setPlaceholderText(str(model.current_page_number))
 
-
     @staticmethod
     def get_max_visible_rows(table_view):
         row_height = 30  # Get actual row height
@@ -22,7 +21,9 @@ class TableViewPageControls:
         if row_height <= 0:
             return 0
 
-        visible_rows = table_view.viewport().height() // row_height
+        table_view_height = table_view.viewport().height()
+
+        visible_rows = table_view_height // row_height
         return visible_rows
 
     @staticmethod

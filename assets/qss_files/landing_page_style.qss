@@ -17,18 +17,10 @@ QPushButton::hover{
     background-color: rgb(127, 85, 57);
 }
 
-#about_this_app_button{
+#about_this_app_button, #mode_button{
     border-radius: 10%;
 }
 
-#landing_title_label{
+#landing_title_label, #landing_subtitle_label, #mode_label{
     color: rgb(127, 85, 57);
 }
-
-#landing_subtitle_label{
-    color: rgb(127, 85, 57);
-}
-
-
-
-

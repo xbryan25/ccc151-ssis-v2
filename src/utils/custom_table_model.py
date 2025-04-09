@@ -20,6 +20,7 @@ class CustomTableModel(QAbstractTableModel):
         super().__init__()
 
         self.has_changes = False
+        self.mode = "viewer"
 
         # Use when sorting filtered data
         self.is_data_currently_filtered = False
@@ -75,6 +76,9 @@ class CustomTableModel(QAbstractTableModel):
     def set_data(self, data_from_db):
         self.data_from_db = data_from_db
 
+    def set_mode(self, mode):
+        self.mode = mode
+
     def set_has_changes(self, state):
         self.has_changes = state
 
@@ -106,6 +110,7 @@ class CustomTableModel(QAbstractTableModel):
         self.current_page_number = 1
 
     def update_page_view(self, table_view):
+
         self.max_row_per_page = TableViewPageControls.get_max_visible_rows(table_view)
         self.max_pages = (self.total_num // self.max_row_per_page) + 1
 
@@ -410,7 +415,9 @@ class CustomTableModel(QAbstractTableModel):
         # Check if the first element of the empty string list is empty
         # If so, disable cells
 
-        if self.get_data()[0][0] != "":
+        if self.get_data()[0][0] != "" and self.mode == "admin":
             return Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
+        elif self.get_data()[0][0] != "" and self.mode == "viewer":
+            return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
         else:
             return Qt.ItemFlag.NoItemFlags
