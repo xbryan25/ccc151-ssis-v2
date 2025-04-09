@@ -426,30 +426,16 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.update_table_views()
 
-    # def changeEvent(self, event):
-    #     # Checks if window state has been changed
-    #     if event.type() == QEvent.Type.WindowStateChange:
-    #
-    #         if (self.stackedWidget.currentWidget() == self.entity_page and
-    #                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
-    #
-    #             self.students_table_view.clearSelection()
-    #             print("1")
-    #
-    #         elif (self.stackedWidget.currentWidget() == self.entity_page and
-    #                 self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
-    #
-    #             self.programs_table_view.clearSelection()
-    #             print("2")
-    #
-    #         elif (self.stackedWidget.currentWidget() == self.entity_page and
-    #               self.table_view_widgets.currentWidget() == self.colleges_table_view_widget):
-    #
-    #             self.colleges_table_view.clearSelection()
-    #             print("3")
-    #
-    #
-    #     super().changeEvent(event)
+    def changeEvent(self, event):
+        if event.type() == QEvent.Type.WindowStateChange:
+
+            if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
+                # Handle minimize state
+                print("Window is minimized!")
+            elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
+                # Handle fullscreen state
+                print("Window is fullscreen!")
+        super().changeEvent(event)
 
     def is_window_fullscreen(self):
         screen_geometry = QGuiApplication.primaryScreen().geometry()

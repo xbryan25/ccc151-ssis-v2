@@ -1,3 +1,5 @@
+from PyQt6.QtCore import QTimer
+
 from operation_dialogs.edit_entity.edit_student import EditStudentDialog
 from operation_dialogs.edit_entity.edit_program import EditProgramDialog
 from operation_dialogs.edit_entity.edit_college import EditCollegeDialog

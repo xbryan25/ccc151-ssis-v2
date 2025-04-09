@@ -39,19 +39,21 @@ class ContextMenuSetup:
         selected_rows = list(set(index.row() for index in selected_indexes))
         selected_rows.sort()
 
-        menu = QMenu(self.table_view)
+        context_menu = QMenu(self.table_view)
 
         if self.entity_type != "college" or (self.entity_type == "college" and len(selected_rows) == 1):
-            edit_action = menu.addAction("Edit")
+            edit_action = context_menu.addAction("Edit")
             edit_action.setData("edit")
             edit_action.triggered.connect(self.edit_entity)
 
-        delete_action = menu.addAction("Delete")
+        delete_action = context_menu.addAction("Delete")
         delete_action.setData("edit")
         delete_action.triggered.connect(self.delete_entity)
 
-        # Execute menu and get selected action
-        menu.exec(self.table_view.viewport().mapToGlobal(pos))
+        # Execute context menu and get selected action
+        context_menu.exec(self.table_view.viewport().mapToGlobal(pos))
+
+        context_menu.deleteLater()
 
     # Can't combine the two methods because lambda functions can't be used because of weird
     # event issues that will affect the QMenu
@@ -60,6 +62,8 @@ class ContextMenuSetup:
     # results in the QMenu popping up again
 
     def delete_entity(self):
+        # self.context_menu.close()
+        # self.context_menu = None
 
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
@@ -74,6 +78,12 @@ class ContextMenuSetup:
         delete_entity_handler.delete_entities()
 
     def edit_entity(self):
+        # self.context_menu.close()
+        # self.context_menu = None
+        #
+        # print(self.context_menu)
+
+
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
         selected_rows = list(set(index.row() for index in selected_indexes))
@@ -84,6 +94,6 @@ class ContextMenuSetup:
         edit_entity_handler = EditEntityHandler(selected_rows, identifiers, self.current_model, self.table_view,
                                                 self.entity_type, self.save_changes_button,
                                                 self.undo_all_changes_button, self.reset_item_delegates_func)
-        edit_entity_handler.edit_entities()
 
+        edit_entity_handler.edit_entities()
 

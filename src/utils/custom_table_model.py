@@ -58,7 +58,7 @@ class CustomTableModel(QAbstractTableModel):
         if self.information_type == "college":
             self.columns = ["College Code", "College Name"]
 
-        # self.initialize_data()
+        self.initialize_data()
 
         self.model_data_is_empty()
 
@@ -285,6 +285,7 @@ class CustomTableModel(QAbstractTableModel):
     def data(self, index, role):
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
+            # return self.data_from_db[index.row()][index.column()]
             if index.row() < self.max_row_per_page and index.row() + ((self.current_page_number - 1) * self.max_row_per_page) < len(self.data_from_db):
                 return self.data_from_db[index.row() + ((self.current_page_number - 1) * self.max_row_per_page)][
                     index.column()]

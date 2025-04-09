@@ -71,7 +71,7 @@ class OpenDialogs:
 
         if confirm_save_or_undo_dialog.get_confirm_edit_decision():
 
-            db_handler = students_table_model.db_handler
+            db_handler = self.students_table_model.db_handler
 
             if button_type == "save":
                 db_handler.commit_changes()
@@ -91,7 +91,7 @@ class OpenDialogs:
                 self.colleges_table_model.initialize_data()
 
             SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
-                                                                self.undo_button,
+                                                                self.undo_all_changes_button,
                                                                 self.students_table_model,
                                                                 self.programs_table_model,
                                                                 self.colleges_table_model)

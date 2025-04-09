@@ -121,10 +121,10 @@ class EditProgramDialog(QDialog, EditProgramUI):
                 # If program code is not changed, a different confirm edit dialog will show
                 if self.program_codes_to_edit[0] == program_to_edit[0]:
                     self.confirm_to_edit_dialog = ConfirmEditDialog("program",
-                                                                    self.program_codes_to_edit[0])
+                                                                    self.program_codes_to_edit)
                 else:
                     self.confirm_to_edit_dialog = ConfirmEditDialog("program",
-                                                                    self.program_codes_to_edit[0],
+                                                                    self.program_codes_to_edit,
                                                                     num_of_affected=len_of_students_under_program_code,
                                                                     entity_code_affected=True)
 
