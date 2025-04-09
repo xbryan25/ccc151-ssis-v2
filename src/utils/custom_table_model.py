@@ -118,6 +118,8 @@ class CustomTableModel(QAbstractTableModel):
 
     def initialize_data(self):
         self.data_from_db = self.db_handler.get_all_entities(self.information_type)
+
+
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
 
@@ -284,17 +286,28 @@ class CustomTableModel(QAbstractTableModel):
     # Override
     def data(self, index, role):
 
+        if not index.isValid():
+            return None
+
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-            # return self.data_from_db[index.row()][index.column()]
-            if index.row() < self.max_row_per_page and index.row() + ((self.current_page_number - 1) * self.max_row_per_page) < len(self.data_from_db):
-                return self.data_from_db[index.row() + ((self.current_page_number - 1) * self.max_row_per_page)][
-                    index.column()]
+
+            row_index = index.row() + ((self.current_page_number - 1) * self.max_row_per_page)
+
+            # if (index.row() < self.max_row_per_page and
+            #         row_index < len(self.data_from_db) and
+            #         index.column() < len(self.data_from_db[0])):
+
+            if row_index < len(self.data_from_db) and index.column() < len(self.data_from_db[0]):
+
+                return self.data_from_db[row_index][index.column()]
             else:
                 return None
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if index.row() < self.max_row_per_page:
                 return Qt.AlignmentFlag.AlignCenter
+
+        return None
 
     # Override
     def setData(self, index, value, role):
@@ -411,15 +424,18 @@ class CustomTableModel(QAbstractTableModel):
 
     # Override
     def rowCount(self, index=None):
+        total_rows = len(self.data_from_db)
 
-        if (self.current_page_number == 1 or self.current_page_number < self.max_pages) and len(self.get_data()) > self.max_row_per_page:
+        # If the current page is not the last page, return max rows per page
+        if self.current_page_number == 1 or self.current_page_number < self.max_pages:
+            return min(self.max_row_per_page, total_rows)
+
+        # For the last page, calculate the number of remaining rows
+        remaining_rows = total_rows % self.max_row_per_page
+        if remaining_rows == 0:  # If the last page is full
             return self.max_row_per_page
-
         else:
-
-            current_page_row_count = len(self.data_from_db) % self.max_row_per_page
-
-            return current_page_row_count
+            return remaining_rows
 
     # Override
     def columnCount(self, index=None):
@@ -442,9 +458,11 @@ class CustomTableModel(QAbstractTableModel):
         # Check if the first element of the empty string list is empty
         # If so, disable cells
 
-        if self.get_data()[0][0] != "" and self.mode == "admin":
+        first_element_of_data = self.get_data()[0][0]
+
+        if first_element_of_data != "" and self.mode == "admin":
             return Qt.ItemFlag.ItemIsEditable | Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
-        elif self.get_data()[0][0] != "" and self.mode == "viewer":
+        elif first_element_of_data != "" and self.mode == "viewer":
             return Qt.ItemFlag.ItemIsSelectable | Qt.ItemFlag.ItemIsEnabled
         else:
             return Qt.ItemFlag.NoItemFlags

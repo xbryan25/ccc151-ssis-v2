@@ -34,6 +34,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_table_model = CustomTableModel("program", self.database_handler)
         self.colleges_table_model = CustomTableModel("college", self.database_handler)
 
+        # s = self.students_table_model
+        # p = self.programs_table_model
+        # c = self.colleges_table_model
+
         self.students_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
         self.programs_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
         self.colleges_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
@@ -153,6 +157,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.add_entity_button.setText(" Add student")
 
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
+        self.students_table_view.reset()
+
         self.current_page_lineedit.setPlaceholderText("1")
 
         self.previous_page_button.setEnabled(True)
@@ -204,6 +210,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_type_label.setText("Programs")
 
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
+        self.programs_table_view.reset()
+
         self.current_page_lineedit.setPlaceholderText("1")
 
         self.previous_page_button.setEnabled(True)
@@ -262,6 +270,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.add_entity_button.setText(" Add college")
 
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
+
+        # Probably what fixed the college page issue
+        self.colleges_table_view.reset()
         self.current_page_lineedit.setPlaceholderText("1")
 
         self.previous_page_button.setEnabled(True)
@@ -426,16 +437,16 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.update_table_views()
 
-    def changeEvent(self, event):
-        if event.type() == QEvent.Type.WindowStateChange:
-
-            if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
-                # Handle minimize state
-                print("Window is minimized!")
-            elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
-                # Handle fullscreen state
-                print("Window is fullscreen!")
-        super().changeEvent(event)
+    # def changeEvent(self, event):
+    #     if event.type() == QEvent.Type.WindowStateChange:
+    #
+    #         if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
+    #             # Handle minimize state
+    #             print("Window is minimized!")
+    #         elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
+    #             # Handle fullscreen state
+    #             print("Window is fullscreen!")
+    #     super().changeEvent(event)
 
     def is_window_fullscreen(self):
         screen_geometry = QGuiApplication.primaryScreen().geometry()

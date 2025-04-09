@@ -1559,7 +1559,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(0)
-        self.table_view_widgets.setCurrentIndex(2)
+        self.table_view_widgets.setCurrentIndex(0)
         self.search_type_combobox.setCurrentIndex(0)
         self.sort_type_combobox.setCurrentIndex(0)
         self.sort_order_combobox.setCurrentIndex(0)
