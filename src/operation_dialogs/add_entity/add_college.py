@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from operation_dialogs.colleges.add_college_design import Ui_Dialog as AddCollegeUI
+from operation_dialogs.add_entity.add_college_design import Ui_Dialog as AddCollegeUI
 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog

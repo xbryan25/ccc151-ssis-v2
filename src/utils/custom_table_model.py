@@ -145,8 +145,7 @@ class CustomTableModel(QAbstractTableModel):
             if entity_replacement[2] == "--Select a college--":
                 entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
 
-        else:
-            self.data_from_db[actual_row_to_edit] = entity_replacement
+        self.data_from_db[actual_row_to_edit] = entity_replacement
 
         # If edited 'from_model', no need to update the internal list
 

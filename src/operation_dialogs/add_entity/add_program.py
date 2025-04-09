@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from operation_dialogs.programs.add_program_design import Ui_Dialog as AddProgramUI
+from operation_dialogs.add_entity.add_program_design import Ui_Dialog as AddProgramUI
 
 from helper_dialogs.add_item_state.fail_add_item import FailAddItemDialog
 from helper_dialogs.add_item_state.success_add_item import SuccessAddItemDialog

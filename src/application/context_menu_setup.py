@@ -1,13 +1,7 @@
 from PyQt6.QtWidgets import QMenu
 
-from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
-from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
-
-from operation_dialogs.students.edit_student import EditStudentDialog
-from operation_dialogs.programs.edit_program import EditProgramDialog
-from operation_dialogs.colleges.edit_college import EditCollegeDialog
-
-from utils.specific_buttons_enabler import SpecificButtonsEnabler
+from operation_dialogs.delete_entity.delete_entity_handler import DeleteEntityHandler
+from operation_dialogs.edit_entity.edit_entity_handler import EditEntityHandler
 
 
 class ContextMenuSetup:
@@ -49,15 +43,16 @@ class ContextMenuSetup:
 
         if self.entity_type != "college" or (self.entity_type == "college" and len(selected_rows) == 1):
             edit_action = menu.addAction("Edit")
-            edit_action.triggered.connect(self.edit_entity)
+            edit_action.triggered.connect(lambda: self.delete_or_edit_entity("edit"))
 
         delete_action = menu.addAction("Delete")
-        delete_action.triggered.connect(self.delete_entity)
+        delete_action.triggered.connect(lambda: self.delete_or_edit_entity("delete"))
 
         # Execute menu and get selected action
         menu.exec(self.table_view.viewport().mapToGlobal(pos))
 
-    def edit_entity(self):
+    def delete_or_edit_entity(self, delete_or_edit):
+
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
         selected_rows = list(set(index.row() for index in selected_indexes))
@@ -65,68 +60,14 @@ class ContextMenuSetup:
 
         identifiers = self.current_model.get_identifiers_of_selected_rows(selected_rows)
 
-        if self.entity_type == "student":
+        if delete_or_edit == "delete":
+            delete_entity_handler = DeleteEntityHandler(selected_rows, identifiers, self.current_model, self.table_view,
+                                                        self.entity_type, self.save_changes_button,
+                                                        self.undo_all_changes_button)
+            delete_entity_handler.delete_entities()
 
-            edit_student_dialog = EditStudentDialog(self.table_view, self.students_table_model,
-                                                    self.save_changes_button, self.undo_all_changes_button,
-                                                    self.reset_item_delegates_func, identifiers, selected_rows)
-            edit_student_dialog.exec()
-
-        elif self.entity_type == "program":
-            edit_program_dialog = EditProgramDialog(self.table_view, self.programs_table_model,
-                                                    self.save_changes_button, self.undo_all_changes_button,
-                                                    self.reset_item_delegates_func, identifiers, selected_rows)
-            edit_program_dialog.exec()
-
-        elif self.entity_type == "college":
-            edit_college_dialog = EditCollegeDialog(self.table_view, self.colleges_table_model,
-                                                    self.save_changes_button, self.undo_all_changes_button,
-                                                    self.reset_item_delegates_func, identifiers, selected_rows)
-            edit_college_dialog.exec()
-
-    def delete_entity(self):
-        selected_indexes = self.table_view.selectionModel().selectedIndexes()
-
-        selected_rows = list(set(index.row() for index in selected_indexes))
-        selected_rows.sort()
-
-        identifiers = self.current_model.get_identifiers_of_selected_rows(selected_rows)
-
-        # Probably put in another file for better organization
-
-        self.confirm_to_delete_dialog = ConfirmDeleteDialog(self.entity_type, identifiers)
-        self.confirm_to_delete_dialog.exec()
-
-        confirm_delete_decision = self.confirm_to_delete_dialog.get_confirm_delete_decision()
-
-        if confirm_delete_decision:
-
-            for selected_row in selected_rows:
-                self.current_model.delete_entity_from_db(selected_row, self.entity_type)
-
-            self.current_model.update_data_from_db_after_deleting(selected_rows)
-
-            self.table_view.clearSelection()
-            self.current_model.update_page_view(self.table_view)
-
-            if self.entity_type == "student":
-
-                self.students_table_model.set_has_changes(True)
-                SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
-                                                                    self.undo_all_changes_button,
-                                                                    students_table_model=self.students_table_model)
-            elif self.entity_type == "program":
-
-                self.programs_table_model.set_has_changes(True)
-                SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
-                                                                    self.undo_all_changes_button,
-                                                                    programs_table_model=self.programs_table_model)
-            elif self.entity_type == "college":
-
-                self.colleges_table_model.set_has_changes(True)
-                SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
-                                                                    self.undo_all_changes_button,
-                                                                    colleges_table_model=self.colleges_table_model)
-
-            self.success_delete_item_dialog = SuccessDeleteItemDialog(self.entity_type)
-            self.success_delete_item_dialog.exec()
+        elif delete_or_edit == "edit":
+            edit_entity_handler = EditEntityHandler(selected_rows, identifiers, self.current_model, self.table_view,
+                                                    self.entity_type, self.save_changes_button,
+                                                    self.undo_all_changes_button, self.reset_item_delegates_func)
+            edit_entity_handler.edit_entities()

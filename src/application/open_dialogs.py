@@ -2,9 +2,9 @@ from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisi
 from helper_dialogs.save_or_undo_state.confirm_save_or_undo import ConfirmSaveOrUndoDialog
 from helper_dialogs.save_or_undo_state.success_save_changes import SuccessSaveChangesDialog
 
-from operation_dialogs.students.add_student import AddStudentDialog
-from operation_dialogs.programs.add_program import AddProgramDialog
-from operation_dialogs.colleges.add_college import AddCollegeDialog
+from operation_dialogs.add_entity.add_student import AddStudentDialog
+from operation_dialogs.add_entity.add_program import AddProgramDialog
+from operation_dialogs.add_entity.add_college import AddCollegeDialog
 
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
