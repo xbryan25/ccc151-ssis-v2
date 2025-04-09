@@ -360,12 +360,16 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
     def for_view_demographics_page_controls(self):
         return [self.demographics_stacked_widget,
+                self.general_demographics_widget,
                 self.students_demographics_widget,
                 self.programs_demographics_widget,
                 self.colleges_demographics_widget,
                 self.students_table_model,
                 self.programs_table_model,
                 self.colleges_table_model,
+                self.gd_total_colleges_count_label,
+                self.gd_total_programs_count_label,
+                self.gd_total_students_count_label,
                 self.sd_total_students_count_label,
                 self.sd_gender_count_label,
                 self.sd_year_level_count_label,
@@ -482,6 +486,13 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.demographics_title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
 
         self.demographics_center_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
+
+        self.gd_total_colleges_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
+        self.gd_total_colleges_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
+        self.gd_total_programs_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
+        self.gd_total_programs_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
+        self.gd_total_students_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
+        self.gd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
 
         self.sd_total_students_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
         self.sd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))

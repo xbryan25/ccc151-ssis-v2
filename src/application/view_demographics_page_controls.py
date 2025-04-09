@@ -12,47 +12,63 @@ class ViewDemographicsPageControls:
 
         self.demographics_stacked_widget = view_demographics_page_elements[0]
 
-        self.students_demographics_widget = view_demographics_page_elements[1]
-        self.programs_demographics_widget = view_demographics_page_elements[2]
-        self.colleges_demographics_widget = view_demographics_page_elements[3]
+        self.general_demographics_widget = view_demographics_page_elements[1]
+        self.students_demographics_widget = view_demographics_page_elements[2]
+        self.programs_demographics_widget = view_demographics_page_elements[3]
+        self.colleges_demographics_widget = view_demographics_page_elements[4]
 
-        self.students_table_model = view_demographics_page_elements[4]
-        self.programs_table_model = view_demographics_page_elements[5]
-        self.colleges_table_model = view_demographics_page_elements[6]
+        self.students_table_model = view_demographics_page_elements[5]
+        self.programs_table_model = view_demographics_page_elements[6]
+        self.colleges_table_model = view_demographics_page_elements[7]
 
-        self.sd_total_students_count_label = view_demographics_page_elements[7]
-        self.sd_gender_count_label = view_demographics_page_elements[8]
-        self.sd_year_level_count_label = view_demographics_page_elements[9]
+        self.gd_total_colleges_count_label = view_demographics_page_elements[8]
+        self.gd_total_programs_count_label = view_demographics_page_elements[9]
+        self.gd_total_students_count_label = view_demographics_page_elements[10]
 
-        self.pd_select_college_combobox = view_demographics_page_elements[10]
-        self.pd_select_program_combobox = view_demographics_page_elements[11]
-        self.pd_total_students_count_label = view_demographics_page_elements[12]
-        self.pd_year_level_count_label = view_demographics_page_elements[13]
-        self.pd_gender_count_label = view_demographics_page_elements[14]
+        self.sd_total_students_count_label = view_demographics_page_elements[11]
+        self.sd_gender_count_label = view_demographics_page_elements[12]
+        self.sd_year_level_count_label = view_demographics_page_elements[13]
 
-        self.cd_select_college_combobox = view_demographics_page_elements[15]
-        self.cd_total_programs_count_label = view_demographics_page_elements[16]
-        self.cd_total_students_count_label = view_demographics_page_elements[17]
-        self.cd_gender_count_label = view_demographics_page_elements[18]
-        self.cd_year_level_count_label = view_demographics_page_elements[19]
+        self.pd_select_college_combobox = view_demographics_page_elements[14]
+        self.pd_select_program_combobox = view_demographics_page_elements[15]
+        self.pd_total_students_count_label = view_demographics_page_elements[16]
+        self.pd_year_level_count_label = view_demographics_page_elements[17]
+        self.pd_gender_count_label = view_demographics_page_elements[18]
 
-        self.demographics_type_combobox = view_demographics_page_elements[20]
+        self.cd_select_college_combobox = view_demographics_page_elements[19]
+        self.cd_total_programs_count_label = view_demographics_page_elements[20]
+        self.cd_total_students_count_label = view_demographics_page_elements[21]
+        self.cd_gender_count_label = view_demographics_page_elements[22]
+        self.cd_year_level_count_label = view_demographics_page_elements[23]
 
-        self.application_window = view_demographics_page_elements[21]
+        self.demographics_type_combobox = view_demographics_page_elements[24]
+
+        self.application_window = view_demographics_page_elements[25]
 
         self.demographics_type_combobox.currentIndexChanged.connect(self.change_view_demographics)
 
-        self.view_students_demographics()
+        self.view_general_demographics()
 
         self.add_signals()
 
     def change_view_demographics(self, index):
         if index == 0:
-            self.view_students_demographics()
+            self.view_general_demographics()
         elif index == 1:
-            self.view_programs_demographics()
+            self.view_students_demographics()
         elif index == 2:
+            self.view_programs_demographics()
+        elif index == 3:
             self.view_colleges_demographics()
+
+    def view_general_demographics(self):
+        self.application_window.setWindowTitle("Sequence | View General Demographics")
+
+        self.demographics_stacked_widget.setCurrentWidget(self.general_demographics_widget)
+
+        self.gd_total_colleges_count_label.setText(str(len(self.colleges_table_model.get_data())))
+        self.gd_total_programs_count_label.setText(str(len(self.programs_table_model.get_data())))
+        self.gd_total_students_count_label.setText(str(len(self.students_table_model.get_data())))
 
     def view_students_demographics(self):
         self.application_window.setWindowTitle("Sequence | View Students Demographics")

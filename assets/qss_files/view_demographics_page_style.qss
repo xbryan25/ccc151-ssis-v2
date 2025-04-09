@@ -52,6 +52,52 @@ QComboBox::down-arrow{
     border-image: url(../assets/images/down-arrow.png) 0 0 0 0 stretch stretch;
 }
 
+QScrollBar:vertical {
+    background: rgb(156, 102, 68);
+
+    border-color: rgb(127, 85, 57);
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 3%;
+}
+
+QScrollBar::handle:vertical {
+    height: 10px;
+    background: rgb(230, 204, 178);
+}
+
+QScrollBar::handle:vertical:hover {
+    height: 10px;
+    background: rgb(200, 165, 125);
+}
+
+QScrollBar::add-line:vertical {
+    border: none;
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+    border: none;
+    background: none;
+    color: none;
+
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+     background: none;
+}
+
 #demographics_header_frame, #demographics_frame, #demographics_title_frame,
 #demographics_title_icon, #demographics_icon, #demographics_title_label, #demographics_label{
     background-color: rgb(127, 85, 57);
@@ -61,6 +107,7 @@ QComboBox::down-arrow{
     color: rgb(237, 224, 212);
 }
 
+#gd_total_colleges_header_label, #gd_total_programs_header_label, #gd_total_students_header_label,
 #sd_total_students_header_label, #sd_gender_header_label, #sd_year_level_header_label,
 #pd_total_students_header_label, #pd_gender_header_label, #pd_year_level_header_label,
 #cd_total_programs_header_label, #cd_total_students_header_label, #cd_gender_header_label, #cd_year_level_header_label{
@@ -70,6 +117,7 @@ QComboBox::down-arrow{
     border-radius: 5px;
 }
 
+#gd_total_colleges_count_label, #gd_total_programs_count_label, #gd_total_students_count_label,
 #sd_total_students_count_label, #sd_gender_count_label, #sd_year_level_count_label,
 #pd_total_students_count_label, #pd_gender_count_label, #pd_year_level_count_label,
 #cd_total_programs_count_label, #cd_total_students_count_label, #cd_gender_count_label, #cd_year_level_count_label{
