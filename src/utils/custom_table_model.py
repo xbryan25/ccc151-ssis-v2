@@ -66,12 +66,17 @@ class CustomTableModel(QAbstractTableModel):
 
     def model_data_is_empty(self):
         if not self.get_data():
+
+            self.beginResetModel()
+
             if self.information_type == "student":
                 self.data_from_db.append(["", "", "", "", "", ""])
             elif self.information_type == "program":
                 self.data_from_db.append(["", "", ""])
             elif self.information_type == "college":
                 self.data_from_db.append(["", ""])
+
+            self.endResetModel()
 
     def get_data(self):
         return self.data_from_db
@@ -117,18 +122,21 @@ class CustomTableModel(QAbstractTableModel):
         self.prev_sort_order = None
 
     def initialize_data(self):
+
+        self.beginResetModel()
+
         self.data_from_db = self.db_handler.get_all_entities(self.information_type)
 
+        self.endResetModel()
 
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
 
-        self.layoutChanged.emit()
-
     def update_page_view(self, table_view):
 
         self.max_row_per_page = TableViewPageControls.get_max_visible_rows(table_view)
-        self.max_pages = (self.total_num // self.max_row_per_page) + 1
+        self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
+        print("reach here?")
 
         self.layoutChanged.emit()
 
@@ -173,6 +181,8 @@ class CustomTableModel(QAbstractTableModel):
                 entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
 
         self.data_from_db[actual_row_to_edit] = entity_replacement
+
+        self.dataChanged.emit()
 
         # If edited 'from_model', no need to update the internal list
 
@@ -221,12 +231,16 @@ class CustomTableModel(QAbstractTableModel):
         if search_text.strip() != "":
             self.is_data_currently_filtered = True
 
+            self.beginResetModel()
+
             self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
                                                                              self.prev_sort_column,
                                                                              self.prev_sort_order,
                                                                              search_type,
                                                                              search_method,
                                                                              search_text)
+
+            self.endResetModel()
 
             self.total_num = len(self.data_from_db)
             self.current_page_number = 1
@@ -245,12 +259,17 @@ class CustomTableModel(QAbstractTableModel):
         self.layoutChanged.emit()
 
     def sort_filtered_entities(self, sort_column, sort_order):
+
+        self.beginResetModel()
+
         self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
                                                                          sort_column,
                                                                          sort_order,
                                                                          self.prev_search_type,
                                                                          self.prev_search_method,
                                                                          self.prev_search_text)
+
+        self.endResetModel()
 
         self.total_num = len(self.data_from_db)
         self.current_page_number = 1
@@ -262,7 +281,11 @@ class CustomTableModel(QAbstractTableModel):
 
     def sort_entities(self, sort_column, sort_order):
         if sort_order != "-":
+
+            self.beginResetModel()
             self.data_from_db = self.db_handler.get_sorted_entities(self.information_type, sort_column, sort_order)
+            self.endResetModel()
+
             self.total_num = len(self.data_from_db)
             self.current_page_number = 1
 

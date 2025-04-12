@@ -156,8 +156,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_type_label.setText("Students")
         self.add_entity_button.setText(" Add student")
 
+        # self.students_table_view.reset()
+        self.students_table_model.layoutChanged.emit()
+
         self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
-        self.students_table_view.reset()
 
         self.current_page_lineedit.setPlaceholderText("1")
 
@@ -209,8 +211,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.entity_type_label.setText("Programs")
 
+        # self.programs_table_view.reset()
+        self.programs_table_model.layoutChanged.emit()
+
         self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
-        self.programs_table_view.reset()
 
         self.current_page_lineedit.setPlaceholderText("1")
 
@@ -269,10 +273,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.add_entity_button.setText(" Add college")
 
+        # Probably what fixed the college page issue
+        # self.colleges_table_view.reset()
+        self.colleges_table_model.layoutChanged.emit()
+
         self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
 
-        # Probably what fixed the college page issue
-        self.colleges_table_view.reset()
         self.current_page_lineedit.setPlaceholderText("1")
 
         self.previous_page_button.setEnabled(True)
@@ -437,16 +443,19 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.update_table_views()
 
-    # def changeEvent(self, event):
-    #     if event.type() == QEvent.Type.WindowStateChange:
-    #
-    #         if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
-    #             # Handle minimize state
-    #             print("Window is minimized!")
-    #         elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
-    #             # Handle fullscreen state
-    #             print("Window is fullscreen!")
-    #     super().changeEvent(event)
+    def changeEvent(self, event):
+        if event.type() == QEvent.Type.WindowStateChange:
+
+            if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
+                # Handle minimize state
+                # pass
+                self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+                self.students_sort_filter_proxy_model.invalidateFilter()
+                self.students_table_view.selectionModel().clear()
+            elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
+                # Handle fullscreen state
+                print("Window is fullscreen!")
+        super().changeEvent(event)
 
     def is_window_fullscreen(self):
         screen_geometry = QGuiApplication.primaryScreen().geometry()

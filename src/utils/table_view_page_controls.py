@@ -1,15 +1,22 @@
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QTimer, QModelIndex
+
 
 class TableViewPageControls:
 
     @staticmethod
-    def go_to_previous_page(model, current_page_lineedit):
+    def go_to_previous_page(table_view, model, current_page_lineedit):
+        table_view.clearSelection()
+        table_view.setCurrentIndex(QModelIndex())
+
         model.set_previous_page()
 
         current_page_lineedit.setPlaceholderText(str(model.current_page_number))
 
     @staticmethod
-    def go_to_next_page(model, current_page_lineedit):
+    def go_to_next_page(table_view, model, current_page_lineedit):
+        table_view.clearSelection()
+        table_view.setCurrentIndex(QModelIndex())
+
         model.set_next_page()
 
         current_page_lineedit.setPlaceholderText(str(model.current_page_number))
