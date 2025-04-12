@@ -76,6 +76,7 @@ class CustomTableModel(QAbstractTableModel):
             elif self.information_type == "college":
                 self.data_from_db.append(["", ""])
 
+            self.total_num = 1
             self.endResetModel()
 
     def get_data(self):
@@ -127,16 +128,21 @@ class CustomTableModel(QAbstractTableModel):
 
         self.data_from_db = self.db_handler.get_all_entities(self.information_type)
 
+        self.total_num = len(self.data_from_db)
+        self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
+        self.current_page_number = min(self.current_page_number, self.max_pages)
+
         self.endResetModel()
 
-        self.total_num = len(self.data_from_db)
-        self.current_page_number = 1
+        self.layoutChanged.emit()
 
     def update_page_view(self, table_view):
 
-        self.max_row_per_page = TableViewPageControls.get_max_visible_rows(table_view)
+        self.max_row_per_page = max(1, TableViewPageControls.get_max_visible_rows(table_view))
         self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
-        print("reach here?")
+
+        if self.current_page_number > self.max_pages:
+            self.current_page_number = self.max_pages
 
         self.layoutChanged.emit()
 
@@ -473,7 +479,6 @@ class CustomTableModel(QAbstractTableModel):
 
             return self.columns[section]
 
-        # print(self.columns)
         return super().headerData(section, orientation, role)
 
     # Override

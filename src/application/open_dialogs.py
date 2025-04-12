@@ -90,6 +90,8 @@ class OpenDialogs:
                 self.programs_table_model.initialize_data()
                 self.colleges_table_model.initialize_data()
 
+
+
             SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
                                                                 self.undo_all_changes_button,
                                                                 self.students_table_model,

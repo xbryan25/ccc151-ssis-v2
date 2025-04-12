@@ -34,5 +34,9 @@ class TableViewPageControls:
         return visible_rows
 
     @staticmethod
+    def update_max_pages_label(model, max_pages_label):
+        max_pages_label.setText(model.max_pages)
+
+    @staticmethod
     def update_navigation_buttons_state(model, prev_button, next_button):
         print("Yo")

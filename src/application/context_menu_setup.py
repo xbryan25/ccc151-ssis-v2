@@ -6,16 +6,22 @@ from operation_dialogs.edit_entity.edit_entity_handler import EditEntityHandler
 
 class ContextMenuSetup:
     def __init__(self, table_view, students_table_model, programs_table_model, colleges_table_model,
-                 save_changes_button, undo_all_changes_button, reset_item_delegates_func, entity_type):
+                 current_page_lineedit, max_pages_label, save_changes_button, undo_all_changes_button,
+                 reset_item_delegates_func, entity_type):
 
         self.table_view = table_view
 
         self.students_table_model = students_table_model
         self.programs_table_model = programs_table_model
         self.colleges_table_model = colleges_table_model
-        self.reset_item_delegates_func = reset_item_delegates_func
+
+        self.current_page_lineedit = current_page_lineedit
+        self.max_pages_label = max_pages_label
+
         self.save_changes_button = save_changes_button
         self.undo_all_changes_button = undo_all_changes_button
+
+        self.reset_item_delegates_func = reset_item_delegates_func
 
         self.entity_type = entity_type
 
@@ -73,8 +79,8 @@ class ContextMenuSetup:
         identifiers = self.current_model.get_identifiers_of_selected_rows(selected_rows)
 
         delete_entity_handler = DeleteEntityHandler(selected_rows, identifiers, self.current_model, self.table_view,
-                                                    self.entity_type, self.save_changes_button,
-                                                    self.undo_all_changes_button)
+                                                    self.entity_type, self.current_page_lineedit, self.max_pages_label,
+                                                    self.save_changes_button, self.undo_all_changes_button)
         delete_entity_handler.delete_entities()
 
     def edit_entity(self):
