@@ -64,7 +64,7 @@ class OpenDialogs:
                                               self.reset_item_delegates_func)
         add_college_dialog.exec()
 
-    def open_confirm_save_or_undo_dialog(self, button_type):
+    def open_confirm_save_or_undo_dialog(self, entity_type, button_type, max_pages_label):
 
         confirm_save_or_undo_dialog = ConfirmSaveOrUndoDialog(button_type)
         confirm_save_or_undo_dialog.exec()
@@ -90,7 +90,12 @@ class OpenDialogs:
                 self.programs_table_model.initialize_data()
                 self.colleges_table_model.initialize_data()
 
-
+                if entity_type == "student":
+                    max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+                elif entity_type == "program":
+                    max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
+                elif entity_type == "college":
+                    max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
 
             SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
                                                                 self.undo_all_changes_button,

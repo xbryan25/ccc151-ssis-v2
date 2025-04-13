@@ -42,6 +42,8 @@ class EntityPageSignals:
         self.current_page_lineedit = entity_page_elements[23]
         self.max_pages_label = entity_page_elements[24]
 
+        self.current_entity_type = None
+
         self.open_dialogs = OpenDialogs(self.students_table_view, self.students_table_model, self.programs_table_view,
                                         self.programs_table_model, self.colleges_table_view, self.colleges_table_model,
                                         self.save_changes_button, self.undo_all_changes_button,
@@ -87,6 +89,8 @@ class EntityPageSignals:
         # self.remove()
 
         if entity_type == "student":
+
+            self.current_entity_type = "student"
 
             self.students_table_view.doubleClicked.connect(self.reset_item_delegates.
                                                            show_combobox_delegate_students_table_view)
@@ -140,6 +144,8 @@ class EntityPageSignals:
                                                               self.current_page_lineedit))
 
         elif entity_type == "program":
+
+            self.current_entity_type = "program"
 
             self.programs_table_view.doubleClicked.connect(self.reset_item_delegates.
                                                            show_combobox_delegate_programs_table_view)
@@ -195,6 +201,8 @@ class EntityPageSignals:
 
         elif entity_type == "college":
 
+            self.current_entity_type = "college"
+
             self.colleges_table_view.customContextMenuRequested.connect(
                 self.colleges_table_view_context_menu.show_context_menu)
 
@@ -249,10 +257,10 @@ class EntityPageSignals:
                                                                            self.search_input_lineedit))
 
         (self.save_changes_button.clicked.connect
-         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog("save")))
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.current_entity_type, "save", self.max_pages_label)))
 
         (self.undo_all_changes_button.clicked.connect
-         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog("undo")))
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.current_entity_type, "undo", self.max_pages_label)))
 
     def on_text_changed_search_lineedit(self):
         # So everytime a key gets entered in self.search_input_lineedit,
