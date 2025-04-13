@@ -29,7 +29,11 @@ class SearchAndSortHeader:
 
     @staticmethod
     def change_search_lineedit_placeholder(search_type_combobox, search_input_lineedit):
-        search_input_lineedit.setPlaceholderText(f"Input {search_type_combobox.currentText()}")
+
+        if search_type_combobox.currentText() == "All":
+            search_input_lineedit.setPlaceholderText(f"Input any text")
+        else:
+            search_input_lineedit.setPlaceholderText(f"Input {search_type_combobox.currentText()}")
 
     @staticmethod
     def search_using_lineedit(entity_type, search_type_combobox, search_method_combobox, search_input_lineedit, model,

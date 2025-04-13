@@ -1599,7 +1599,7 @@ class Ui_MainWindow(object):
         self.search_method_combobox.setItemText(1, _translate("MainWindow", "Starts with"))
         self.search_method_combobox.setItemText(2, _translate("MainWindow", "Ends with"))
         self.search_method_combobox.setItemText(3, _translate("MainWindow", "Exactly match"))
-        self.search_input_lineedit.setPlaceholderText(_translate("MainWindow", "Input ID Number"))
+        self.search_input_lineedit.setPlaceholderText(_translate("MainWindow", "Input any text"))
         self.sort_label.setText(_translate("MainWindow", "Sort by"))
         self.sort_type_combobox.setItemText(0, _translate("MainWindow", "ID Number"))
         self.sort_type_combobox.setItemText(1, _translate("MainWindow", "First Name"))
