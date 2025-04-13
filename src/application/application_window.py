@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView, QMenu
 from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon, QGuiApplication
-from PyQt6.QtCore import Qt, QEvent
+from PyQt6.QtCore import Qt, QEvent, QModelIndex
 
 from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
 from application.open_dialogs import OpenDialogs
@@ -412,18 +412,30 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         if (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
+
+            self.students_table_view.clearSelection()
+            self.students_table_view.setCurrentIndex(QModelIndex())
+
             self.students_table_model.update_page_view(self.students_table_view)
 
             self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
 
         elif (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
+
+            self.programs_table_view.clearSelection()
+            self.programs_table_view.setCurrentIndex(QModelIndex())
+
             self.programs_table_model.update_page_view(self.programs_table_view)
 
             self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
         elif (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.colleges_table_view_widget):
+
+            self.colleges_table_view.clearSelection()
+            self.colleges_table_view.setCurrentIndex(QModelIndex())
+
             self.colleges_table_model.update_page_view(self.colleges_table_view)
 
             self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
@@ -449,11 +461,17 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
             if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
                 # Handle minimize state
                 # pass
-                self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-                self.students_sort_filter_proxy_model.invalidateFilter()
-                self.students_table_view.selectionModel().clear()
+                # self.students_table_view.clearSelection()
+                # self.students_table_view.setCurrentIndex(QModelIndex())
+                print("Window is minimized")
+                # self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+                # self.students_sort_filter_proxy_model.invalidateFilter()
+                # self.students_table_view.selectionModel().clear()
             elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
                 # Handle fullscreen state
+
+                # self.students_table_view.clearSelection()
+                # self.students_table_view.setCurrentIndex(QModelIndex())
                 print("Window is fullscreen!")
         super().changeEvent(event)
 
