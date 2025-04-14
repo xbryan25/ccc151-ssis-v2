@@ -133,15 +133,26 @@ class EntityPageSignals:
                                                                 self.current_page_lineedit,
                                                                 self.max_pages_label))
 
+            self.current_page_lineedit.textChanged.connect(
+                lambda: TableViewPageControls.go_to_specific_page(self.students_table_view,
+                                                                  self.students_table_model,
+                                                                  self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button))
+
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.students_table_view,
                                                                   self.students_table_model,
-                                                                  self.current_page_lineedit))
+                                                                  self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.students_table_view,
                                                               self.students_table_model,
-                                                              self.current_page_lineedit))
+                                                              self.current_page_lineedit,
+                                                              self.previous_page_button,
+                                                              self.next_page_button))
 
         elif entity_type == "program":
 
@@ -189,15 +200,27 @@ class EntityPageSignals:
                                                                 self.current_page_lineedit,
                                                                 self.max_pages_label))
 
+            self.current_page_lineedit.textChanged.connect(
+                lambda: TableViewPageControls.go_to_specific_page(self.programs_table_view,
+                                                                  self.programs_table_model,
+                                                                  self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button))
+
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.programs_table_view,
                                                                   self.programs_table_model,
-                                                                  self.current_page_lineedit))
+                                                                  self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button
+                                                                  ))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.programs_table_view,
                                                               self.programs_table_model,
-                                                              self.current_page_lineedit))
+                                                              self.current_page_lineedit,
+                                                              self.previous_page_button,
+                                                              self.next_page_button))
 
         elif entity_type == "college":
 
@@ -242,15 +265,26 @@ class EntityPageSignals:
                                                                 self.current_page_lineedit,
                                                                 self.max_pages_label))
 
+            self.current_page_lineedit.textChanged.connect(
+                lambda: TableViewPageControls.go_to_specific_page(self.colleges_table_view,
+                                                                  self.colleges_table_model,
+                                                                  self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button))
+
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.colleges_table_view,
                                                                   self.colleges_table_model,
-                                                                  self.current_page_lineedit))
+                                                                  self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.colleges_table_view,
                                                               self.colleges_table_model,
-                                                              self.current_page_lineedit))
+                                                              self.current_page_lineedit,
+                                                                  self.previous_page_button,
+                                                                  self.next_page_button))
 
         self.search_type_combobox.currentIndexChanged.connect(
             lambda: SearchAndSortHeader.change_search_lineedit_placeholder(self.search_type_combobox,
@@ -288,3 +322,4 @@ class EntityPageSignals:
 
         self.previous_page_button.disconnect()
         self.next_page_button.disconnect()
+        self.current_page_lineedit.disconnect()
