@@ -27,6 +27,8 @@ class CustomTableModel(QAbstractTableModel):
 
         # Use when sorting filtered data
         self.is_data_currently_filtered = False
+        self.is_data_currently_sorted = False
+
         self.prev_search_type = None
         self.prev_search_method = None
         self.prev_search_text = None
@@ -58,26 +60,12 @@ class CustomTableModel(QAbstractTableModel):
         if self.information_type == "college":
             self.columns = ["College Code", "College Name"]
 
+        self.get_total_num()
         self.initialize_data()
 
         self.model_data_is_empty()
 
         # self.save_button = None
-
-    def model_data_is_empty(self):
-        if not self.get_data():
-
-            self.beginResetModel()
-
-            if self.information_type == "student":
-                self.data_from_db.append(["", "", "", "", "", ""])
-            elif self.information_type == "program":
-                self.data_from_db.append(["", "", ""])
-            elif self.information_type == "college":
-                self.data_from_db.append(["", ""])
-
-            self.total_num = 1
-            self.endResetModel()
 
     def get_data(self):
         return self.data_from_db
@@ -100,15 +88,40 @@ class CustomTableModel(QAbstractTableModel):
     def set_is_data_currently_filtered(self, is_data_currently_filtered):
         self.is_data_currently_filtered = is_data_currently_filtered
 
-    def get_identifiers_of_selected_rows(self, selected_rows):
-        actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
-                                for selected_row in selected_rows]
+    def get_is_data_currently_sorted(self):
+        return self.is_data_currently_sorted
 
-        return [row[0] for i, row in enumerate(self.get_data()) if i in actual_selected_rows]
+    def set_is_data_currently_sorted(self, is_data_currently_sorted):
+        self.is_data_currently_sorted = is_data_currently_sorted
+
+    def model_data_is_empty(self):
+        if not self.get_data():
+
+            self.beginResetModel()
+
+            if self.information_type == "student":
+                self.data_from_db.append(["", "", "", "", "", ""])
+            elif self.information_type == "program":
+                self.data_from_db.append(["", "", ""])
+            elif self.information_type == "college":
+                self.data_from_db.append(["", ""])
+
+            self.total_num = 1
+            self.endResetModel()
+
+    def get_identifiers_of_selected_rows(self, selected_rows):
+
+        return [row[0] for i, row in enumerate(self.get_data()) if i in selected_rows]
 
     def set_search_and_sort_fields(self, sort_order_combobox, search_input_lineedit):
         self.sort_order_combobox = sort_order_combobox
         self.search_input_lineedit = search_input_lineedit
+
+    def get_total_num(self):
+        self.total_num = self.db_handler.get_count_of_all_entities(self.information_type)
+
+    def set_max_row_per_page(self, max_row_per_page):
+        self.max_row_per_page = max_row_per_page
 
     def reset_search_and_sort_fields(self):
         if self.sort_order_combobox and self.search_input_lineedit:
@@ -126,25 +139,26 @@ class CustomTableModel(QAbstractTableModel):
 
         self.beginResetModel()
 
-        self.data_from_db = self.db_handler.get_all_entities(self.information_type)
+        self.data_from_db = self.db_handler.get_entities(self.max_row_per_page, self.current_page_number, self.information_type)
 
-        self.total_num = len(self.data_from_db)
         self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
-        self.current_page_number = min(self.current_page_number, self.max_pages)
 
         self.endResetModel()
 
         self.layoutChanged.emit()
 
     def update_page_view(self, table_view):
+        new_max_row_per_page = max(1, TableViewPageControls.get_max_visible_rows(table_view))
 
-        self.max_row_per_page = max(1, TableViewPageControls.get_max_visible_rows(table_view))
-        self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
+        # Only refresh data when new_max_row_per_page is different from self.max_row_per_page
+        if self.max_row_per_page != new_max_row_per_page:
+            self.max_row_per_page = new_max_row_per_page
+            self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
 
-        if self.current_page_number > self.max_pages:
-            self.current_page_number = self.max_pages
+            if self.current_page_number > self.max_pages:
+                self.current_page_number = self.max_pages
 
-        self.layoutChanged.emit()
+            self.initialize_data()
 
     def add_entity(self, entity_to_add, entity_type):
         # Add data to database (although it is only staged)
@@ -156,43 +170,45 @@ class CustomTableModel(QAbstractTableModel):
 
         self.reset_search_and_sort_fields()
 
-    def update_entity(self, entity_replacement, entity_type, actual_row_to_edit, edit_type="from_dialog",
+    def update_entity(self, entity_replacement, entity_type, row_to_edit, edit_type="from_dialog",
                       edit_mode="single"):
 
-        entity_to_edit = self.get_data()[actual_row_to_edit]
+        entity_to_edit = self.get_data()[row_to_edit]
 
         identifier = entity_to_edit[0]
 
         if edit_mode == "multiple" and entity_type == "student":
             # Copy old values before replacing value in internal list
-            entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
-            entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
-            entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
+            entity_replacement[0] = self.data_from_db[row_to_edit][0]
+            entity_replacement[1] = self.data_from_db[row_to_edit][1]
+            entity_replacement[2] = self.data_from_db[row_to_edit][2]
 
             if entity_replacement[3] == "--Select year level--":
-                entity_replacement[3] = self.data_from_db[actual_row_to_edit][3]
+                entity_replacement[3] = self.data_from_db[row_to_edit][3]
 
             if entity_replacement[4] == "--Select gender--":
-                entity_replacement[4] = self.data_from_db[actual_row_to_edit][4]
+                entity_replacement[4] = self.data_from_db[row_to_edit][4]
 
             if entity_replacement[5] == "--Select a program--":
-                entity_replacement[5] = self.data_from_db[actual_row_to_edit][5]
+                entity_replacement[5] = self.data_from_db[row_to_edit][5]
 
         elif edit_mode == "multiple" and entity_type == "program":
             # Copy old values before replacing value in internal list
-            entity_replacement[0] = self.data_from_db[actual_row_to_edit][0]
-            entity_replacement[1] = self.data_from_db[actual_row_to_edit][1]
+            entity_replacement[0] = self.data_from_db[row_to_edit][0]
+            entity_replacement[1] = self.data_from_db[row_to_edit][1]
 
             if entity_replacement[2] == "--Select a college--":
-                entity_replacement[2] = self.data_from_db[actual_row_to_edit][2]
+                entity_replacement[2] = self.data_from_db[row_to_edit][2]
 
-        self.data_from_db[actual_row_to_edit] = entity_replacement
+        self.data_from_db[row_to_edit] = entity_replacement
 
-        self.dataChanged.emit()
+        top_left = self.index(row_to_edit, 0)
+        bottom_right = self.index(row_to_edit, self.columnCount())
+        self.dataChanged.emit(top_left, bottom_right, [Qt.ItemDataRole.DisplayRole])
 
         # If edited 'from_model', no need to update the internal list
 
-        self.db_handler.update_entity(identifier, self.data_from_db[actual_row_to_edit], entity_type)
+        self.db_handler.update_entity(identifier, self.data_from_db[row_to_edit], entity_type)
 
         # Then select all students from database
         # This ensures that the edit student will be sorted
@@ -203,59 +219,64 @@ class CustomTableModel(QAbstractTableModel):
     def delete_entity_from_db(self, entity_relative_row, entity_type):
         # This method deletes entities from the database
 
-        actual_row = (self.max_row_per_page * (self.current_page_number - 1)) + entity_relative_row
-        entity_to_delete = self.get_data()[actual_row]
+        entity_to_delete = self.get_data()[entity_relative_row]
 
         identifier = entity_to_delete[0]
 
         # Delete from DB
         self.db_handler.delete_entity(identifier, entity_type)
 
-        # # Delete from internal data structure of model
-        # self.removeRow(actual_row)
-
-    def update_data_from_db_after_deleting(self, selected_rows):
-        # This method updates the internal data structure of table model after deleting from database
-
-        actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
-                                for selected_row in selected_rows]
-
-        self.beginResetModel()
-
-        # Instead of deleting values one by one in self.data_from_db,
-        # make another list that doesn't contain the affected rows and overwrite
-        # self.data_from_db instead
-        self.data_from_db = [row for i, row in enumerate(self.get_data()) if i not in actual_selected_rows]
-        self.total_num = len(self.data_from_db)
-
-        self.endResetModel()
-
-        self.model_data_is_empty()
+    # def update_data_from_db_after_deleting(self, selected_rows):
+    #     # This method updates the internal data structure of table model after deleting from database
+    #
+    #     actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
+    #                             for selected_row in selected_rows]
+    #
+    #     self.beginResetModel()
+    #
+    #     # Instead of deleting values one by one in self.data_from_db,
+    #     # make another list that doesn't contain the affected rows and overwrite
+    #     # self.data_from_db instead
+    #     self.data_from_db = [row for i, row in enumerate(self.get_data()) if i not in actual_selected_rows]
+    #     self.total_num = len(self.data_from_db)
+    #
+    #     self.endResetModel()
+    #
+    #     self.model_data_is_empty()
 
     def search_entities(self, search_type, search_method, search_text):
+        # Connected to self.sort_filtered_entities()
 
         if search_text.strip() != "":
             self.is_data_currently_filtered = True
 
+            self.total_num = self.db_handler.get_count_of_sorted_filtered_entities(self.information_type,
+                                                                                   search_type,
+                                                                                   search_method,
+                                                                                   search_text)
+
+
             self.beginResetModel()
 
-            self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
+            self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.max_row_per_page,
+                                                                             self.current_page_number,
+                                                                             self.information_type,
                                                                              self.prev_sort_column,
                                                                              self.prev_sort_order,
                                                                              search_type,
                                                                              search_method,
                                                                              search_text)
 
-            self.endResetModel()
+            self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
 
-            self.total_num = len(self.data_from_db)
-            self.current_page_number = 1
+            self.endResetModel()
 
             self.model_data_is_empty()
 
         else:
             self.is_data_currently_filtered = False
 
+            self.get_total_num()
             self.initialize_data()
 
         self.prev_search_type = search_type
@@ -265,10 +286,15 @@ class CustomTableModel(QAbstractTableModel):
         self.layoutChanged.emit()
 
     def sort_filtered_entities(self, sort_column, sort_order):
+        # Connected to self.search_entities
+
+        print("Yo")
 
         self.beginResetModel()
 
-        self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.information_type,
+        self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.max_row_per_page,
+                                                                         self.current_page_number,
+                                                                         self.information_type,
                                                                          sort_column,
                                                                          sort_order,
                                                                          self.prev_search_type,
@@ -277,8 +303,11 @@ class CustomTableModel(QAbstractTableModel):
 
         self.endResetModel()
 
-        self.total_num = len(self.data_from_db)
-        self.current_page_number = 1
+        if sort_order != "-":
+            self.is_data_currently_sorted = True
+
+        else:
+            self.is_data_currently_sorted = False
 
         self.layoutChanged.emit()
 
@@ -289,15 +318,23 @@ class CustomTableModel(QAbstractTableModel):
         if sort_order != "-":
 
             self.beginResetModel()
-            self.data_from_db = self.db_handler.get_sorted_entities(self.information_type, sort_column, sort_order)
+            self.data_from_db = self.db_handler.get_sorted_entities(self.max_row_per_page,
+                                                                    self.current_page_number,
+                                                                    self.information_type,
+                                                                    sort_column,
+                                                                    sort_order)
             self.endResetModel()
 
-            self.total_num = len(self.data_from_db)
-            self.current_page_number = 1
+            # self.total_num = len(self.data_from_db)
+            # self.current_page_number = 1
 
             self.layoutChanged.emit()
+
+            self.is_data_currently_sorted = True
         else:
             self.initialize_data()
+
+            self.is_data_currently_sorted = False
 
         self.prev_sort_column = sort_column
         self.prev_sort_order = sort_order
@@ -305,12 +342,22 @@ class CustomTableModel(QAbstractTableModel):
     def set_next_page(self):
         if self.current_page_number + 1 <= self.max_pages:
             self.current_page_number += 1
-            self.layoutChanged.emit()
+
+            if self.get_is_data_currently_filtered() and self.get_is_data_currently_sorted():
+                self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
+            elif self.get_is_data_currently_sorted():
+                self.sort_entities(self.prev_sort_column, self.prev_sort_order)
+            else:
+                self.initialize_data()
 
     def set_previous_page(self):
         if self.current_page_number - 1 >= 1:
             self.current_page_number -= 1
-            self.layoutChanged.emit()
+
+            if self.is_data_currently_filtered:
+                self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
+            else:
+                self.initialize_data()
 
     # Override
     def data(self, index, role):
@@ -320,17 +367,7 @@ class CustomTableModel(QAbstractTableModel):
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
 
-            row_index = index.row() + ((self.current_page_number - 1) * self.max_row_per_page)
-
-            # if (index.row() < self.max_row_per_page and
-            #         row_index < len(self.data_from_db) and
-            #         index.column() < len(self.data_from_db[0])):
-
-            if row_index < len(self.data_from_db) and index.column() < len(self.data_from_db[0]):
-
-                return self.data_from_db[row_index][index.column()]
-            else:
-                return None
+            return self.data_from_db[index.row()][index.column()]
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
             if index.row() < self.max_row_per_page:
@@ -433,7 +470,7 @@ class CustomTableModel(QAbstractTableModel):
 
                     self.update_entity(temp_list,
                                        self.information_type,
-                                       actual_row_to_edit=index.row(),
+                                       row_to_edit=index.row(),
                                        edit_type='from_model')
 
                     self.success_edit_item = SuccessEditItemDialog(self.information_type, [self.data_from_db[index.row()][0]])

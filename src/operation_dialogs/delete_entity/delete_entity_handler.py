@@ -34,10 +34,9 @@ class DeleteEntityHandler:
             for selected_row in self.selected_rows:
                 self.current_model.delete_entity_from_db(selected_row, self.entity_type)
 
-            # self.current_model.initialize_data()
-            self.current_model.update_data_from_db_after_deleting(self.selected_rows)
+            self.current_model.initialize_data()
 
-            self.current_model.update_page_view(self.table_view)
+            # self.current_model.update_page_view(self.table_view)
             self.table_view.clearSelection()
             self.table_view.setCurrentIndex(QModelIndex())
 

@@ -61,12 +61,10 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
                                if self.new_college_name_lineedit.text().strip()
                                else self.new_college_name_lineedit.placeholderText()]
 
-            actual_row_to_edit = ((self.colleges_table_model.max_row_per_page *
-                                   (self.colleges_table_model.current_page_number - 1))
-                                  + self.selected_rows[0])
+            row_to_edit = self.selected_rows[0]
 
             # Check if there are any changes made from the old data of the college
-            if self.colleges_table_model.get_data()[actual_row_to_edit] != college_to_edit:
+            if self.colleges_table_model.get_data()[row_to_edit] != college_to_edit:
                 len_of_programs_under_college_code = self.len_of_programs_under_college_code(self.college_codes_to_edit[0])
 
                 # If college code is not changed, a different confirm edit dialog will show
@@ -89,7 +87,7 @@ class EditCollegeDialog(QDialog, EditCollegeUI):
 
                     self.colleges_table_model.update_entity(college_to_edit,
                                                             'college',
-                                                            actual_row_to_edit=actual_row_to_edit)
+                                                            row_to_edit=row_to_edit)
 
                     self.colleges_table_model.set_has_changes(True)
 

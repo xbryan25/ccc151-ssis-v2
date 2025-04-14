@@ -121,12 +121,10 @@ class EditStudentDialog(QDialog, EditStudentUI):
                                self.new_gender_combobox.currentText(),
                                self.new_program_code_combobox.currentText()]
 
-            actual_row_to_edit = ((self.students_table_model.max_row_per_page *
-                                   (self.students_table_model.current_page_number - 1))
-                                  + self.selected_rows[0])
+            row_to_edit = self.selected_rows[0]
 
             # Check if there are any changes made from the old data of the student
-            if self.students_table_model.get_data()[actual_row_to_edit] != student_to_edit:
+            if self.students_table_model.get_data()[row_to_edit] != student_to_edit:
 
                 # old_student_id_number = self.student_to_edit_combobox.currentText()
                 self.confirm_to_edit_dialog = ConfirmEditDialog("student",
@@ -143,7 +141,7 @@ class EditStudentDialog(QDialog, EditStudentUI):
                     # self.students_table_model.get_data()[row_to_edit] = student_to_edit
                     self.students_table_model.update_entity(student_to_edit,
                                                             'student',
-                                                            actual_row_to_edit=actual_row_to_edit,
+                                                            row_to_edit=row_to_edit,
                                                             edit_mode=self.edit_mode)
 
                     self.students_table_model.set_has_changes(True)
@@ -181,17 +179,13 @@ class EditStudentDialog(QDialog, EditStudentUI):
 
             for selected_row in self.selected_rows:
 
-                actual_row_to_edit = ((self.students_table_model.max_row_per_page *
-                                       (self.students_table_model.current_page_number - 1))
-                                      + selected_row)
-
                 # By doing this, the data in the model also gets updated, same reference
                 # self.students_table_model.get_data()[row_to_edit] = student_to_edit
 
                 # list(students_to_edit) creates another copy that doesn't manipulate students_to_edit
                 self.students_table_model.update_entity(list(students_to_edit),
                                                         'student',
-                                                        actual_row_to_edit=actual_row_to_edit,
+                                                        row_to_edit=selected_row,
                                                         edit_mode=self.edit_mode)
 
             self.students_table_model.set_has_changes(True)

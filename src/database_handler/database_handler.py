@@ -37,6 +37,50 @@ class DatabaseHandler:
 
         return entities_data
 
+    def get_count_of_all_entities(self, entity_type):
+
+        if entity_type == "student":
+            self.cursor.execute("SELECT COUNT(*) FROM students;")
+        elif entity_type == "program":
+            self.cursor.execute("SELECT COUNT(*) FROM programs")
+        elif entity_type == "college":
+            self.cursor.execute("SELECT COUNT(*) FROM colleges")
+
+        results = self.cursor.fetchall()
+
+        return results[0][0]
+
+    def get_entities(self, max_row_per_page, current_page_number, entity_type):
+
+        print(f"------Query - max_row_per_page: {max_row_per_page}, current_page_number: {current_page_number}------")
+
+        entities_data = []
+
+        sql = ""
+        values = (max_row_per_page, (current_page_number - 1) * max_row_per_page)
+
+        if entity_type == "student":
+            sql = "SELECT * FROM students LIMIT %s OFFSET %s"
+        elif entity_type == "program":
+            sql = "SELECT * FROM programs LIMIT %s OFFSET %s"
+        elif entity_type == "college":
+            sql = "SELECT * FROM colleges LIMIT %s OFFSET %s"
+
+        self.cursor.execute(sql, values)
+        results = self.cursor.fetchall()
+
+        for row in results:
+            list_row = list(row)
+
+            if entity_type == 'student' and not list_row[5]:
+                list_row[5] = "N/A"
+            elif entity_type == 'program' and not list_row[2]:
+                list_row[2] = "N/A"
+
+            entities_data.append(list_row)
+
+        return entities_data
+
     def get_all_existing_students(self):
         sql = "SELECT id_number, first_name, last_name FROM students"
 
@@ -142,13 +186,15 @@ class DatabaseHandler:
 
         return program_to_student_connections
 
-    def get_sorted_entities(self, entity_type, sort_column, sort_order):
+    def get_sorted_entities(self, max_row_per_page, current_page_number, entity_type, sort_column, sort_order):
         sql = f"SELECT * FROM {entity_type + "s"} ORDER BY {sort_column} IS NULL, {sort_column}"
 
         if sort_order == "ascending":
             sql += " ASC"
         else:
             sql += " DESC"
+
+        sql += f" LIMIT {max_row_per_page} OFFSET {(current_page_number - 1) * max_row_per_page}"
 
         self.cursor.execute(sql)
 
@@ -168,8 +214,8 @@ class DatabaseHandler:
 
         return entities_data
 
-    def get_sorted_filtered_entities(self, entity_type, sort_column, sort_order, search_type, search_method,
-                                     search_text):
+    def get_sorted_filtered_entities(self, max_row_per_page, current_page_number, entity_type, sort_column, sort_order,
+                                     search_type, search_method, search_text):
 
         like_or_equals = "LIKE"
         left_percent_sign = ""
@@ -191,7 +237,8 @@ class DatabaseHandler:
 
         if search_type != "all":
             sql = f"SELECT * FROM {entity_type + "s"} WHERE {search_type} {like_or_equals} %s"
-            values = (f"{left_percent_sign}{search_text}{right_percent_sign}",)
+            values = (f"{left_percent_sign}{search_text}{right_percent_sign}", max_row_per_page,
+                      (current_page_number - 1) * max_row_per_page)
         else:
             sql = ""
             values = ()
@@ -210,7 +257,9 @@ class DatabaseHandler:
                           f"{left_percent_sign}{search_text}{right_percent_sign}",
                           f"{left_percent_sign}{search_text}{right_percent_sign}",
                           f"{left_percent_sign}{search_text}{right_percent_sign}",
-                          f"{left_percent_sign}{search_text}{right_percent_sign}")
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          max_row_per_page,
+                          (current_page_number - 1) * max_row_per_page)
 
             elif entity_type == "program":
                 sql = ("SELECT * FROM programs "
@@ -220,7 +269,9 @@ class DatabaseHandler:
 
                 values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
                           f"{left_percent_sign}{search_text}{right_percent_sign}",
-                          f"{left_percent_sign}{search_text}{right_percent_sign}")
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          max_row_per_page,
+                          (current_page_number - 1) * max_row_per_page)
 
             elif entity_type == "college":
                 sql = ("SELECT * FROM colleges "
@@ -228,13 +279,17 @@ class DatabaseHandler:
                        f"college_name {like_or_equals} %s")
 
                 values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
-                          f"{left_percent_sign}{search_text}{right_percent_sign}")
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          max_row_per_page,
+                          (current_page_number - 1) * max_row_per_page)
 
-        if sort_column and sort_order:
+        if sort_column and sort_order and sort_order != "-":
             if sort_order == "ascending":
                 sql += f" ORDER BY {sort_column} IS NULL, {sort_column} ASC"
-            else:
+            elif sort_order == "descending":
                 sql += f" ORDER BY {sort_column} IS NULL, {sort_column} DESC"
+
+        sql += f" LIMIT %s OFFSET %s"
 
         self.cursor.execute(sql, values)
         results = self.cursor.fetchall()
@@ -253,53 +308,71 @@ class DatabaseHandler:
 
         return entities_data
 
-    # def search_entities(self, entity_type, search_type, search_text):
-    #     if search_type != "all":
-    #         sql = ""
-    #         values = (f"{search_text}%",)
-    #
-    #         if entity_type == "student":
-    #             sql = f"SELECT * FROM students WHERE {search_type} LIKE %s"
-    #         elif entity_type == "program":
-    #             sql = f"SELECT * FROM programs WHERE {search_type} LIKE %s"
-    #         elif entity_type == "college":
-    #             sql = f"SELECT * FROM colleges WHERE {search_type} LIKE %s"
-    #     else:
-    #         sql = ""
-    #         values = ()
-    #
-    #         if entity_type == "student":
-    #             sql = ("SELECT * FROM students "
-    #                    "WHERE id_number LIKE %s OR "
-    #                    "first_name LIKE %s OR "
-    #                    "last_name LIKE %s OR "
-    #                    "year_level LIKE %s OR "
-    #                    "gender LIKE %s OR "
-    #                    "program_code LIKE %s")
-    #
-    #             values = (f"{search_text}%",
-    #                       f"{search_text}%",
-    #                       f"{search_text}%",
-    #                       f"{search_text}%",
-    #                       f"{search_text}%",
-    #                       f"{search_text}%")
-    #
-    #     self.cursor.execute(sql, values)
-    #     results = self.cursor.fetchall()
-    #
-    #     entities_data = []
-    #
-    #     for row in results:
-    #         list_row = list(row)
-    #
-    #         if entity_type == 'student' and not list_row[5]:
-    #             list_row[5] = "N/A"
-    #         elif entity_type == 'program' and not list_row[2]:
-    #             list_row[2] = "N/A"
-    #
-    #         entities_data.append(list_row)
-    #
-    #     return entities_data
+    def get_count_of_sorted_filtered_entities(self, entity_type, search_type, search_method,  search_text):
+
+        like_or_equals = "LIKE"
+        left_percent_sign = ""
+        right_percent_sign = ""
+
+        if search_method == "contains":
+            left_percent_sign = "%"
+            right_percent_sign = "%"
+        elif search_method == "starts_with":
+            left_percent_sign = ""
+            right_percent_sign = "%"
+        elif search_method == "ends_with":
+            left_percent_sign = "%"
+            right_percent_sign = ""
+        elif search_method == "exactly_match":
+            like_or_equals = "="
+            left_percent_sign = ""
+            right_percent_sign = ""
+
+        if search_type != "all":
+            sql = f"SELECT COUNT(*) AS total FROM {entity_type + "s"} WHERE {search_type} {like_or_equals} %s"
+            values = (f"{left_percent_sign}{search_text}{right_percent_sign}",)
+        else:
+            sql = ""
+            values = ()
+
+            if entity_type == "student":
+                sql = ("SELECT COUNT(*) AS total FROM students "
+                       f"WHERE id_number {like_or_equals} %s OR "
+                       f"first_name {like_or_equals} %s OR "
+                       f"last_name {like_or_equals} %s OR "
+                       f"year_level {like_or_equals} %s OR "
+                       f"gender {like_or_equals} %s OR "
+                       f"program_code {like_or_equals} %s")
+
+                values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}")
+
+            elif entity_type == "program":
+                sql = ("SELECT COUNT(*) AS total FROM programs "
+                       f"WHERE program_code {like_or_equals} %s OR "
+                       f"program_name {like_or_equals} %s OR "
+                       f"college_code {like_or_equals} %s")
+
+                values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}")
+
+            elif entity_type == "college":
+                sql = ("SELECT COUNT(*) AS total FROM colleges "
+                       f"WHERE college_code {like_or_equals} %s OR "
+                       f"college_name {like_or_equals} %s")
+
+                values = (f"{left_percent_sign}{search_text}{right_percent_sign}",
+                          f"{left_percent_sign}{search_text}{right_percent_sign}")
+
+        self.cursor.execute(sql, values)
+        results = self.cursor.fetchone()[0]
+
+        return results
 
     def add_entity(self, entity_data, entity_type):
         sql = ""

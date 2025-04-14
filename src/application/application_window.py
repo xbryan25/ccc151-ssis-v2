@@ -12,6 +12,7 @@ from application.view_demographics_page_controls import ViewDemographicsPageCont
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.custom_table_model import CustomTableModel
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
+from utils.table_view_page_controls import TableViewPageControls
 
 from database_handler.database_handler import DatabaseHandler
 
@@ -33,10 +34,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_model = CustomTableModel("student", self.database_handler)
         self.programs_table_model = CustomTableModel("program", self.database_handler)
         self.colleges_table_model = CustomTableModel("college", self.database_handler)
-
-        # s = self.students_table_model
-        # p = self.programs_table_model
-        # c = self.colleges_table_model
 
         self.students_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
         self.programs_table_model.set_search_and_sort_fields(self.sort_order_combobox, self.search_input_lineedit)
@@ -182,6 +179,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.setWindowTitle("Sequence | Students")
 
+        self.students_table_model.set_max_row_per_page(TableViewPageControls.get_max_visible_rows(self.students_table_view))
         self.students_table_model.initialize_data()
 
         self.students_table_model.update_page_view(self.students_table_view)
@@ -243,6 +241,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.setWindowTitle("Sequence | Programs")
 
+        self.programs_table_model.set_max_row_per_page(
+            TableViewPageControls.get_max_visible_rows(self.programs_table_view))
         self.programs_table_model.initialize_data()
 
         self.programs_table_model.update_page_view(self.programs_table_view)
@@ -304,6 +304,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.setWindowTitle("Sequence | Colleges")
 
+        self.colleges_table_model.set_max_row_per_page(
+            TableViewPageControls.get_max_visible_rows(self.colleges_table_view))
         self.colleges_table_model.initialize_data()
 
         self.colleges_table_model.update_page_view(self.colleges_table_view)
