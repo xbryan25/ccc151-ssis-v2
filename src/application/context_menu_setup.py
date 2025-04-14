@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QMenu
+from PyQt6.QtCore import QTimer
 
 from operation_dialogs.delete_entity.delete_entity_handler import DeleteEntityHandler
 from operation_dialogs.edit_entity.edit_entity_handler import EditEntityHandler
@@ -50,11 +51,13 @@ class ContextMenuSetup:
         if self.entity_type != "college" or (self.entity_type == "college" and len(selected_rows) == 1):
             edit_action = context_menu.addAction("Edit")
             edit_action.setData("edit")
-            edit_action.triggered.connect(self.edit_entity)
+            # edit_action.triggered.connect(self.edit_entity)
+            edit_action.triggered.connect(lambda: QTimer.singleShot(0, self.edit_entity))
 
         delete_action = context_menu.addAction("Delete")
         delete_action.setData("edit")
-        delete_action.triggered.connect(self.delete_entity)
+        # delete_action.triggered.connect(self.delete_entity)
+        delete_action.triggered.connect(lambda: QTimer.singleShot(0, self.delete_entity))
 
         # Execute context menu and get selected action
         context_menu.exec(self.table_view.viewport().mapToGlobal(pos))
@@ -68,8 +71,6 @@ class ContextMenuSetup:
     # results in the QMenu popping up again
 
     def delete_entity(self):
-        # self.context_menu.close()
-        # self.context_menu = None
 
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
@@ -84,11 +85,6 @@ class ContextMenuSetup:
         delete_entity_handler.delete_entities()
 
     def edit_entity(self):
-        # self.context_menu.close()
-        # self.context_menu = None
-        #
-        # print(self.context_menu)
-
 
         selected_indexes = self.table_view.selectionModel().selectedIndexes()
 
