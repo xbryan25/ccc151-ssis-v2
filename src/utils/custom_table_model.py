@@ -60,7 +60,7 @@ class CustomTableModel(QAbstractTableModel):
         if self.information_type == "college":
             self.columns = ["College Code", "College Name"]
 
-        self.get_total_num()
+        self.set_total_num()
         self.initialize_data()
 
         self.model_data_is_empty()
@@ -117,8 +117,11 @@ class CustomTableModel(QAbstractTableModel):
         self.sort_order_combobox = sort_order_combobox
         self.search_input_lineedit = search_input_lineedit
 
-    def get_total_num(self):
+    def set_total_num(self):
         self.total_num = self.db_handler.get_count_of_all_entities(self.information_type)
+
+    def get_total_num(self):
+        return self.total_num
 
     def set_max_row_per_page(self, max_row_per_page):
         self.max_row_per_page = max_row_per_page
@@ -276,7 +279,7 @@ class CustomTableModel(QAbstractTableModel):
         else:
             self.is_data_currently_filtered = False
 
-            self.get_total_num()
+            self.set_total_num()
             self.initialize_data()
 
         self.prev_search_type = search_type

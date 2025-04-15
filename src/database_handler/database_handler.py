@@ -50,6 +50,102 @@ class DatabaseHandler:
 
         return results[0][0]
 
+    def get_count_of_all_students_in_program(self, program_code):
+
+        self.cursor.execute(f"SELECT COUNT(*) FROM students WHERE program_code='{program_code}';")
+        results = self.cursor.fetchall()
+
+        return results[0][0]
+
+    def get_count_of_all_students_in_college(self, college_code):
+        self.cursor.execute(f"""SELECT COUNT(*) AS student_count
+                            FROM students
+                            JOIN programs ON students.program_code = programs.program_code
+                            JOIN colleges ON programs.college_code = colleges.college_code
+                            WHERE colleges.college_code = '{college_code}';
+                            """)
+
+        results = self.cursor.fetchall()
+
+        return results[0][0]
+
+    def get_count_of_all_programs_in_college(self, college_code):
+
+        self.cursor.execute(f"SELECT COUNT(*) FROM programs WHERE college_code='{college_code}';")
+        results = self.cursor.fetchall()
+
+        return results[0][0]
+
+    def get_count_of_gender(self, identifier=None, entity_type="student"):
+
+        gender_count = {"Male": 0, "Female": 0, "Others": 0, "Prefer not to say": 0}
+
+        if entity_type == "student":
+            self.cursor.execute("""
+                    SELECT gender, COUNT(*) 
+                    FROM students 
+                    GROUP BY gender;""")
+
+        elif entity_type == "program":
+            self.cursor.execute("""
+                    SELECT gender, COUNT(*) 
+                    FROM students 
+                    WHERE program_code = %s 
+                    GROUP BY gender;
+                """, (identifier,))
+
+        elif entity_type == "college":
+            self.cursor.execute("""
+                                SELECT gender, COUNT(*)
+                                FROM students
+                                JOIN programs ON students.program_code = programs.program_code
+                                JOIN colleges ON programs.college_code = colleges.college_code
+                                WHERE colleges.college_code = %s
+                                GROUP BY gender;
+                                """, (identifier,))
+
+        results = self.cursor.fetchall()
+
+        for gender, count in results:
+            gender_count[gender] += count
+
+        return gender_count
+
+    def get_count_of_year_level(self, identifier=None, entity_type="student"):
+
+        year_level_count = {"1st": 0, "2nd": 0, "3rd": 0, "4th": 0, "5th": 0}
+
+        if entity_type == "student":
+            self.cursor.execute("""
+                    SELECT year_level, COUNT(*) 
+                    FROM students 
+                    GROUP BY year_level;""")
+
+        elif entity_type == "program":
+            self.cursor.execute("""
+                                SELECT year_level, COUNT(*) 
+                                FROM students 
+                                WHERE program_code = %s 
+                                GROUP BY year_level;
+                                """, (identifier,))
+
+        elif entity_type == "college":
+            self.cursor.execute("""
+                               SELECT year_level, COUNT(*)
+                               FROM students
+                               JOIN programs ON students.program_code = programs.program_code
+                               JOIN colleges ON programs.college_code = colleges.college_code
+                               WHERE colleges.college_code = %s
+                               GROUP BY year_level;
+                               """, (identifier,))
+
+        results = self.cursor.fetchall()
+
+        for year_level, count in results:
+            year_level_count[year_level] += count
+
+        return year_level_count
+
     def get_entities(self, max_row_per_page, current_page_number, entity_type):
 
         print(f"------Query - max_row_per_page: {max_row_per_page}, current_page_number: {current_page_number}------")

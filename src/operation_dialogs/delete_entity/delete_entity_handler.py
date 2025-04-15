@@ -34,7 +34,7 @@ class DeleteEntityHandler:
             for selected_row in self.selected_rows:
                 self.current_model.delete_entity_from_db(selected_row, self.entity_type)
 
-            self.current_model.get_total_num()
+            self.current_model.set_total_num()
             self.current_model.initialize_data()
 
             # self.current_model.update_page_view(self.table_view)

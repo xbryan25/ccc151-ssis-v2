@@ -45,6 +45,8 @@ class ViewDemographicsPageControls:
 
         self.application_window = view_demographics_page_elements[25]
 
+        self.db_handler = self.students_table_model.db_handler
+
         self.demographics_type_combobox.currentIndexChanged.connect(self.change_view_demographics)
 
         self.view_general_demographics()
@@ -66,16 +68,16 @@ class ViewDemographicsPageControls:
 
         self.demographics_stacked_widget.setCurrentWidget(self.general_demographics_widget)
 
-        self.gd_total_colleges_count_label.setText(str(len(self.colleges_table_model.get_data())))
-        self.gd_total_programs_count_label.setText(str(len(self.programs_table_model.get_data())))
-        self.gd_total_students_count_label.setText(str(len(self.students_table_model.get_data())))
+        self.gd_total_colleges_count_label.setText(str(self.colleges_table_model.get_total_num()))
+        self.gd_total_programs_count_label.setText(str(self.programs_table_model.get_total_num()))
+        self.gd_total_students_count_label.setText(str(self.students_table_model.get_total_num()))
 
     def view_students_demographics(self):
         self.application_window.setWindowTitle("Sequence | View Students Demographics")
 
         self.demographics_stacked_widget.setCurrentWidget(self.students_demographics_widget)
 
-        self.sd_total_students_count_label.setText(str(len(self.students_table_model.get_data())))
+        self.sd_total_students_count_label.setText(str(self.students_table_model.get_total_num()))
 
         self.set_gender_demographic("student")
         self.set_year_level_demographic("student")
@@ -97,12 +99,10 @@ class ViewDemographicsPageControls:
         self.load_college_codes("college")
 
     def set_gender_demographic(self, view_demographic_type, identifier=None):
-        total_students = len(self.students_table_model.get_data())
-        gender_demographic = {"Male": 0, "Female": 0, "Others": 0, "Prefer not to say": 0}
+        total_students = self.students_table_model.get_total_num()
 
         if view_demographic_type == "student":
-            for student in self.students_table_model.get_data():
-                gender_demographic[student[4]] += 1
+            gender_demographic = self.db_handler.get_count_of_gender()
 
             self.sd_gender_count_label.setText(f"Male: {gender_demographic['Male']} "
                                                f"({(gender_demographic['Male'] / total_students) * 100:.2f}%)"
@@ -114,11 +114,8 @@ class ViewDemographicsPageControls:
                                                f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
 
         elif view_demographic_type == "program":
-            program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
-
-            for student in self.students_table_model.get_data():
-                if student[0] in program_to_student_connections[identifier]:
-                    gender_demographic[student[4]] += 1
+            gender_demographic = self.db_handler.get_count_of_gender(identifier=identifier,
+                                                                                          entity_type="program")
 
             self.pd_gender_count_label.setText(f"Male: {gender_demographic['Male']} "
                                                f"({(gender_demographic['Male'] / total_students) * 100:.2f}%)"
@@ -130,13 +127,8 @@ class ViewDemographicsPageControls:
                                                f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
 
         elif view_demographic_type == "college":
-            college_to_program_connections = self.programs_table_model.db_handler.get_colleges_and_programs_connections()
-            program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
-
-            for program_code in college_to_program_connections[identifier]:
-                for student in self.students_table_model.get_data():
-                    if student[0] in program_to_student_connections[program_code]:
-                        gender_demographic[student[4]] += 1
+            gender_demographic = self.db_handler.get_count_of_gender(identifier=identifier,
+                                                                                          entity_type="college")
 
             self.cd_gender_count_label.setText(f"Male: {gender_demographic['Male']} "
                                                f"({(gender_demographic['Male'] / total_students) * 100:.2f}%)"
@@ -148,12 +140,11 @@ class ViewDemographicsPageControls:
                                                f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
 
     def set_year_level_demographic(self, view_demographic_type, identifier=None):
-        total_students = len(self.students_table_model.get_data())
-        year_level_demographic = {"1st": 0, "2nd": 0, "3rd": 0, "4th": 0, "5th": 0}
+        total_students = self.students_table_model.get_total_num()
 
         if view_demographic_type == "student":
-            for student in self.students_table_model.get_data():
-                year_level_demographic[student[3]] += 1
+
+            year_level_demographic = self.db_handler.get_count_of_year_level()
 
             self.sd_year_level_count_label.setText(f"1st Year: {year_level_demographic['1st']} "
                                                    f"({(year_level_demographic['1st'] / total_students) * 100:.2f}%)"
@@ -167,11 +158,8 @@ class ViewDemographicsPageControls:
                                                    f"({(year_level_demographic['5th'] / total_students) * 100:.2f}%)")
 
         elif view_demographic_type == "program":
-            program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
-
-            for student in self.students_table_model.get_data():
-                if student[0] in program_to_student_connections[identifier]:
-                    year_level_demographic[student[3]] += 1
+            year_level_demographic = self.db_handler.get_count_of_year_level(identifier=identifier,
+                                                                                                  entity_type="program")
 
             self.pd_year_level_count_label.setText(f"1st Year: {year_level_demographic['1st']} "
                                                    f"({(year_level_demographic['1st'] / total_students) * 100:.2f}%)"
@@ -185,13 +173,8 @@ class ViewDemographicsPageControls:
                                                    f"({(year_level_demographic['5th'] / total_students) * 100:.2f}%)")
 
         elif view_demographic_type == "college":
-            college_to_program_connections = self.programs_table_model.db_handler.get_colleges_and_programs_connections()
-            program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
-
-            for program_code in college_to_program_connections[identifier]:
-                for student in self.students_table_model.get_data():
-                    if student[0] in program_to_student_connections[program_code]:
-                        year_level_demographic[student[3]] += 1
+            year_level_demographic = self.db_handler.get_count_of_year_level(identifier=identifier,
+                                                                                                  entity_type="college")
 
             self.cd_year_level_count_label.setText(f"1st Year: {year_level_demographic['1st']} "
                                                    f"({(year_level_demographic['1st'] / total_students) * 100:.2f}%)"
@@ -232,7 +215,7 @@ class ViewDemographicsPageControls:
                                                    f"\n5th Year: -")
 
     def load_college_codes(self, view_demographic_type):
-        college_codes = self.colleges_table_model.db_handler.get_all_entity_information_codes('college')
+        college_codes = self.db_handler.get_all_entity_information_codes('college')
 
         if view_demographic_type == "program":
             self.pd_select_college_combobox.addItem("--Select a college--")
@@ -255,9 +238,9 @@ class ViewDemographicsPageControls:
         else:
             self.pd_select_program_combobox.addItem("--Select a program--")
 
-            program_codes = self.programs_table_model.db_handler.get_all_entity_information_codes('program')
+            program_codes = self.db_handler.get_all_entity_information_codes('program')
 
-            colleges_and_programs_connections = self.programs_table_model.db_handler.get_colleges_and_programs_connections()
+            colleges_and_programs_connections = self.db_handler.get_colleges_and_programs_connections()
             has_connection = False
 
             for program_code in program_codes:
@@ -271,9 +254,8 @@ class ViewDemographicsPageControls:
 
     def load_program_data(self, selected_program_code):
         if selected_program_code.strip() != "" and selected_program_code != "-" and selected_program_code != "--Select a program--":
-            program_to_student_connections = self.programs_table_model.db_handler.get_programs_and_students_connections()
 
-            self.pd_total_students_count_label.setText(str(len(program_to_student_connections[selected_program_code])))
+            self.pd_total_students_count_label.setText(str(self.get_number_of_students_in_program(selected_program_code)))
             self.set_gender_demographic("program", selected_program_code)
             self.set_year_level_demographic("program", selected_program_code)
         else:
@@ -284,6 +266,7 @@ class ViewDemographicsPageControls:
 
             self.cd_total_programs_count_label.setText(
                 str(self.get_number_of_programs_in_college(selected_college_code)))
+
             self.cd_total_students_count_label.setText(str(self.get_number_of_students_in_college(selected_college_code)))
 
             self.set_gender_demographic("college", selected_college_code)
@@ -291,24 +274,14 @@ class ViewDemographicsPageControls:
         else:
             self.clear_data_in_labels("college")
 
+    def get_number_of_students_in_program(self, program_code):
+        return self.db_handler.get_count_of_all_students_in_program(program_code)
+
     def get_number_of_students_in_college(self, college_code):
-        number_of_students = 0
-
-        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
-
-        program_to_student_connections = self.colleges_table_model.db_handler.get_programs_and_students_connections()
-
-        for program_code in college_to_program_connections[college_code]:
-            for student in self.students_table_model.get_data():
-                if student[0] in program_to_student_connections[program_code]:
-                    number_of_students += 1
-
-        return number_of_students
+        return self.db_handler.get_count_of_all_students_in_college(college_code)
 
     def get_number_of_programs_in_college(self, college_code):
-        college_to_program_connections = self.colleges_table_model.db_handler.get_colleges_and_programs_connections()
-
-        return len(college_to_program_connections[college_code])
+        return self.db_handler.get_count_of_all_programs_in_college(college_code)
 
     def add_signals(self):
         self.pd_select_college_combobox.currentTextChanged.connect(self.load_program_codes)
