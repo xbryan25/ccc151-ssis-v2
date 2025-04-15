@@ -173,8 +173,7 @@ class CustomTableModel(QAbstractTableModel):
 
         self.reset_search_and_sort_fields()
 
-    def update_entity(self, entity_replacement, entity_type, row_to_edit, edit_type="from_dialog",
-                      edit_mode="single"):
+    def update_entity(self, entity_replacement, entity_type, row_to_edit, edit_mode="single"):
 
         entity_to_edit = self.get_data()[row_to_edit]
 
@@ -228,24 +227,6 @@ class CustomTableModel(QAbstractTableModel):
 
         # Delete from DB
         self.db_handler.delete_entity(identifier, entity_type)
-
-    # def update_data_from_db_after_deleting(self, selected_rows):
-    #     # This method updates the internal data structure of table model after deleting from database
-    #
-    #     actual_selected_rows = [(self.max_row_per_page * (self.current_page_number - 1)) + selected_row
-    #                             for selected_row in selected_rows]
-    #
-    #     self.beginResetModel()
-    #
-    #     # Instead of deleting values one by one in self.data_from_db,
-    #     # make another list that doesn't contain the affected rows and overwrite
-    #     # self.data_from_db instead
-    #     self.data_from_db = [row for i, row in enumerate(self.get_data()) if i not in actual_selected_rows]
-    #     self.total_num = len(self.data_from_db)
-    #
-    #     self.endResetModel()
-    #
-    #     self.model_data_is_empty()
 
     def search_entities(self, search_type, search_method, search_text):
         # Connected to self.sort_filtered_entities()
@@ -361,7 +342,6 @@ class CustomTableModel(QAbstractTableModel):
 
         self.initialize_data()
 
-
     def set_next_page(self, previous_page_button, next_page_button):
         if self.current_page_number + 1 <= self.max_pages:
             previous_page_button.setEnabled(True)
@@ -401,7 +381,6 @@ class CustomTableModel(QAbstractTableModel):
             return None
 
         if role == Qt.ItemDataRole.DisplayRole or role == Qt.ItemDataRole.EditRole:
-
             return self.data_from_db[index.row()][index.column()]
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
@@ -424,58 +403,49 @@ class CustomTableModel(QAbstractTableModel):
                 return True
 
             if self.information_type == "student":
-                self.existing_students_information = self.db_handler.get_all_existing_students()
+                # self.existing_students_information = self.db_handler.get_all_existing_students()
 
-                valid, issue = self.is_valid_edit_value.for_students_cell(index, value,
-                                                                            self.existing_students_information["ID Number"],
-                                                                            self.existing_students_information["Full Name"],
-                                                                            self.data_from_db)
+                valid, issue = self.is_valid_edit_value.for_students_cell(index,
+                                                                          value,
+                                                                          self.db_handler,
+                                                                          self.data_from_db)
 
             elif self.information_type == "program":
-                self.existing_programs_information = self.db_handler.get_all_existing_programs()
 
-                valid, issue = self.is_valid_edit_value.for_programs_cell(index, value,
-                                                                            self.existing_programs_information["Program Code"],
-                                                                            self.existing_programs_information["Program Name"])
+                valid, issue = self.is_valid_edit_value.for_programs_cell(index,
+                                                                          value,
+                                                                          self.db_handler)
 
             elif self.information_type == "college":
-                self.existing_colleges_information = self.db_handler.get_all_existing_colleges()
-
                 valid, issue = self.is_valid_edit_value.for_colleges_cell(index,
                                                                           value,
-                                                                          self.existing_colleges_information["College Code"],
-                                                                          self.existing_colleges_information["College Name"])
+                                                                          self.db_handler)
 
             if valid:
                 # If program code is not changed, a different confirm edit dialog will show
-                if ((self.information_type == "program" or self.information_type == "college")
-                        and index.column() == 0 and old_value == value):
+                # if ((self.information_type == "program" or self.information_type == "college")
+                #         and index.column() == 0 and old_value == value):
+                #
+                #     self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type,
+                #                                                     [self.get_data()[index.row()][0]])
 
-                    self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type,
-                                                                    self.get_data()[index.row()][0])
-
-                elif self.information_type == "program" and index.column() == 0  and old_value != value:
-                    len_of_students_under_program_code = len(
-                        self.db_handler.get_programs_and_students_connections()[self.get_data()][index.row()][0])
-
-
+                if self.information_type == "program" and index.column() == 0 and old_value != value:
+                    len_of_students_under_program_code = self.db_handler.get_count_of_all_students_in_program(self.get_data()[index.row()][0])
 
                     self.confirm_to_edit_dialog = ConfirmEditDialog("program",
-                                                                    old_value,
+                                                                    [old_value],
                                                                     num_of_affected=len_of_students_under_program_code,
-                                                                    information_code_affected=True)
+                                                                    entity_code_affected=True)
 
                 elif self.information_type == "college" and index.column() == 0 and old_value != value:
-
-                    len_of_programs_under_college_code = len(
-                        self.db_handler.get_colleges_and_programs_connections()[self.get_data()][index.row()][0])
+                    len_of_programs_under_college_code = self.db_handler.get_count_of_all_programs_in_college(self.get_data()[index.row()][0])
 
                     self.confirm_to_edit_dialog = ConfirmEditDialog("college",
-                                                                    old_value,
+                                                                    [old_value],
                                                                     num_of_affected=len_of_programs_under_college_code,
-                                                                    information_code_affected=True)
+                                                                    entity_code_affected=True)
                 else:
-                    self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type, self.get_data()[index.row()][0])
+                    self.confirm_to_edit_dialog = ConfirmEditDialog(self.information_type, [self.get_data()[index.row()][0]])
 
                 self.confirm_to_edit_dialog.exec()
 
@@ -505,8 +475,7 @@ class CustomTableModel(QAbstractTableModel):
 
                     self.update_entity(temp_list,
                                        self.information_type,
-                                       row_to_edit=index.row(),
-                                       edit_type='from_model')
+                                       row_to_edit=index.row())
 
                     self.success_edit_item = SuccessEditItemDialog(self.information_type, [self.data_from_db[index.row()][0]])
                     self.success_edit_item.exec()

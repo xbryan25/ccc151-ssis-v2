@@ -209,6 +209,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_type_icon.setScaledContents(True)
 
         self.entity_type_label.setText("Programs")
+        self.add_entity_button.setText(" Add program")
 
         # self.programs_table_view.reset()
         self.programs_table_model.layoutChanged.emit()

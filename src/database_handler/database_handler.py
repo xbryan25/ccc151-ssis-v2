@@ -470,6 +470,66 @@ class DatabaseHandler:
 
         return results
 
+    def check_if_id_number_exists(self, id_number):
+        sql = "SELECT 1 FROM students WHERE id_number = %s LIMIT 1;"
+        self.cursor.execute(sql, (id_number,))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
+    def check_if_name_combination_exists(self, first_name, last_name):
+        sql = "SELECT 1 FROM students WHERE first_name = %s and last_name = %s LIMIT 1;"
+        self.cursor.execute(sql, (first_name, last_name))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
+    def check_if_program_code_exists(self, program_code):
+        sql = "SELECT 1 FROM programs WHERE program_code = %s LIMIT 1;"
+        self.cursor.execute(sql, (program_code,))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
+    def check_if_program_name_exists(self, program_name):
+        sql = "SELECT 1 FROM programs WHERE program_name = %s LIMIT 1;"
+        self.cursor.execute(sql, (program_name,))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
+    def check_if_college_code_exists(self, college_code):
+        sql = "SELECT 1 FROM colleges WHERE college_code = %s LIMIT 1;"
+        self.cursor.execute(sql, (college_code,))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
+    def check_if_college_name_exists(self, college_name):
+        sql = "SELECT 1 FROM colleges WHERE college_name = %s LIMIT 1;"
+        self.cursor.execute(sql, (college_name,))
+        result = self.cursor.fetchone()
+
+        if result:
+            return True
+        else:
+            return False
+
     def add_entity(self, entity_data, entity_type):
         sql = ""
         values = ()

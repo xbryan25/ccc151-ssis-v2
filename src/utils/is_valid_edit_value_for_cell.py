@@ -6,7 +6,7 @@ from utils.is_valid_verifiers import IsValidVerifiers
 class IsValidEditValueForCell:
 
     @staticmethod
-    def for_students_cell(index, value, id_numbers, full_names, data_from_csv):
+    def for_students_cell(index, value, db_handler, data_from_db):
         issue = ""
         valid = True
 
@@ -16,7 +16,7 @@ class IsValidEditValueForCell:
         elif index.column() == 0 and not IsValidVerifiers.id_number(value.strip()):
             issue = "ID number not in correct format"
             valid = False
-        elif index.column() == 0 and value.strip() in id_numbers:
+        elif index.column() == 0 and db_handler.check_if_id_number_exists(value):
             issue = "ID already exists"
             valid = False
 
@@ -26,9 +26,9 @@ class IsValidEditValueForCell:
         elif index.column() == 1 and not IsValidVerifiers.first_name(value.strip()):
             issue = "First name not in correct format"
             valid = False
-        # Converts the old and new full names into all caps
-        elif index.column() == 1 and f"{value.strip().upper()} {data_from_csv[index.row()][index.column() + 1].upper()}" in \
-                [full_name.upper() for full_name in full_names]:
+        elif index.column() == 1 and db_handler.check_if_name_combination_exists(value.strip(),
+                                                                                 data_from_db[index.row()][
+                                                                                     index.column() + 1]):
             issue = "Name combination exists"
             valid = False
 
@@ -38,8 +38,8 @@ class IsValidEditValueForCell:
         elif index.column() == 2 and not IsValidVerifiers.last_name(value.strip()):
             issue = "Last name not in correct format"
             valid = False
-        elif index.column() == 2 and f"{data_from_csv[index.row()][index.column() - 1].upper()} {value.strip().upper()}" in \
-                [full_name.upper() for full_name in full_names]:
+        elif index.column() == 2 and db_handler.check_if_name_combination_exists(data_from_db[index.row()][
+                index.column() - 1], value.strip()):
             issue = "Name combination exists"
             valid = False
 
@@ -60,7 +60,7 @@ class IsValidEditValueForCell:
         return valid, issue
 
     @staticmethod
-    def for_programs_cell(index, value, program_codes, program_names):
+    def for_programs_cell(index, value, db_handler):
         issue = ""
         valid = True
 
@@ -70,7 +70,7 @@ class IsValidEditValueForCell:
         elif index.column() == 0 and not IsValidVerifiers.program_code(value.strip()):
             issue = "Program code not in correct format"
             valid = False
-        elif index.column() == 0 and value.strip().upper() in program_codes:
+        elif index.column() == 0 and db_handler.check_if_program_code_exists(value):
             issue = "Program code already exists"
             valid = False
 
@@ -80,15 +80,14 @@ class IsValidEditValueForCell:
         elif index.column() == 1 and not IsValidVerifiers.program_name(value.strip()):
             issue = "Program name not in correct format"
             valid = False
-        elif index.column() == 1 and value.strip().upper() in \
-                [program_name.upper() for program_name in program_names]:
+        elif index.column() == 1 and db_handler.check_if_program_name_exists(value.strip()):
             issue = "Program name already exists"
             valid = False
 
         return valid, issue
 
     @staticmethod
-    def for_colleges_cell(index, value, college_codes, college_names):
+    def for_colleges_cell(index, value, db_handler):
         issue = ""
         valid = True
 
@@ -98,7 +97,7 @@ class IsValidEditValueForCell:
         elif index.column() == 0 and not IsValidVerifiers.college_code(value.strip()):
             issue = "College code not in correct format"
             valid = False
-        elif index.column() == 0 and value.strip().upper() in college_codes:
+        elif index.column() == 0 and db_handler.check_if_college_code_exists(value):
             issue = "College code already exists"
             valid = False
 
@@ -108,8 +107,7 @@ class IsValidEditValueForCell:
         elif index.column() == 1 and not IsValidVerifiers.college_name(value.strip()):
             issue = "College name not in correct format"
             valid = False
-        elif index.column() == 1 and value.strip().upper() in \
-                [college_name.upper() for college_name in college_names]:
+        elif index.column() == 1 and db_handler.check_if_college_name_exists(value):
             issue = "College name already exists"
             valid = False
 
