@@ -424,7 +424,17 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
             self.students_table_model.update_page_view(self.students_table_view)
 
+            # Get the number of max_pages before it is updated
+            old_max_pages = int(self.max_pages_label.text().replace("/", "").strip())
+
             self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
+
+            if (int(self.current_page_lineedit.text().strip()) > self.students_table_model.max_pages or
+                    int(self.current_page_lineedit.text().strip()) == old_max_pages):
+
+                self.current_page_lineedit.blockSignals(True)
+                self.current_page_lineedit.setText(str(self.students_table_model.max_pages))
+                self.current_page_lineedit.blockSignals(False)
 
         elif (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
@@ -434,7 +444,17 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
             self.programs_table_model.update_page_view(self.programs_table_view)
 
+            # Get the number of max_pages before it is updated
+            old_max_pages = int(self.max_pages_label.text().replace("/", "").strip())
+
             self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
+
+            if (int(self.current_page_lineedit.text().strip()) > self.programs_table_model.max_pages or
+                    int(self.current_page_lineedit.text().strip()) == old_max_pages):
+
+                self.current_page_lineedit.blockSignals(True)
+                self.current_page_lineedit.setText(str(self.programs_table_model.max_pages))
+                self.current_page_lineedit.blockSignals(False)
 
         elif (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.colleges_table_view_widget):
@@ -444,7 +464,17 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
             self.colleges_table_model.update_page_view(self.colleges_table_view)
 
+            # Get the number of max_pages before it is updated
+            old_max_pages = int(self.max_pages_label.text().replace("/", "").strip())
+
             self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
+
+            if (int(self.current_page_lineedit.text().strip()) > self.colleges_table_model.max_pages or
+                    int(self.current_page_lineedit.text().strip()) == old_max_pages):
+
+                self.current_page_lineedit.blockSignals(True)
+                self.current_page_lineedit.setText(str(self.colleges_table_model.max_pages))
+                self.current_page_lineedit.blockSignals(False)
 
     def resizeEvent(self, event):
         font = QFont()
@@ -461,25 +491,25 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.update_table_views()
 
-    def changeEvent(self, event):
-        if event.type() == QEvent.Type.WindowStateChange:
-
-            if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
-                # Handle minimize state
-                # pass
-                # self.students_table_view.clearSelection()
-                # self.students_table_view.setCurrentIndex(QModelIndex())
-                print("Window is minimized")
-                # self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-                # self.students_sort_filter_proxy_model.invalidateFilter()
-                # self.students_table_view.selectionModel().clear()
-            elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
-                # Handle fullscreen state
-
-                # self.students_table_view.clearSelection()
-                # self.students_table_view.setCurrentIndex(QModelIndex())
-                print("Window is fullscreen!")
-        super().changeEvent(event)
+    # def changeEvent(self, event):
+    #     if event.type() == QEvent.Type.WindowStateChange:
+    #
+    #         if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
+    #             # Handle minimize state
+    #             # pass
+    #             # self.students_table_view.clearSelection()
+    #             # self.students_table_view.setCurrentIndex(QModelIndex())
+    #             print("Window is minimized")
+    #             # self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+    #             # self.students_sort_filter_proxy_model.invalidateFilter()
+    #             # self.students_table_view.selectionModel().clear()
+    #         elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
+    #             # Handle fullscreen state
+    #
+    #             # self.students_table_view.clearSelection()
+    #             # self.students_table_view.setCurrentIndex(QModelIndex())
+    #             print("Window is fullscreen!")
+    #     super().changeEvent(event)
 
     def is_window_fullscreen(self):
         screen_geometry = QGuiApplication.primaryScreen().geometry()

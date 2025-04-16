@@ -326,12 +326,20 @@ class CustomTableModel(QAbstractTableModel):
         if page_number < 1:
             self.current_page_number = 1
             previous_page_button.setEnabled(False)
+            #
+            # current_page_lineedit.blockSignals(True)
+            # current_page_lineedit.setText("1")
+            # current_page_lineedit.blockSignals(False)
+
+        elif page_number == 1:
+            self.current_page_number = 1
+            previous_page_button.setEnabled(False)
 
             current_page_lineedit.blockSignals(True)
             current_page_lineedit.setText("1")
             current_page_lineedit.blockSignals(False)
 
-        elif page_number > self.max_pages:
+        elif page_number >= self.max_pages:
             self.current_page_number = self.max_pages
             next_page_button.setEnabled(False)
 

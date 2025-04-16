@@ -38,7 +38,7 @@ class TableViewPageControls:
             return
 
         if str_page_number == "":
-            page_number = 1
+            page_number = -1
         else:
             page_number = int(current_page_lineedit.text())
 
