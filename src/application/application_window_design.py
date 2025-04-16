@@ -922,7 +922,7 @@ class Ui_MainWindow(object):
         self.contents_scroll_area.setWidgetResizable(True)
         self.contents_scroll_area.setObjectName("contents_scroll_area")
         self.scroll_area_widget = QtWidgets.QWidget()
-        self.scroll_area_widget.setGeometry(QtCore.QRect(0, 0, 630, 636))
+        self.scroll_area_widget.setGeometry(QtCore.QRect(0, 0, 1171, 573))
         self.scroll_area_widget.setObjectName("scroll_area_widget")
         self.gridLayout_12 = QtWidgets.QGridLayout(self.scroll_area_widget)
         self.gridLayout_12.setObjectName("gridLayout_12")
@@ -1650,15 +1650,15 @@ class Ui_MainWindow(object):
         self.scroll_area_title_label.setText(_translate("MainWindow", "Sequence"))
         self.scroll_area_contents.setText(_translate("MainWindow", "Sequence is a simple student information system (SSIS) made in accordance with the requirements of CCC151. The name \'Sequence\' comes from the fact that the data in this application is stored in a particular order, hence, a sequence.\n"
 "\n"
-"Sequence is made using Python 3.12. It uses PyQT6 for the graphical user interface (GUI). It also uses built-in libraries such as csv (for .csv read and write operations) and re (for user input validation). Qt Designer was used to create the interface of the application. The final look of the application was made possible using .qss files.\n"
+"Sequence is made using Python 3.12. It uses PyQT6 for the graphical user interface (GUI). It also uses libraries such as PyMySQL (for MySQL connection) and re (for user input validation). Qt Designer was used to create the interface of the application. The final look of the application was made possible using .qss files.\n"
 "\n"
 "This application supports the create, read, update, delete, and list (CRUDL) operations for students, programs, and colleges. Records can also be sorted and searched according to a criteria that will be set by the users.\n"
 "\n"
-"The students, programs, and colleges data is stored in three separate .csv files. These .csv files are continuously updated when the save button in the application is pressed. The application does not modify the .csv files after every operation. Instead, the application stores the data in models. These models will used by the views to produced a tabular presentation of the data.\n"
+"The students, programs, and colleges data are stored in three relations in a database made using MySQL. The application does not permanently modify the relations after every operation. Instead, only the ‘Save changes’ button triggers the .commit() function in PyMySQL, which finalizes the transaction and applies all of the recent changes to the database. This way, whenever the user feels the need to restore the state of the data based on the previous commit, they can do so by pressing the ‘Undo all changes’ button. As for displaying the data from the database in the application, QAbstractTableModel is used. More specifically, data from the database will be loaded into an internal data structure in QAbstractTableModel. Three models are created for holding parts of the data of students, programs, and colleges, respectively. These models will be used by the QTableViews to produce a tabular presentation of the data.\n"
 "\n"
-"When data is being edited, added, or deleted, all of the changes go through the models first. Only when the save button is pressed that the .csv files get modified. This is done to increase efficiency for large data sets, as a save button can write the changes in the .csv files in one operation.\n"
+"As this application aims to handle large amounts of data, it doesn’t load all of it in the internal data structure of the QAbstractTableModel. What it does instead is utilizing pagination to efficiently retrieve a part of data from the database using the current page number. This way, only a part of the data gets displayed by the QTableViews. To access the next/previous set of data, there are buttons available for navigation. By utilizing pagination, the application won’t use a lot of memory since only a part of the data gets loaded to the internal data structure of the QAbstractTableModels. This won’t be noticeable with a low number of data sets, however. Where this pagination approach really shines is when the user has thousands, or even millions of data in the database. It essentially makes the application run smooth as compared to when not using pagination and by loading all of the data in one go.\n"
 "\n"
-"The development of this application took more or less four weeks. "))
+"This application has two versions. The first version used .csv files as a database. It also loaded all of the data in the QAbstractTableModels in one go, clearly not using pagination techniques. The second version (which is the version of this application) vastly improved upon the first by utilizing MySQL for the database and using pagination techniques. This is done to improve the performance of the application when loading large amounts of data. The development of this application took more or less eight weeks, with the first version taking around four weeks, and the second version taking just as long."))
         self.about_this_app_title_label.setText(_translate("MainWindow", "Sequence"))
         self.about_this_app_label.setText(_translate("MainWindow", "About this app"))
         self.demographics_back_to_main_button.setText(_translate("MainWindow", "Go back to main screen"))
