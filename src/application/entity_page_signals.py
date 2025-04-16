@@ -111,9 +111,7 @@ class EntityPageSignals:
                                                                                                 self.reset_item_delegates.reset,
                                                                                                 self.students_table_view,
                                                                                                 self.current_page_lineedit,
-                                                                                                self.max_pages_label,
-                                                                                                self.previous_page_button,
-                                                                                                self.next_page_button
+                                                                                                self.max_pages_label
                                                                                                 ))
 
             self.sort_type_combobox.currentTextChanged.connect(
@@ -178,9 +176,7 @@ class EntityPageSignals:
                                                                   self.reset_item_delegates.reset,
                                                                   self.programs_table_view,
                                                                   self.current_page_lineedit,
-                                                                  self.max_pages_label,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button
+                                                                  self.max_pages_label
                                                                   ))
 
             self.sort_type_combobox.currentTextChanged.connect(
@@ -243,9 +239,7 @@ class EntityPageSignals:
                                                                   self.reset_item_delegates.reset,
                                                                   self.colleges_table_view,
                                                                   self.current_page_lineedit,
-                                                                  self.max_pages_label,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button
+                                                                  self.max_pages_label
                                                                   ))
 
             self.sort_type_combobox.currentTextChanged.connect(

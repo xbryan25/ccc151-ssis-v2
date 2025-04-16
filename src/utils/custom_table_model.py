@@ -65,8 +65,6 @@ class CustomTableModel(QAbstractTableModel):
 
         self.model_data_is_empty()
 
-        # self.save_button = None
-
     def get_data(self):
         return self.data_from_db
 
@@ -239,7 +237,6 @@ class CustomTableModel(QAbstractTableModel):
                                                                                    search_method,
                                                                                    search_text)
 
-
             self.beginResetModel()
 
             self.data_from_db = self.db_handler.get_sorted_filtered_entities(self.max_row_per_page,
@@ -268,6 +265,7 @@ class CustomTableModel(QAbstractTableModel):
         self.prev_search_text = search_text
 
         self.layoutChanged.emit()
+        self.dataChanged.emit(self.index(0, 0), self.index(self.rowCount() - 1, self.columnCount() - 1))
 
     def sort_filtered_entities(self, sort_column, sort_order):
         # Connected to self.search_entities()
@@ -328,19 +326,30 @@ class CustomTableModel(QAbstractTableModel):
         if page_number < 1:
             self.current_page_number = 1
             previous_page_button.setEnabled(False)
+
+            current_page_lineedit.blockSignals(True)
             current_page_lineedit.setText("1")
+            current_page_lineedit.blockSignals(False)
 
         elif page_number > self.max_pages:
             self.current_page_number = self.max_pages
             next_page_button.setEnabled(False)
+
+            current_page_lineedit.blockSignals(True)
             current_page_lineedit.setText(f"{self.max_pages}")
+            current_page_lineedit.blockSignals(False)
         else:
             self.current_page_number = page_number
 
             previous_page_button.setEnabled(True)
             next_page_button.setEnabled(True)
 
-        self.initialize_data()
+        if self.get_is_data_currently_filtered():
+            self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
+        elif self.get_is_data_currently_sorted():
+            self.sort_entities(self.prev_sort_column, self.prev_sort_order)
+        else:
+            self.initialize_data()
 
     def set_next_page(self, previous_page_button, next_page_button):
         if self.current_page_number + 1 <= self.max_pages:
@@ -348,7 +357,7 @@ class CustomTableModel(QAbstractTableModel):
 
             self.current_page_number += 1
 
-            if self.get_is_data_currently_filtered() and self.get_is_data_currently_sorted():
+            if self.get_is_data_currently_filtered():
                 self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
             elif self.get_is_data_currently_sorted():
                 self.sort_entities(self.prev_sort_column, self.prev_sort_order)
@@ -494,18 +503,20 @@ class CustomTableModel(QAbstractTableModel):
 
     # Override
     def rowCount(self, index=None):
-        total_rows = len(self.data_from_db)
+        return len(self.data_from_db)
 
-        # If the current page is not the last page, return max rows per page
-        if self.current_page_number == 1 or self.current_page_number < self.max_pages:
-            return min(self.max_row_per_page, total_rows)
-
-        # For the last page, calculate the number of remaining rows
-        remaining_rows = total_rows % self.max_row_per_page
-        if remaining_rows == 0:  # If the last page is full
-            return self.max_row_per_page
-        else:
-            return remaining_rows
+        # total_rows = len(self.data_from_db)
+        #
+        # # If the current page is not the last page, return max rows per page
+        # if self.current_page_number == 1 or self.current_page_number < self.max_pages:
+        #     return min(self.max_row_per_page, total_rows)
+        #
+        # # For the last page, calculate the number of remaining rows
+        # remaining_rows = total_rows % self.max_row_per_page
+        # if remaining_rows == 0:  # If the last page is full
+        #     return self.max_row_per_page
+        # else:
+        #     return remaining_rows
 
     # Override
     def columnCount(self, index=None):

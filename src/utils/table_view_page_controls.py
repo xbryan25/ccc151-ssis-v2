@@ -10,7 +10,9 @@ class TableViewPageControls:
 
         model.set_previous_page(previous_page_button, next_page_button)
 
+        current_page_lineedit.blockSignals(True)
         current_page_lineedit.setText(str(model.current_page_number))
+        current_page_lineedit.blockSignals(False)
 
     @staticmethod
     def go_to_next_page(table_view, model, current_page_lineedit, previous_page_button, next_page_button):
@@ -19,7 +21,9 @@ class TableViewPageControls:
 
         model.set_next_page(previous_page_button, next_page_button)
 
+        current_page_lineedit.blockSignals(True)
         current_page_lineedit.setText(str(model.current_page_number))
+        current_page_lineedit.blockSignals(False)
 
     @staticmethod
     def go_to_specific_page(table_view, model, current_page_lineedit, previous_page_button, next_page_button):
@@ -55,7 +59,3 @@ class TableViewPageControls:
     @staticmethod
     def update_max_pages_label(model, max_pages_label):
         max_pages_label.setText(model.max_pages)
-
-    @staticmethod
-    def update_navigation_buttons_state(model, prev_button, next_button):
-        print("Yo")
