@@ -90,8 +90,6 @@ class EntityPageSignals:
 
         if entity_type == "student":
 
-            self.current_entity_type = "student"
-
             self.students_table_view.doubleClicked.connect(self.reset_item_delegates.
                                                            show_combobox_delegate_students_table_view)
 
@@ -100,8 +98,9 @@ class EntityPageSignals:
             (self.add_entity_button.clicked.connect
              (lambda: self.open_dialogs.open_add_entity_dialog_for_students()))
 
-
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
+            self.search_type_combobox.currentTextChanged.connect(self.on_text_changed_search_lineedit)
+            self.search_method_combobox.currentTextChanged.connect(self.on_text_changed_search_lineedit)
 
             self.search_timer.timeout.connect(lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
                                                                                                 self.search_type_combobox,
@@ -154,8 +153,6 @@ class EntityPageSignals:
 
         elif entity_type == "program":
 
-            self.current_entity_type = "program"
-
             self.programs_table_view.doubleClicked.connect(self.reset_item_delegates.
                                                            show_combobox_delegate_programs_table_view)
 
@@ -166,6 +163,8 @@ class EntityPageSignals:
              (lambda: self.open_dialogs.open_add_entity_dialog_for_programs()))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
+            self.search_type_combobox.currentTextChanged.connect(self.on_text_changed_search_lineedit)
+            self.search_method_combobox.currentTextChanged.connect(self.on_text_changed_search_lineedit)
 
             self.search_timer.timeout.connect(
                 lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
@@ -220,8 +219,6 @@ class EntityPageSignals:
 
         elif entity_type == "college":
 
-            self.current_entity_type = "college"
-
             self.colleges_table_view.customContextMenuRequested.connect(
                 self.colleges_table_view_context_menu.show_context_menu)
 
@@ -229,6 +226,8 @@ class EntityPageSignals:
              (lambda: self.open_dialogs.open_add_entity_dialog_for_colleges()))
 
             self.search_input_lineedit.textChanged.connect(self.on_text_changed_search_lineedit)
+            self.search_type_combobox.currentTextChanged.connect(self.on_text_changed_search_lineedit)
+            self.search_method_combobox.currentTextChanged.connect(self.on_text_changed_search_lineedit)
 
             self.search_timer.timeout.connect(
                 lambda: SearchAndSortHeader.search_using_lineedit(entity_type,
@@ -285,10 +284,10 @@ class EntityPageSignals:
                                                                            self.search_input_lineedit))
 
         (self.save_changes_button.clicked.connect
-         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.current_entity_type, "save", self.max_pages_label)))
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(entity_type, "save", self.max_pages_label)))
 
         (self.undo_all_changes_button.clicked.connect
-         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(self.current_entity_type, "undo", self.max_pages_label)))
+         (lambda: self.open_dialogs.open_confirm_save_or_undo_dialog(entity_type, "undo", self.max_pages_label)))
 
     def on_text_changed_search_lineedit(self):
         # So everytime a key gets entered in self.search_input_lineedit,
