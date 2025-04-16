@@ -321,19 +321,17 @@ class CustomTableModel(QAbstractTableModel):
         self.prev_sort_column = sort_column
         self.prev_sort_order = sort_order
 
-    def set_specific_page(self, page_number, current_page_lineedit, previous_page_button, next_page_button):
+    def set_specific_page(self, page_number, current_page_lineedit, page_buttons):
 
         if page_number < 1:
             self.current_page_number = 1
-            previous_page_button.setEnabled(False)
-            #
-            # current_page_lineedit.blockSignals(True)
-            # current_page_lineedit.setText("1")
-            # current_page_lineedit.blockSignals(False)
+            page_buttons["previous_page"].setEnabled(False)
+            page_buttons["first_page"].setEnabled(False)
 
         elif page_number == 1:
             self.current_page_number = 1
-            previous_page_button.setEnabled(False)
+            page_buttons["previous_page"].setEnabled(False)
+            page_buttons["first_page"].setEnabled(False)
 
             current_page_lineedit.blockSignals(True)
             current_page_lineedit.setText("1")
@@ -341,7 +339,8 @@ class CustomTableModel(QAbstractTableModel):
 
         elif page_number >= self.max_pages:
             self.current_page_number = self.max_pages
-            next_page_button.setEnabled(False)
+            page_buttons["next_page"].setEnabled(False)
+            page_buttons["last_page"].setEnabled(False)
 
             current_page_lineedit.blockSignals(True)
             current_page_lineedit.setText(f"{self.max_pages}")
@@ -349,8 +348,11 @@ class CustomTableModel(QAbstractTableModel):
         else:
             self.current_page_number = page_number
 
-            previous_page_button.setEnabled(True)
-            next_page_button.setEnabled(True)
+            page_buttons["previous_page"].setEnabled(True)
+            page_buttons["first_page"].setEnabled(True)
+
+            page_buttons["next_page"].setEnabled(True)
+            page_buttons["last_page"].setEnabled(True)
 
         if self.get_is_data_currently_filtered():
             self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
@@ -359,9 +361,10 @@ class CustomTableModel(QAbstractTableModel):
         else:
             self.initialize_data()
 
-    def set_next_page(self, previous_page_button, next_page_button):
+    def set_next_page(self, page_buttons):
         if self.current_page_number + 1 <= self.max_pages:
-            previous_page_button.setEnabled(True)
+            page_buttons["previous_page"].setEnabled(True)
+            page_buttons["first_page"].setEnabled(True)
 
             self.current_page_number += 1
 
@@ -373,11 +376,13 @@ class CustomTableModel(QAbstractTableModel):
                 self.initialize_data()
 
         if self.current_page_number == self.max_pages:
-            next_page_button.setEnabled(False)
+            page_buttons["next_page"].setEnabled(False)
+            page_buttons["last_page"].setEnabled(False)
 
-    def set_previous_page(self, previous_page_button, next_page_button):
+    def set_previous_page(self, page_buttons):
         if self.current_page_number - 1 >= 1:
-            next_page_button.setEnabled(True)
+            page_buttons["next_page"].setEnabled(True)
+            page_buttons["last_page"].setEnabled(True)
 
             self.current_page_number -= 1
 
@@ -389,7 +394,40 @@ class CustomTableModel(QAbstractTableModel):
                 self.initialize_data()
 
         if self.current_page_number == 1:
-            previous_page_button.setEnabled(False)
+            page_buttons["previous_page"].setEnabled(False)
+            page_buttons["first_page"].setEnabled(False)
+
+    def set_first_page(self, page_buttons):
+        page_buttons["next_page"].setEnabled(True)
+        page_buttons["last_page"].setEnabled(True)
+
+        page_buttons["previous_page"].setEnabled(False)
+        page_buttons["first_page"].setEnabled(False)
+
+        self.current_page_number = 1
+
+        if self.get_is_data_currently_filtered() and self.get_is_data_currently_sorted():
+            self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
+        elif self.get_is_data_currently_sorted():
+            self.sort_entities(self.prev_sort_column, self.prev_sort_order)
+        else:
+            self.initialize_data()
+
+    def set_last_page(self, page_buttons):
+        page_buttons["next_page"].setEnabled(False)
+        page_buttons["last_page"].setEnabled(False)
+
+        page_buttons["previous_page"].setEnabled(True)
+        page_buttons["first_page"].setEnabled(True)
+
+        self.current_page_number = self.max_pages
+
+        if self.get_is_data_currently_filtered() and self.get_is_data_currently_sorted():
+            self.search_entities(self.prev_search_type, self.prev_search_method, self.prev_search_text)
+        elif self.get_is_data_currently_sorted():
+            self.sort_entities(self.prev_sort_column, self.prev_sort_order)
+        else:
+            self.initialize_data()
 
     # Override
     def data(self, index, role):

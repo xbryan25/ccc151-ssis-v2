@@ -39,8 +39,16 @@ class EntityPageSignals:
 
         self.previous_page_button = entity_page_elements[21]
         self.next_page_button = entity_page_elements[22]
-        self.current_page_lineedit = entity_page_elements[23]
-        self.max_pages_label = entity_page_elements[24]
+        self.first_page_button = entity_page_elements[23]
+        self.last_page_button = entity_page_elements[24]
+
+        self.page_buttons = {"previous_page": self.previous_page_button,
+                             "next_page": self.next_page_button,
+                             "first_page": self.first_page_button,
+                             "last_page": self.last_page_button}
+
+        self.current_page_lineedit = entity_page_elements[25]
+        self.max_pages_label = entity_page_elements[26]
 
         self.current_entity_type = None
 
@@ -134,22 +142,31 @@ class EntityPageSignals:
                 lambda: TableViewPageControls.go_to_specific_page(self.students_table_view,
                                                                   self.students_table_model,
                                                                   self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.page_buttons))
 
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.students_table_view,
                                                                   self.students_table_model,
                                                                   self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.page_buttons))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.students_table_view,
                                                               self.students_table_model,
                                                               self.current_page_lineedit,
-                                                              self.previous_page_button,
-                                                              self.next_page_button))
+                                                              self.page_buttons))
+
+            self.first_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_first_page(self.students_table_view,
+                                                               self.students_table_model,
+                                                               self.current_page_lineedit,
+                                                               self.page_buttons))
+
+            self.last_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_last_page(self.students_table_view,
+                                                              self.students_table_model,
+                                                              self.current_page_lineedit,
+                                                              self.page_buttons))
 
         elif entity_type == "program":
 
@@ -199,23 +216,31 @@ class EntityPageSignals:
                 lambda: TableViewPageControls.go_to_specific_page(self.programs_table_view,
                                                                   self.programs_table_model,
                                                                   self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.page_buttons))
 
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.programs_table_view,
                                                                   self.programs_table_model,
                                                                   self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button
-                                                                  ))
+                                                                  self.page_buttons))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.programs_table_view,
                                                               self.programs_table_model,
                                                               self.current_page_lineedit,
-                                                              self.previous_page_button,
-                                                              self.next_page_button))
+                                                              self.page_buttons))
+
+            self.first_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_first_page(self.programs_table_view,
+                                                               self.programs_table_model,
+                                                               self.current_page_lineedit,
+                                                               self.page_buttons))
+
+            self.last_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_last_page(self.programs_table_view,
+                                                              self.programs_table_model,
+                                                              self.current_page_lineedit,
+                                                              self.page_buttons))
 
         elif entity_type == "college":
 
@@ -262,22 +287,31 @@ class EntityPageSignals:
                 lambda: TableViewPageControls.go_to_specific_page(self.colleges_table_view,
                                                                   self.colleges_table_model,
                                                                   self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.page_buttons))
 
             self.previous_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_previous_page(self.colleges_table_view,
                                                                   self.colleges_table_model,
                                                                   self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                                  self.page_buttons))
 
             self.next_page_button.clicked.connect(
                 lambda: TableViewPageControls.go_to_next_page(self.colleges_table_view,
                                                               self.colleges_table_model,
                                                               self.current_page_lineedit,
-                                                                  self.previous_page_button,
-                                                                  self.next_page_button))
+                                                              self.page_buttons))
+
+            self.first_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_first_page(self.colleges_table_view,
+                                                               self.colleges_table_model,
+                                                               self.current_page_lineedit,
+                                                               self.page_buttons))
+
+            self.last_page_button.clicked.connect(
+                lambda: TableViewPageControls.go_to_last_page(self.colleges_table_view,
+                                                              self.colleges_table_model,
+                                                              self.current_page_lineedit,
+                                                              self.page_buttons))
 
         self.search_type_combobox.currentIndexChanged.connect(
             lambda: SearchAndSortHeader.change_search_lineedit_placeholder(self.search_type_combobox,
@@ -315,4 +349,7 @@ class EntityPageSignals:
 
         self.previous_page_button.disconnect()
         self.next_page_button.disconnect()
+        self.first_page_button.disconnect()
+        self.last_page_button.disconnect()
+
         self.current_page_lineedit.disconnect()

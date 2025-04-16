@@ -185,6 +185,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_model.update_page_view(self.students_table_view)
 
         self.previous_page_button.setEnabled(False)
+        self.first_page_button.setEnabled(False)
+
+        if self.students_table_model.max_pages == 1:
+            self.next_page_button.setEnabled(False)
+            self.last_page_button.setEnabled(False)
+
         self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
 
         self.reset_tracked_attributes_of_models("student")
@@ -218,8 +224,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.current_page_lineedit.setText("1")
 
-        self.previous_page_button.setEnabled(True)
-
         self.entity_page_signals.remove()
 
         SearchAndSortHeader.change_contents("program", self.search_type_combobox, "search")
@@ -250,6 +254,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_table_model.update_page_view(self.programs_table_view)
 
         self.previous_page_button.setEnabled(False)
+        self.first_page_button.setEnabled(False)
+
+        if self.programs_table_model.max_pages == 1:
+            self.next_page_button.setEnabled(False)
+            self.last_page_button.setEnabled(False)
+
         self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
 
         self.reset_tracked_attributes_of_models("program")
@@ -284,8 +294,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.current_page_lineedit.setText("1")
 
-        self.previous_page_button.setEnabled(True)
-
         self.entity_page_signals.remove()
 
         SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
@@ -314,6 +322,12 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.colleges_table_model.update_page_view(self.colleges_table_view)
 
         self.previous_page_button.setEnabled(False)
+        self.first_page_button.setEnabled(False)
+
+        if self.colleges_table_model.max_pages == 1:
+            self.next_page_button.setEnabled(False)
+            self.last_page_button.setEnabled(False)
+
         self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
 
         self.reset_tracked_attributes_of_models("college")
@@ -382,6 +396,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                 self.reset_item_delegates,
                 self.previous_page_button,
                 self.next_page_button,
+                self.first_page_button,
+                self.last_page_button,
                 self.current_page_lineedit,
                 self.max_pages_label
                 ]

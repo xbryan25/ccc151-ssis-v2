@@ -4,29 +4,51 @@ from PyQt6.QtCore import QTimer, QModelIndex
 class TableViewPageControls:
 
     @staticmethod
-    def go_to_previous_page(table_view, model, current_page_lineedit, previous_page_button, next_page_button):
+    def go_to_previous_page(table_view, model, current_page_lineedit, page_buttons):
         table_view.clearSelection()
         table_view.setCurrentIndex(QModelIndex())
 
-        model.set_previous_page(previous_page_button, next_page_button)
+        model.set_previous_page(page_buttons)
 
         current_page_lineedit.blockSignals(True)
         current_page_lineedit.setText(str(model.current_page_number))
         current_page_lineedit.blockSignals(False)
 
     @staticmethod
-    def go_to_next_page(table_view, model, current_page_lineedit, previous_page_button, next_page_button):
+    def go_to_next_page(table_view, model, current_page_lineedit, page_buttons):
         table_view.clearSelection()
         table_view.setCurrentIndex(QModelIndex())
 
-        model.set_next_page(previous_page_button, next_page_button)
+        model.set_next_page(page_buttons)
 
         current_page_lineedit.blockSignals(True)
         current_page_lineedit.setText(str(model.current_page_number))
         current_page_lineedit.blockSignals(False)
 
     @staticmethod
-    def go_to_specific_page(table_view, model, current_page_lineedit, previous_page_button, next_page_button):
+    def go_to_first_page(table_view, model, current_page_lineedit, page_buttons):
+        table_view.clearSelection()
+        table_view.setCurrentIndex(QModelIndex())
+
+        model.set_first_page(page_buttons)
+
+        current_page_lineedit.blockSignals(True)
+        current_page_lineedit.setText(str(model.current_page_number))
+        current_page_lineedit.blockSignals(False)
+
+    @staticmethod
+    def go_to_last_page(table_view, model, current_page_lineedit, page_buttons):
+        table_view.clearSelection()
+        table_view.setCurrentIndex(QModelIndex())
+
+        model.set_last_page(page_buttons)
+
+        current_page_lineedit.blockSignals(True)
+        current_page_lineedit.setText(str(model.current_page_number))
+        current_page_lineedit.blockSignals(False)
+
+    @staticmethod
+    def go_to_specific_page(table_view, model, current_page_lineedit, page_buttons):
 
         table_view.clearSelection()
         table_view.setCurrentIndex(QModelIndex())
@@ -42,7 +64,7 @@ class TableViewPageControls:
         else:
             page_number = int(current_page_lineedit.text())
 
-        model.set_specific_page(page_number, current_page_lineedit, previous_page_button, next_page_button)
+        model.set_specific_page(page_number, current_page_lineedit, page_buttons)
 
     @staticmethod
     def get_max_visible_rows(table_view):
