@@ -1,17 +1,21 @@
 import pymysql
 
+from database_handler.initialize_database import InitializeDatabase
+
 
 class DatabaseHandler:
     
     def __init__(self):
+
         self.db = pymysql.connect(
             host='localhost',
             user='root',
-            password='root',
-            database='ssis_db'
+            password='root'
         )
         
         self.cursor = self.db.cursor()
+
+        self.initialize_database = InitializeDatabase(self.db, self.cursor)
 
     def get_all_entities(self, entity_type):
         entities_data = []
@@ -634,3 +638,6 @@ class DatabaseHandler:
 
     def rollback_changes(self):
         self.db.rollback()
+
+    def close_connection(self):
+        self.db.close()

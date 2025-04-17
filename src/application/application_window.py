@@ -342,6 +342,9 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.update_table_views()
 
+    def closeEvent(self, event):
+        self.database_handler.close_connection()
+
     def load_fonts(self):
         # Load fonts, they can be used in any part of the application
         QFontDatabase.addApplicationFont("../assets/fonts/ClashGroteskSemibold.otf")
