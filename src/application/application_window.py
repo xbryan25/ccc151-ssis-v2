@@ -97,6 +97,21 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_view.setModel(self.students_sort_filter_proxy_model)
         self.students_table_view.setAlternatingRowColors(True)
 
+        # Programs table view
+        self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
+        self.programs_table_view.setAlternatingRowColors(True)
+
+        self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        # Colleges table view
+        self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
+        self.colleges_table_view.setAlternatingRowColors(True)
+
+        self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        self.setup_table_views_column_widths()
+
+    def setup_table_views_column_widths(self):
         self.students_table_horizontal_header = self.students_table_view.horizontalHeader()
 
         self.students_table_horizontal_header.resizeSection(0, 110)
@@ -110,11 +125,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.students_table_horizontal_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
         self.students_table_horizontal_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
 
-        # Programs table view
-        self.programs_table_view.setModel(self.programs_sort_filter_proxy_model)
-        self.programs_table_view.setAlternatingRowColors(True)
-
-        self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
         self.programs_table_horizontal_header = self.programs_table_view.horizontalHeader()
 
@@ -122,11 +132,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.programs_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
         self.programs_table_horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
 
-        # Colleges table view
-        self.colleges_table_view.setModel(self.colleges_sort_filter_proxy_model)
-        self.colleges_table_view.setAlternatingRowColors(True)
-
-        self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
         self.colleges_table_horizontal_header = self.colleges_table_view.horizontalHeader()
 
@@ -206,10 +211,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
                                                             self.colleges_table_model)
 
         self.search_type_combobox.setCurrentIndex(0)
+        self.search_input_lineedit.clear()
+
         self.sort_type_combobox.setCurrentIndex(0)
         self.sort_order_combobox.setCurrentIndex(0)
-
-        self.search_input_lineedit.clear()
 
         self.entity_page_controls.add(entity_type)
 
@@ -224,6 +229,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
             TableViewPageControls.get_max_visible_rows(current_table_view))
 
         current_model.initialize_data()
+
+        if len(current_model.get_data()) == 0:
+            current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+        else:
+            current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+        current_model.model_data_is_empty()
+        self.setup_table_views_column_widths()
 
         current_model.update_page_view(current_table_view)
 

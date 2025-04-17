@@ -1,5 +1,6 @@
-from PyQt6.QtCore import QModelIndex
+from PyQt6.QtCore import QModelIndex, Qt
 from PyQt6.QtWidgets import QHeaderView
+
 from helper_dialogs.delete_item_state.confirm_delete import ConfirmDeleteDialog
 from helper_dialogs.delete_item_state.success_delete_item import SuccessDeleteItemDialog
 
@@ -36,6 +37,12 @@ class DeleteEntityHandler:
 
             self.current_model.set_total_num()
             self.current_model.initialize_data()
+
+            if len(self.current_model.get_data()) == 0:
+                # If table is empty, disable context menu
+                self.table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+
+            self.current_model.model_data_is_empty()
 
             # self.current_model.update_page_view(self.table_view)
             self.table_view.clearSelection()

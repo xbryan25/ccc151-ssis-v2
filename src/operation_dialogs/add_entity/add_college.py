@@ -1,4 +1,5 @@
 from PyQt6.QtWidgets import QDialog
+from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont, QFontDatabase
 
 from ui_py.add_college_design import Ui_Dialog as AddCollegeUI
@@ -59,6 +60,8 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
             self.success_add_item_dialog = SuccessAddItemDialog("college", self)
             self.success_add_item_dialog.exec()
+
+            self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
     def add_college_to_model(self, college_to_add):
         self.colleges_table_model.layoutAboutToBeChanged.emit()

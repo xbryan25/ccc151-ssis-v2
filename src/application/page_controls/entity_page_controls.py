@@ -307,6 +307,8 @@ class EntityPageControls:
         try:
             self.search_timer.timeout.disconnect()
             self.aw.search_input_lineedit.textChanged.disconnect()
+            self.aw.search_type_combobox.currentTextChanged.disconnect()
+            self.aw.search_method_combobox.currentTextChanged.disconnect()
 
         except TypeError:
             pass

@@ -141,9 +141,11 @@ class CustomTableModel(QAbstractTableModel):
 
         self.beginResetModel()
 
+        current_page_number = self.current_page_number
+
         self.data_from_db = self.db_handler.get_entities(self.max_row_per_page, self.current_page_number, self.information_type)
 
-        self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
+        self.max_pages = max(1, (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page)
 
         self.endResetModel()
 
