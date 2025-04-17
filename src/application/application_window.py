@@ -6,13 +6,15 @@ from application.application_window_design import Ui_MainWindow as ApplicationWi
 from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
 from application.reset_item_delegates import ResetItemDelegates
-from application.entity_page_signals import EntityPageSignals
-from application.view_demographics_page_controls import ViewDemographicsPageControls
+from application.load_application_window_fonts import LoadApplicationWindowFonts
+
+from application.page_controls.entity_page_controls import EntityPageControls
+from application.page_controls.view_demographics_page_controls import ViewDemographicsPageControls
+from application.page_controls.table_view_page_controls import TableViewPageControls
 
 from utils.custom_sort_filter_proxy_model import CustomSortFilterProxyModel
 from utils.custom_table_model import CustomTableModel
 from utils.specific_buttons_enabler import SpecificButtonsEnabler
-from utils.table_view_page_controls import TableViewPageControls
 
 from database_handler.database_handler import DatabaseHandler
 
@@ -45,21 +47,14 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         # Declared in setup_table_views
         self.reset_item_delegates = None
-        self.entity_page_signals = None
+        self.entity_page_controls = None
 
-        self.view_demographics_button.clicked.connect(self.change_to_demographics_page)
-
-        self.back_to_main_button.clicked.connect(self.change_to_landing_page)
-        self.about_this_app_back_to_main_button.clicked.connect(self.change_to_landing_page)
-        self.demographics_back_to_main_button.clicked.connect(self.change_to_landing_page)
+        self.add_signals()
 
         self.setup_table_views()
 
-        self.students_button.clicked.connect(self.change_to_entity_page_student)
-        self.programs_button.clicked.connect(self.change_to_entity_page_program)
-        self.colleges_button.clicked.connect(self.change_to_entity_page_college)
-        self.about_this_app_button.clicked.connect(self.change_to_about_this_app_page)
-        self.mode_button.clicked.connect(self.change_mode)
+        self.reset_item_delegates = ResetItemDelegates(self)
+        self.entity_page_controls = EntityPageControls(self)
 
         self.setWindowIcon(QIcon("../assets/images/sequence_icon.ico"))
 
@@ -76,14 +71,25 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         with open("../assets/qss_files/view_demographics_page_style.qss", "r") as file:
             self.demographics_page.setStyleSheet(file.read())
 
-    def change_to_landing_page(self):
-        self.stackedWidget.setCurrentWidget(self.landing_page)
-        self.setWindowTitle("Sequence")
+    def add_signals(self):
+        # Back to landing page buttons
+        self.back_to_main_button.clicked.connect(self.change_to_landing_page)
+        self.about_this_app_back_to_main_button.clicked.connect(self.change_to_landing_page)
+        self.demographics_back_to_main_button.clicked.connect(self.change_to_landing_page)
 
-    def change_to_demographics_page(self):
-        self.stackedWidget.setCurrentWidget(self.demographics_page)
+        # Go to entity pages
 
-        self.view_demographics_page_controls = ViewDemographicsPageControls(self.for_view_demographics_page_controls())
+        self.students_button.clicked.connect(lambda: self.change_to_entity_page("student"))
+        self.programs_button.clicked.connect(lambda: self.change_to_entity_page("program"))
+        self.colleges_button.clicked.connect(lambda: self.change_to_entity_page("college"))
+
+        # Go to view demographics page
+        self.view_demographics_button.clicked.connect(self.change_to_demographics_page)
+
+        # Go to about this app page
+        self.about_this_app_button.clicked.connect(self.change_to_about_this_app_page)
+
+        self.mode_button.clicked.connect(self.change_mode)
 
     def setup_table_views(self):
         # Students table view
@@ -126,108 +132,71 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.colleges_table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
         self.colleges_table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
 
-        self.reset_item_delegates = ResetItemDelegates(self.for_reset_item_delegates())
+    def change_to_landing_page(self):
+        self.stackedWidget.setCurrentWidget(self.landing_page)
+        self.setWindowTitle("Sequence")
 
-        self.entity_page_signals = EntityPageSignals(self.for_entity_page_signals())
-
-    def change_to_entity_page_student(self):
-
+    def change_to_entity_page(self, entity_type):
         self.stackedWidget.setCurrentWidget(self.entity_page)
 
+        self.entity_page_controls.remove()
+
+        current_model = None
+        current_table_view = None
+
+        if entity_type == "student":
+
+            current_model = self.students_table_model
+            current_table_view = self.students_table_view
+
+            self.reset_item_delegates.load_item_delegates_for_students_table_view()
+            self.entity_type_icon.setPixmap(QPixmap("../assets/images/student_icon.svg"))
+
+            self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
+
+        elif entity_type == "program":
+
+            current_model = self.programs_table_model
+            current_table_view = self.programs_table_view
+
+            self.reset_item_delegates.load_item_delegates_for_programs_table_view()
+            self.entity_type_icon.setPixmap(QPixmap("../assets/images/book_icon.svg"))
+
+            self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
+
+        elif entity_type == "college":
+
+            current_model = self.colleges_table_model
+            current_table_view = self.colleges_table_view
+
+            self.entity_type_icon.setPixmap(QPixmap("../assets/images/building_icon.svg"))
+
+            self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
+
         if self.mode == "viewer":
-            self.students_table_model.set_mode("viewer")
-            self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+            current_model.set_mode("viewer")
+            current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
             self.buttons_frame.hide()
         else:
-            self.students_table_model.set_mode("admin")
-            self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            current_model.set_mode("admin")
+            current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
             self.buttons_frame.show()
+
+        self.setWindowTitle(f"Sequence | {entity_type.capitalize()}s")
+
+        self.entity_type_label.setText(f"{entity_type.capitalize()}s")
+        self.add_entity_button.setText(f" Add {entity_type}")
 
         self.entity_page_layout.activate()
 
-        self.reset_item_delegates.load_item_delegates_for_students_table_view()
-
-        self.entity_type_icon.setPixmap(QPixmap("../assets/images/student_icon.svg"))
         self.entity_type_icon.setScaledContents(True)
-
-        self.entity_type_label.setText("Students")
-        self.add_entity_button.setText(" Add student")
-
-        # self.students_table_view.reset()
-        self.students_table_model.layoutChanged.emit()
-
-        self.table_view_widgets.setCurrentWidget(self.students_table_view_widget)
 
         self.current_page_lineedit.setText("1")
 
         self.previous_page_button.setEnabled(True)
 
-        self.entity_page_signals.remove()
-
-        SearchAndSortHeader.change_contents("student", self.search_type_combobox, "search")
-        SearchAndSortHeader.change_contents("student", self.sort_type_combobox, "sort")
-
-        self.search_type_combobox.setCurrentIndex(0)
-        self.sort_type_combobox.setCurrentIndex(0)
-        self.sort_order_combobox.setCurrentIndex(0)
-
-        self.search_input_lineedit.clear()
-
-        self.entity_page_signals.add("student")
-
-        self.reset_item_delegates.reset("student")
-
-        self.setWindowTitle("Sequence | Students")
-
-        self.students_table_model.set_max_row_per_page(TableViewPageControls.get_max_visible_rows(self.students_table_view))
-        self.students_table_model.initialize_data()
-
-        self.students_table_model.update_page_view(self.students_table_view)
-
-        self.previous_page_button.setEnabled(False)
-        self.first_page_button.setEnabled(False)
-
-        if self.students_table_model.max_pages == 1:
-            self.next_page_button.setEnabled(False)
-            self.last_page_button.setEnabled(False)
-
-        self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
-
-        self.reset_tracked_attributes_of_models("student")
-
-    def change_to_entity_page_program(self):
-        self.stackedWidget.setCurrentWidget(self.entity_page)
-
-        if self.mode == "viewer":
-            self.programs_table_model.set_mode("viewer")
-            self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-            self.buttons_frame.hide()
-        else:
-            self.programs_table_model.set_mode("admin")
-            self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            self.buttons_frame.show()
-
-        self.entity_page_layout.activate()
-
-        self.reset_item_delegates.load_item_delegates_for_programs_table_view()
-
-        self.entity_type_icon.setPixmap(QPixmap("../assets/images/book_icon.svg"))
-        self.entity_type_icon.setScaledContents(True)
-
-        self.entity_type_label.setText("Programs")
-        self.add_entity_button.setText(" Add program")
-
-        # self.programs_table_view.reset()
-        self.programs_table_model.layoutChanged.emit()
-
-        self.table_view_widgets.setCurrentWidget(self.programs_table_view_widget)
-
-        self.current_page_lineedit.setText("1")
-
-        self.entity_page_signals.remove()
-
-        SearchAndSortHeader.change_contents("program", self.search_type_combobox, "search")
-        SearchAndSortHeader.change_contents("program", self.sort_type_combobox, "sort")
+        SearchAndSortHeader.change_contents(entity_type, self.search_type_combobox, "search")
+        SearchAndSortHeader.change_contents(entity_type, self.sort_type_combobox, "sort")
 
         SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
                                                             self.undo_all_changes_button,
@@ -241,96 +210,41 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         self.search_input_lineedit.clear()
 
-        self.entity_page_signals.add("program")
+        self.entity_page_controls.add(entity_type)
 
-        self.reset_item_delegates.reset("program")
-
-        self.setWindowTitle("Sequence | Programs")
-
-        self.programs_table_model.set_max_row_per_page(
-            TableViewPageControls.get_max_visible_rows(self.programs_table_view))
-        self.programs_table_model.initialize_data()
-
-        self.programs_table_model.update_page_view(self.programs_table_view)
+        self.reset_item_delegates.reset(entity_type)
 
         self.previous_page_button.setEnabled(False)
         self.first_page_button.setEnabled(False)
 
-        if self.programs_table_model.max_pages == 1:
+        current_model.layoutChanged.emit()
+
+        current_model.set_max_row_per_page(
+            TableViewPageControls.get_max_visible_rows(current_table_view))
+
+        current_model.initialize_data()
+
+        current_model.update_page_view(current_table_view)
+
+        if current_model.max_pages == 1:
             self.next_page_button.setEnabled(False)
             self.last_page_button.setEnabled(False)
-
-        self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
-
-        self.reset_tracked_attributes_of_models("program")
-
-    def change_to_entity_page_college(self):
-        self.stackedWidget.setCurrentWidget(self.entity_page)
-
-        if self.mode == "viewer":
-            self.colleges_table_model.set_mode("viewer")
-            self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-            self.buttons_frame.hide()
-
         else:
-            self.colleges_table_model.set_mode("admin")
-            self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-            self.buttons_frame.show()
+            self.next_page_button.setEnabled(True)
+            self.last_page_button.setEnabled(True)
 
-        self.entity_page_layout.activate()
+        self.max_pages_label.setText(f"/ {current_model.max_pages}")
 
-        self.entity_type_label.setText("Colleges")
+        self.reset_tracked_attributes_of_models(entity_type)
 
-        self.entity_type_icon.setPixmap(QPixmap("../assets/images/building_icon.svg"))
-        self.entity_type_icon.setScaledContents(True)
+    def change_to_demographics_page(self):
+        self.stackedWidget.setCurrentWidget(self.demographics_page)
 
-        self.add_entity_button.setText(" Add college")
+        self.view_demographics_page_controls = ViewDemographicsPageControls(self)
 
-        # Probably what fixed the college page issue
-        # self.colleges_table_view.reset()
-        self.colleges_table_model.layoutChanged.emit()
-
-        self.table_view_widgets.setCurrentWidget(self.colleges_table_view_widget)
-
-        self.current_page_lineedit.setText("1")
-
-        self.entity_page_signals.remove()
-
-        SearchAndSortHeader.change_contents("college", self.search_type_combobox, "search")
-        SearchAndSortHeader.change_contents("college", self.sort_type_combobox, "sort")
-
-        SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
-                                                            self.undo_all_changes_button,
-                                                            self.students_table_model,
-                                                            self.programs_table_model,
-                                                            self.colleges_table_model)
-
-        self.search_type_combobox.setCurrentIndex(0)
-        self.sort_type_combobox.setCurrentIndex(0)
-        self.sort_order_combobox.setCurrentIndex(0)
-
-        self.search_input_lineedit.clear()
-
-        self.entity_page_signals.add("college")
-
-        self.setWindowTitle("Sequence | Colleges")
-
-        self.colleges_table_model.set_max_row_per_page(
-            TableViewPageControls.get_max_visible_rows(self.colleges_table_view))
-        self.colleges_table_model.initialize_data()
-
-        self.colleges_table_model.update_page_view(self.colleges_table_view)
-
-        self.previous_page_button.setEnabled(False)
-        self.first_page_button.setEnabled(False)
-
-        if self.colleges_table_model.max_pages == 1:
-            self.next_page_button.setEnabled(False)
-            self.last_page_button.setEnabled(False)
-
-        self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
-
-        self.reset_tracked_attributes_of_models("college")
+    def change_to_about_this_app_page(self):
+        self.stackedWidget.setCurrentWidget(self.about_this_app_page)
+        self.setWindowTitle("Sequence | About this app")
 
     def change_mode(self):
         if self.mode == "admin":
@@ -357,139 +271,46 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
             self.colleges_table_model.set_is_data_currently_filtered(False)
             self.colleges_table_model.reset_all_prev_search_and_sort_conditions()
 
-    def change_to_about_this_app_page(self):
-        self.stackedWidget.setCurrentWidget(self.about_this_app_page)
-        self.setWindowTitle("Sequence | About this app")
-
-    def for_reset_item_delegates(self):
-        return [self.students_table_view,
-                self.programs_table_view,
-                self.colleges_table_view,
-                self.students_table_model,
-                self.programs_table_model,
-                self.students_sort_filter_proxy_model,
-                self.programs_sort_filter_proxy_model,
-                self.colleges_sort_filter_proxy_model,
-                self.colleges_table_model]
-
-    def for_entity_page_signals(self):
-        return [self.students_table_view,
-                self.programs_table_view,
-                self.colleges_table_view,
-                self.students_table_model,
-                self.programs_table_model,
-                self.colleges_table_model,
-                self.students_sort_filter_proxy_model,
-                self.programs_sort_filter_proxy_model,
-                self.colleges_sort_filter_proxy_model,
-                self.add_entity_button,
-                self.save_changes_button,
-                self.undo_all_changes_button,
-                self.sort_type_combobox,
-                self.sort_order_combobox,
-                self.search_input_lineedit,
-                self.search_type_combobox,
-                self.search_method_combobox,
-                self.students_table_horizontal_header,
-                self.programs_table_horizontal_header,
-                self.colleges_table_horizontal_header,
-                self.reset_item_delegates,
-                self.previous_page_button,
-                self.next_page_button,
-                self.first_page_button,
-                self.last_page_button,
-                self.current_page_lineedit,
-                self.max_pages_label
-                ]
-
-    def for_view_demographics_page_controls(self):
-        return [self.demographics_stacked_widget,
-                self.general_demographics_widget,
-                self.students_demographics_widget,
-                self.programs_demographics_widget,
-                self.colleges_demographics_widget,
-                self.students_table_model,
-                self.programs_table_model,
-                self.colleges_table_model,
-                self.gd_total_colleges_count_label,
-                self.gd_total_programs_count_label,
-                self.gd_total_students_count_label,
-                self.sd_total_students_count_label,
-                self.sd_gender_count_label,
-                self.sd_year_level_count_label,
-                self.pd_select_college_combobox,
-                self.pd_select_program_combobox,
-                self.pd_total_students_count_label,
-                self.pd_year_level_count_label,
-                self.pd_gender_count_label,
-                self.cd_select_college_combobox,
-                self.cd_total_programs_count_label,
-                self.cd_total_students_count_label,
-                self.cd_gender_count_label,
-                self.cd_year_level_count_label,
-                self.demographics_type_combobox,
-                self]
-
     def update_table_views(self):
+
+        current_model = None
+        current_table_view = None
 
         if (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.students_table_view_widget):
 
-            self.students_table_view.clearSelection()
-            self.students_table_view.setCurrentIndex(QModelIndex())
-
-            self.students_table_model.update_page_view(self.students_table_view)
-
-            # Get the number of max_pages before it is updated
-            old_max_pages = int(self.max_pages_label.text().replace("/", "").strip())
-
-            self.max_pages_label.setText(f"/ {self.students_table_model.max_pages}")
-
-            if (int(self.current_page_lineedit.text().strip()) > self.students_table_model.max_pages or
-                    int(self.current_page_lineedit.text().strip()) == old_max_pages):
-
-                self.current_page_lineedit.blockSignals(True)
-                self.current_page_lineedit.setText(str(self.students_table_model.max_pages))
-                self.current_page_lineedit.blockSignals(False)
+            current_model = self.students_table_model
+            current_table_view = self.students_table_view
 
         elif (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.programs_table_view_widget):
 
-            self.programs_table_view.clearSelection()
-            self.programs_table_view.setCurrentIndex(QModelIndex())
-
-            self.programs_table_model.update_page_view(self.programs_table_view)
-
-            # Get the number of max_pages before it is updated
-            old_max_pages = int(self.max_pages_label.text().replace("/", "").strip())
-
-            self.max_pages_label.setText(f"/ {self.programs_table_model.max_pages}")
-
-            if (int(self.current_page_lineedit.text().strip()) > self.programs_table_model.max_pages or
-                    int(self.current_page_lineedit.text().strip()) == old_max_pages):
-
-                self.current_page_lineedit.blockSignals(True)
-                self.current_page_lineedit.setText(str(self.programs_table_model.max_pages))
-                self.current_page_lineedit.blockSignals(False)
+            current_model = self.programs_table_model
+            current_table_view = self.programs_table_view
 
         elif (self.stackedWidget.currentWidget() == self.entity_page and
                 self.table_view_widgets.currentWidget() == self.colleges_table_view_widget):
 
-            self.colleges_table_view.clearSelection()
-            self.colleges_table_view.setCurrentIndex(QModelIndex())
+            current_model = self.colleges_table_model
+            current_table_view = self.colleges_table_view
 
-            self.colleges_table_model.update_page_view(self.colleges_table_view)
+        if current_model and current_table_view:
+
+            current_table_view.clearSelection()
+            current_table_view.setCurrentIndex(QModelIndex())
+
+            current_model.update_page_view(current_table_view)
 
             # Get the number of max_pages before it is updated
             old_max_pages = int(self.max_pages_label.text().replace("/", "").strip())
 
-            self.max_pages_label.setText(f"/ {self.colleges_table_model.max_pages}")
+            self.max_pages_label.setText(f"/ {current_model.max_pages}")
 
-            if (int(self.current_page_lineedit.text().strip()) > self.colleges_table_model.max_pages or
+            if (int(self.current_page_lineedit.text().strip()) > current_model.max_pages or
                     int(self.current_page_lineedit.text().strip()) == old_max_pages):
 
                 self.current_page_lineedit.blockSignals(True)
-                self.current_page_lineedit.setText(str(self.colleges_table_model.max_pages))
+                self.current_page_lineedit.setText(str(current_model.max_pages))
                 self.current_page_lineedit.blockSignals(False)
 
     def resizeEvent(self, event):
@@ -497,7 +318,7 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         font.setFamily(self.cg_font_family)
 
         # 48 is an arbitrary number obtained from 561/11, 561 is the minimum width, 11 is the minimum font size
-        font.setPointSize(int(self.height() / 45))
+        font.setPointSize(int(self.height() / 48))
 
         font.setWeight(QFont.Weight.DemiBold)
 
@@ -506,30 +327,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.undo_all_changes_button.setFont(font)
 
         self.update_table_views()
-
-    # def changeEvent(self, event):
-    #     if event.type() == QEvent.Type.WindowStateChange:
-    #
-    #         if self.windowState() == Qt.WindowState.WindowMinimized or self.windowState() == Qt.WindowState.WindowNoState:
-    #             # Handle minimize state
-    #             # pass
-    #             # self.students_table_view.clearSelection()
-    #             # self.students_table_view.setCurrentIndex(QModelIndex())
-    #             print("Window is minimized")
-    #             # self.students_table_view.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-    #             # self.students_sort_filter_proxy_model.invalidateFilter()
-    #             # self.students_table_view.selectionModel().clear()
-    #         elif self.windowState() == Qt.WindowState.WindowFullScreen or self.windowState() == Qt.WindowState.WindowMaximized:
-    #             # Handle fullscreen state
-    #
-    #             # self.students_table_view.clearSelection()
-    #             # self.students_table_view.setCurrentIndex(QModelIndex())
-    #             print("Window is fullscreen!")
-    #     super().changeEvent(event)
-
-    def is_window_fullscreen(self):
-        screen_geometry = QGuiApplication.primaryScreen().geometry()
-        return self.geometry() == screen_geometry
 
     def load_fonts(self):
         # Load fonts, they can be used in any part of the application
@@ -542,159 +339,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         # Get font family
         self.cg_font_family = QFontDatabase.applicationFontFamilies(cg_font_id)[0]
 
-        # Landing Page
-        self.landing_subtitle_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
-        self.landing_title_label.setFont(QFont(self.cg_font_family, 48, QFont.Weight.DemiBold))
-        self.mode_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
-        self.students_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
-        self.programs_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
-        self.colleges_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
-        self.view_demographics_button.setFont(QFont(self.cg_font_family, 26, QFont.Weight.DemiBold))
-        self.about_this_app_button.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.mode_button.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
+        self.load_application_window_fonts = LoadApplicationWindowFonts(self)
 
-        # About This App Page
-        self.about_this_app_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
-        self.about_this_app_title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
-        self.scroll_area_title_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.scroll_area_contents.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
-
-        self.about_this_app_back_to_main_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
-
-        # View Demographics Page
-
-        self.demographics_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
-        self.demographics_title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
-
-        self.demographics_center_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-
-        self.gd_total_colleges_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
-        self.gd_total_colleges_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.gd_total_programs_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
-        self.gd_total_programs_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.gd_total_students_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
-        self.gd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-
-        self.sd_total_students_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
-        self.sd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.sd_gender_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
-        self.sd_gender_count_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
-        self.sd_year_level_header_label.setFont(QFont(self.cg_font_family, 18, QFont.Weight.DemiBold))
-        self.sd_year_level_count_label.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
-
-        self.pd_total_students_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.pd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.pd_year_level_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.pd_year_level_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.pd_gender_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.pd_gender_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-
-        self.cd_total_programs_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_total_programs_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.cd_total_students_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_total_students_count_label.setFont(QFont(self.cg_font_family, 28, QFont.Weight.DemiBold))
-        self.cd_gender_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_gender_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_year_level_header_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-        self.cd_year_level_count_label.setFont(QFont(self.cg_font_family, 16, QFont.Weight.DemiBold))
-
-        self.demographics_type_combobox.setStyleSheet(f"""
-                    QComboBox {{
-                        font-family: {self.cg_font_family};
-                        font-size: 32px;
-                        font-weight: {QFont.Weight.DemiBold};
-                    }}
-                """)
-
-        self.pd_select_college_combobox.setStyleSheet(f"""
-                    QComboBox {{
-                        font-family: {self.cg_font_family};
-                        font-size: 18px;
-                        font-weight: {QFont.Weight.Medium};
-                    }}
-                """)
-
-        self.pd_select_program_combobox.setStyleSheet(f"""
-                    QComboBox {{
-                        font-family: {self.cg_font_family};
-                        font-size: 18px;
-                        font-weight: {QFont.Weight.Medium};
-                    }}
-                """)
-
-        self.cd_select_college_combobox.setStyleSheet(f"""
-                    QComboBox {{
-                        font-family: {self.cg_font_family};
-                        font-size: 18px;
-                        font-weight: {QFont.Weight.Medium};
-                    }}
-                """)
-
-        self.demographics_back_to_main_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
-
-        # Entity Page
-        self.entity_type_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
-        self.title_label.setFont(QFont(self.cg_font_family, 30, QFont.Weight.Medium))
-        self.sort_label.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
-
-        self.sort_type_combobox.setStyleSheet(f"""
-                    QComboBox {{
-                        font-family: {self.cg_font_family};
-                        font-size: 16px;
-                        font-weight: {QFont.Weight.Medium};
-                    }}
-                """)
-
-        self.sort_order_combobox.setStyleSheet(f"""
-                            QComboBox {{
-                                font-family: {self.cg_font_family};
-                                font-size: 16px;
-                                font-weight: {QFont.Weight.Medium};
-                            }}
-                        """)
-
-        self.search_label.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
-
-        self.search_type_combobox.setStyleSheet(f"""
-                                    QComboBox {{
-                                        font-family: {self.cg_font_family};
-                                        font-size: 16px;
-                                        font-weight: {QFont.Weight.Medium};
-                                    }}
-                                """)
-
-        self.search_method_combobox.setStyleSheet(f"""
-                                            QComboBox {{
-                                                font-family: {self.cg_font_family};
-                                                font-size: 16px;
-                                                font-weight: {QFont.Weight.Medium};
-                                            }}
-                                        """)
-
-        self.search_input_lineedit.setFont(QFont(self.cg_font_family, 13, QFont.Weight.Medium))
-
-        self.students_table_view.setStyleSheet(f"""
-                                            QHeaderView::section {{
-                                                font-family: {self.cg_font_family};
-                                                font-size: 17px;
-                                                font-weight: {QFont.Weight.DemiBold};
-                                            }}
-                                        """)
-
-        self.programs_table_view.setStyleSheet(f"""
-                                                    QHeaderView::section {{
-                                                        font-family: {self.cg_font_family};
-                                                        font-size: 17px;
-                                                        font-weight: {QFont.Weight.DemiBold};
-                                                    }}
-                                                """)
-
-        self.colleges_table_view.setStyleSheet(f"""
-                                                    QHeaderView::section {{
-                                                        font-family: {self.cg_font_family};
-                                                        font-size: 17px;
-                                                        font-weight: {QFont.Weight.DemiBold};
-                                                    }}
-                                                """)
-
-        self.back_to_main_button.setFont(QFont(self.cg_font_family, 14, QFont.Weight.DemiBold))
+        self.load_application_window_fonts.load_fonts()

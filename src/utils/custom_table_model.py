@@ -1,7 +1,8 @@
 from PyQt6.QtCore import QAbstractTableModel, Qt, QTimer, QMetaObject, QModelIndex
 
 from utils.is_valid_edit_value_for_cell import IsValidEditValueForCell
-from utils.table_view_page_controls import TableViewPageControls
+
+from application.page_controls.table_view_page_controls import TableViewPageControls
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.confirm_edit import ConfirmEditDialog

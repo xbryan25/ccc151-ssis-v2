@@ -77,7 +77,3 @@ class TableViewPageControls:
 
         visible_rows = table_view_height // row_height
         return visible_rows
-
-    @staticmethod
-    def update_max_pages_label(model, max_pages_label):
-        max_pages_label.setText(model.max_pages)
