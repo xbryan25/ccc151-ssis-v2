@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from operation_dialogs.edit_entity.edit_student_design import Ui_Dialog as EditStudentUI
+from ui_py.edit_student_design import Ui_Dialog as EditStudentUI
 
 from helper_dialogs.edit_item_state.fail_to_edit_item import FailToEditItemDialog
 from helper_dialogs.edit_item_state.success_edit_item import SuccessEditItemDialog

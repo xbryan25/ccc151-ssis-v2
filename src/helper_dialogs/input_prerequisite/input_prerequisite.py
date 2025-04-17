@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.input_prerequisite.input_prerequisite_design import Ui_Dialog as InputPrerequisiteUI
+from ui_py.input_prerequisite_design import Ui_Dialog as InputPrerequisiteUI
 
 
 class InputPrerequisiteDialog(QDialog, InputPrerequisiteUI):

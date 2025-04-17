@@ -125,7 +125,7 @@ class Ui_Dialog(object):
         self.edit_college_button.setFont(font)
         self.edit_college_button.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("../../../../../Downloads/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("../../../../Downloads/edit-3-svgrepo-com.svg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         self.edit_college_button.setIcon(icon)
         self.edit_college_button.setIconSize(QtCore.QSize(20, 20))
         self.edit_college_button.setObjectName("edit_college_button")

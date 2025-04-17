@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.add_item_state.success_add_item_design import Ui_Dialog as SuccessAddItemUI
+from ui_py.success_add_item_design import Ui_Dialog as SuccessAddItemUI
 
 
 class SuccessAddItemDialog(QDialog, SuccessAddItemUI):

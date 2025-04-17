@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 from PyQt6.QtCore import QSize
 
-from helper_dialogs.delete_item_state.confirm_delete_design import Ui_Dialog as ConfirmDeleteUI
+from ui_py.confirm_delete_design import Ui_Dialog as ConfirmDeleteUI
 
 
 class ConfirmDeleteDialog(QDialog, ConfirmDeleteUI):

@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.save_or_undo_state.success_save_changes_design import Ui_Dialog as SuccessChangesItemUI
+from ui_py.success_save_changes_design import Ui_Dialog as SuccessChangesItemUI
 
 
 class SuccessSaveChangesDialog(QDialog, SuccessChangesItemUI):

@@ -2,7 +2,8 @@ from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView, QMenu
 from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon, QGuiApplication
 from PyQt6.QtCore import Qt, QEvent, QModelIndex
 
-from application.application_window_design import Ui_MainWindow as ApplicationWindowDesign
+from ui_py.application_window_design import Ui_MainWindow as ApplicationWindowDesign
+
 from application.open_dialogs import OpenDialogs
 from application.search_and_sort_header import SearchAndSortHeader
 from application.reset_item_delegates import ResetItemDelegates

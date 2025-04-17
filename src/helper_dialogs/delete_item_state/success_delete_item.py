@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.delete_item_state.success_delete_item_design import Ui_Dialog as SuccessDeleteItemUI
+from ui_py.success_delete_item_design import Ui_Dialog as SuccessDeleteItemUI
 
 
 class SuccessDeleteItemDialog(QDialog, SuccessDeleteItemUI):

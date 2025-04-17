@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.edit_item_state.confirm_edit_design import Ui_Dialog as ConfirmEditUI
+from ui_py.confirm_edit_design import Ui_Dialog as ConfirmEditUI
 
 
 class ConfirmEditDialog(QDialog, ConfirmEditUI):

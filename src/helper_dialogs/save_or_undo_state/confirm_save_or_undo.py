@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import QDialog
 from PyQt6.QtGui import QFont, QFontDatabase
 
-from helper_dialogs.save_or_undo_state.confirm_save_or_undo_design import Ui_Dialog as ConfirmSaveUI
+from ui_py.confirm_save_or_undo_design import Ui_Dialog as ConfirmSaveUI
 
 
 class ConfirmSaveOrUndoDialog(QDialog, ConfirmSaveUI):
