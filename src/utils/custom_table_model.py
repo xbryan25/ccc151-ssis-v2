@@ -141,8 +141,6 @@ class CustomTableModel(QAbstractTableModel):
 
         self.beginResetModel()
 
-        current_page_number = self.current_page_number
-
         self.data_from_db = self.db_handler.get_entities(self.max_row_per_page, self.current_page_number, self.information_type)
 
         self.max_pages = max(1, (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page)
@@ -272,8 +270,6 @@ class CustomTableModel(QAbstractTableModel):
 
     def sort_filtered_entities(self, sort_column, sort_order):
         # Connected to self.search_entities()
-
-        print("Yo")
 
         self.beginResetModel()
 

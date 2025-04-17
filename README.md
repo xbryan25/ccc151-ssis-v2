@@ -8,6 +8,7 @@ The name 'Sequence' comes from the fact that the data in this application is sto
 ## Requirements
 - Python 3.10+
 - PyQt6 (Recommended version: 6.8.0+)
+- PyMySQL 1.1.1
 
 ## Features
 
@@ -15,26 +16,28 @@ The name 'Sequence' comes from the fact that the data in this application is sto
 - Search and sort operations
 - Full screen mode
 - Data storage using MySQL
+- Utilizes pagination for data display
+- Save recent changes or undo all recent changes
+- Choose between being in admin or viewer mode
+- Display demographics in 'View Demographics' page
 
-## Planned Features
-
-- Undo changes, step by step restoration of the state of the data
-- Undo all changes, reset from last save point
-- A way to enable/disable table view manipulation
-- Search feature in view demographics
-- Filter feature in view demographics
-- Add admin and viewer mode; the admin can manipulate the data, while the viewer, can only view the data
 
 ## Screenshots
 ![Landing Page Screenshot](assets/screenshots/screenshot1.png)
 
 ![About This App Page Screenshot](assets/screenshots/screenshot2.png)
 
-![Students Page Screenshot](assets/screenshots/screenshot3.png)
+![Viewer Mode Screenshot](assets/screenshots/screenshot3.png)
 
-![Programs Page Screenshot](assets/screenshots/screenshot4.png)
+![Students Page Admin Screenshot](assets/screenshots/screenshot4.png)
 
-![Colleges Page Screenshot](assets/screenshots/screenshot5.png)
+![Programs Page Admin Screenshot](assets/screenshots/screenshot5.png)
+
+![Colleges Page Admin Screenshot](assets/screenshots/screenshot6.png)
+
+![General Demographics Screenshot](assets/screenshots/screenshot7.png)
+
+![College Demographics Screenshot](assets/screenshots/screenshot8.png)
 
 ## To run the project on a local machine
 
@@ -60,7 +63,7 @@ Create and activate the virtual environment
 Once in the virtual environment, install dependencies
 
 ```bash
-  pip install pyqt6
+  pip install -r requirements.txt
 ```
 
 Switch to the working directory

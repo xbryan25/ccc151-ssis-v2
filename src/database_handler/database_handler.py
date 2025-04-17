@@ -152,8 +152,6 @@ class DatabaseHandler:
 
     def get_entities(self, max_row_per_page, current_page_number, entity_type):
 
-        print(f"------Query - max_row_per_page: {max_row_per_page}, current_page_number: {current_page_number}------")
-
         entities_data = []
 
         sql = ""
