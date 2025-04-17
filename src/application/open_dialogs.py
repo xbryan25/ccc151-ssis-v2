@@ -1,3 +1,6 @@
+from PyQt6.QtWidgets import QHeaderView
+from PyQt6.QtCore import Qt
+
 from helper_dialogs.input_prerequisite.input_prerequisite import InputPrerequisiteDialog
 from helper_dialogs.save_or_undo_state.confirm_save_or_undo import ConfirmSaveOrUndoDialog
 from helper_dialogs.save_or_undo_state.success_save_changes import SuccessSaveChangesDialog
@@ -52,12 +55,26 @@ class OpenDialogs:
 
     def open_confirm_save_or_undo_dialog(self, entity_type, button_type, max_pages_label):
 
+        current_model = None
+        current_table_view = None
+
+        db_handler = self.aw.students_table_model.db_handler
+
+        if entity_type == "student":
+            current_model = self.aw.students_table_model
+            current_table_view = self.aw.students_table_view
+        elif entity_type == "program":
+            current_model = self.aw.programs_table_model
+            current_table_view = self.aw.colleges_table_view
+        elif entity_type == "college":
+            current_model = self.aw.colleges_table_model
+            current_table_view = self.aw.colleges_table_view
+
+
         confirm_save_or_undo_dialog = ConfirmSaveOrUndoDialog(button_type)
         confirm_save_or_undo_dialog.exec()
 
         if confirm_save_or_undo_dialog.get_confirm_edit_decision():
-
-            db_handler = self.aw.students_table_model.db_handler
 
             if button_type == "save":
                 db_handler.commit_changes()
@@ -76,6 +93,15 @@ class OpenDialogs:
                 self.aw.programs_table_model.initialize_data()
                 self.aw.colleges_table_model.initialize_data()
 
+                if len(current_model.get_data()) == 0:
+                    current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
+                else:
+                    current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+
+                current_model.model_data_is_empty()
+
+                self.maintain_column_width(current_table_view, entity_type)
+
                 if entity_type == "student":
                     max_pages_label.setText(f"/ {self.aw.students_table_model.max_pages}")
                 elif entity_type == "program":
@@ -91,3 +117,29 @@ class OpenDialogs:
 
             success_save_changes = SuccessSaveChangesDialog(button_type)
             success_save_changes.exec()
+
+    @staticmethod
+    def maintain_column_width(current_table_view, entity_type):
+
+        table_horizontal_header = current_table_view.horizontalHeader()
+
+        if entity_type == "student":
+            table_horizontal_header.resizeSection(0, 110)
+            table_horizontal_header.resizeSection(3, 110)
+            table_horizontal_header.resizeSection(4, 130)
+
+            table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            table_horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Stretch)
+            table_horizontal_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Fixed)
+            table_horizontal_header.setSectionResizeMode(4, QHeaderView.ResizeMode.Fixed)
+            table_horizontal_header.setSectionResizeMode(5, QHeaderView.ResizeMode.Fixed)
+
+        elif entity_type == "program":
+            table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
+            table_horizontal_header.setSectionResizeMode(2, QHeaderView.ResizeMode.Fixed)
+
+        elif entity_type == "college":
+            table_horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Fixed)
+            table_horizontal_header.setSectionResizeMode(1, QHeaderView.ResizeMode.Stretch)
