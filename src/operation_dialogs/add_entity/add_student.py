@@ -68,14 +68,8 @@ class AddStudentDialog(QDialog, AddStudentUI):
             self.success_add_item_dialog = SuccessAddItemDialog("student", self)
             self.success_add_item_dialog.exec()
 
-            # If table was previously empty, enable context menu
-            self.students_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-
     def add_student_to_model(self, student_to_add):
         self.students_table_model.layoutAboutToBeChanged.emit()
-
-        if self.students_table_model.get_data()[0][0] == "":
-            self.students_table_model.get_data().pop()
 
         self.students_table_model.add_entity(student_to_add, "student")
         self.students_table_model.layoutChanged.emit()

@@ -38,12 +38,6 @@ class DeleteEntityHandler:
             self.current_model.set_total_num()
             self.current_model.initialize_data()
 
-            if len(self.current_model.get_data()) == 0:
-                # If table is empty, disable context menu
-                self.table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-
-            self.current_model.model_data_is_empty()
-
             # self.current_model.update_page_view(self.table_view)
             self.table_view.clearSelection()
             self.table_view.setCurrentIndex(QModelIndex())

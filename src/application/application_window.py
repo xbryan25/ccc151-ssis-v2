@@ -230,12 +230,6 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
 
         current_model.initialize_data()
 
-        if len(current_model.get_data()) == 0:
-            current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.NoContextMenu)
-        else:
-            current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-
-        current_model.model_data_is_empty()
         self.setup_table_views_column_widths()
 
         current_model.update_page_view(current_table_view)

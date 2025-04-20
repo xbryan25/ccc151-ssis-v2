@@ -64,8 +64,6 @@ class CustomTableModel(QAbstractTableModel):
         self.set_total_num()
         self.initialize_data()
 
-        self.model_data_is_empty()
-
     def get_data(self):
         return self.data_from_db
 
@@ -92,21 +90,6 @@ class CustomTableModel(QAbstractTableModel):
 
     def set_is_data_currently_sorted(self, is_data_currently_sorted):
         self.is_data_currently_sorted = is_data_currently_sorted
-
-    def model_data_is_empty(self):
-        if not self.get_data():
-
-            self.beginResetModel()
-
-            if self.information_type == "student":
-                self.data_from_db.append(["", "", "", "", "", ""])
-            elif self.information_type == "program":
-                self.data_from_db.append(["", "", ""])
-            elif self.information_type == "college":
-                self.data_from_db.append(["", ""])
-
-            self.total_num = 1
-            self.endResetModel()
 
     def get_identifiers_of_selected_rows(self, selected_rows):
 
@@ -252,8 +235,6 @@ class CustomTableModel(QAbstractTableModel):
             self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
 
             self.endResetModel()
-
-            self.model_data_is_empty()
 
         else:
             self.is_data_currently_filtered = False
@@ -565,10 +546,8 @@ class CustomTableModel(QAbstractTableModel):
 
     # Override
     def columnCount(self, index=None):
-        if not self.data_from_db:
-            return 0
 
-        return len(self.data_from_db[0])
+        return len(self.columns)
 
     # Override
     def headerData(self, section, orientation, role=Qt.ItemDataRole.DisplayRole):

@@ -65,13 +65,8 @@ class AddProgramDialog(QDialog, AddProgramUI):
             self.success_add_item_dialog = SuccessAddItemDialog("program", self)
             self.success_add_item_dialog.exec()
 
-            self.programs_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-
     def add_program_to_model(self, program_to_add):
         self.programs_table_model.layoutAboutToBeChanged.emit()
-
-        if self.programs_table_model.get_data()[0][0] == "":
-            self.programs_table_model.get_data().pop()
 
         self.programs_table_model.add_entity(program_to_add, "program")
         self.programs_table_model.layoutChanged.emit()

@@ -61,13 +61,8 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
             self.success_add_item_dialog = SuccessAddItemDialog("college", self)
             self.success_add_item_dialog.exec()
 
-            self.colleges_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
-
     def add_college_to_model(self, college_to_add):
         self.colleges_table_model.layoutAboutToBeChanged.emit()
-
-        if self.colleges_table_model.get_data()[0][0] == "":
-            self.colleges_table_model.get_data().pop()
 
         self.colleges_table_model.add_entity(college_to_add, "college")
         self.colleges_table_model.layoutChanged.emit()
