@@ -66,14 +66,25 @@ Once in the virtual environment, install dependencies
   pip install -r requirements.txt
 ```
 
-Once the dependencies are installed, create an .env file for database credentials
+Once the dependencies are installed, create an .env file for your database credentials
 
-```bash
-  touch .env
+- Powershell
+```powershell
+  ni .env
 ```
+- cmd
+```cmd
+  type nul > .env
+```
+
 
 In the .env file, input your database credentials and preferred default user mode. For example:
 
+- Open .env file using powershell or cmd
+```powershell
+  notepad .env
+```
+- Add and save contents
 ```env
 DB_HOST=localhost
 DB_USER=your_username
