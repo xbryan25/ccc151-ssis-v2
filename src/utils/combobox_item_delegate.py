@@ -14,6 +14,9 @@ class ComboboxItemDelegate(QItemDelegate):
         QItemDelegate.__init__(self, parent)
 
     def createEditor(self, parent, option, index):
+        if not self.items:
+            return None
+
         combobox = CustomComboBox(parent)
 
         if index.row() % 2 == 0:
