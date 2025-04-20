@@ -60,7 +60,7 @@ class ViewDemographicsPageControls:
         self.load_college_codes("college")
 
     def set_gender_demographic(self, view_demographic_type, identifier=None):
-        total_students = self.aw.students_table_model.get_total_num()
+        total_students = max(1, self.aw.students_table_model.get_total_num())
 
         if view_demographic_type == "student":
             gender_demographic = self.aw.database_handler.get_count_of_gender()
@@ -101,7 +101,7 @@ class ViewDemographicsPageControls:
                                                f"({(gender_demographic['Prefer not to say'] / total_students) * 100:.2f}%)")
 
     def set_year_level_demographic(self, view_demographic_type, identifier=None):
-        total_students = self.aw.students_table_model.get_total_num()
+        total_students = max(1, self.aw.students_table_model.get_total_num())
 
         if view_demographic_type == "student":
 

@@ -216,7 +216,7 @@ class CustomTableModel(QAbstractTableModel):
         if search_text.strip() != "":
             self.is_data_currently_filtered = True
 
-            self.total_num = self.db_handler.get_count_of_sorted_filtered_entities(self.information_type,
+            self.total_filtered_num = self.db_handler.get_count_of_sorted_filtered_entities(self.information_type,
                                                                                    search_type,
                                                                                    search_method,
                                                                                    search_text)
@@ -232,7 +232,7 @@ class CustomTableModel(QAbstractTableModel):
                                                                              search_method,
                                                                              search_text)
 
-            self.max_pages = (self.total_num + self.max_row_per_page - 1) // self.max_row_per_page
+            self.max_pages = (self.total_filtered_num + self.max_row_per_page - 1) // self.max_row_per_page
 
             self.endResetModel()
 

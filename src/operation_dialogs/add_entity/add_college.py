@@ -53,6 +53,7 @@ class AddCollegeDialog(QDialog, AddCollegeUI):
 
             # Notifies the CustomTableModel instance that something had changed
             self.colleges_table_model.set_has_changes(True)
+            self.colleges_table_model.set_total_num()
 
             SpecificButtonsEnabler.enable_save_and_undo_buttons(self.save_changes_button,
                                                                 self.undo_all_changes_button,

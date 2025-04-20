@@ -98,8 +98,6 @@ class OpenDialogs:
                 else:
                     current_table_view.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
 
-                current_model.model_data_is_empty()
-
                 self.maintain_column_width(current_table_view, entity_type)
 
                 if entity_type == "student":
