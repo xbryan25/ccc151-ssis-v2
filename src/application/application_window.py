@@ -2,6 +2,10 @@ from PyQt6.QtWidgets import QMainWindow, QHeaderView, QTableView, QMenu
 from PyQt6.QtGui import QFont, QFontDatabase, QPixmap, QIcon, QGuiApplication
 from PyQt6.QtCore import Qt, QEvent, QModelIndex
 
+from dotenv import load_dotenv
+
+import os
+
 from ui_py.application_window_design import Ui_MainWindow as ApplicationWindowDesign
 
 from application.open_dialogs import OpenDialogs
@@ -19,6 +23,8 @@ from utils.specific_buttons_enabler import SpecificButtonsEnabler
 
 from database_handler.database_handler import DatabaseHandler
 
+load_dotenv()
+
 
 class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
     def __init__(self):
@@ -29,7 +35,10 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.set_external_stylesheet()
         self.load_fonts()
 
-        self.mode = "viewer"
+        if os.getenv("USER_MODE") not in ["admin", "viewer"]:
+            self.mode = "viewer"
+        else:
+            self.mode = os.getenv("USER_MODE")
 
         self.database_handler = DatabaseHandler()
 
@@ -58,6 +67,8 @@ class ApplicationWindow(QMainWindow, ApplicationWindowDesign):
         self.entity_page_controls = EntityPageControls(self)
 
         self.setWindowIcon(QIcon("../assets/images/sequence_icon.ico"))
+
+        self.mode_button.setText(self.mode.capitalize())
 
     def set_external_stylesheet(self):
         with open("../assets/qss_files/landing_page_style.qss", "r") as file:

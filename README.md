@@ -66,6 +66,25 @@ Once in the virtual environment, install dependencies
   pip install -r requirements.txt
 ```
 
+Once the dependencies are installed, create an .env file for database credentials
+
+```bash
+  touch .env
+```
+
+In the .env file, input your database credentials and preferred default user mode. For example:
+
+```env
+DB_HOST=localhost
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+# USER_MODE controls application access level: only 'admin' or 'viewer'
+# Will be set to 'viewer' if USER_MODE is not 'admin' nor 'viewer'
+
+USER_MODE=admin
+```
+
 Switch to the working directory
 
 ```bash

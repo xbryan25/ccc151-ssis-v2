@@ -1,16 +1,23 @@
 import pymysql
 
+from dotenv import load_dotenv
+import os
+
 from database_handler.initialize_database import InitializeDatabase
+
+load_dotenv()
 
 
 class DatabaseHandler:
     
     def __init__(self):
 
+        self.check_environment_variables()
+
         self.db = pymysql.connect(
-            host='localhost',
-            user='root',
-            password='root'
+            host=os.getenv("DB_HOST"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD")
         )
         
         self.cursor = self.db.cursor()
@@ -639,3 +646,8 @@ class DatabaseHandler:
 
     def close_connection(self):
         self.db.close()
+
+    @staticmethod
+    def check_environment_variables():
+        if not all([os.getenv("DB_HOST"), os.getenv("DB_USER"), os.getenv("DB_PASSWORD")]):
+            raise EnvironmentError("Missing one or more required DB environment variables.")
